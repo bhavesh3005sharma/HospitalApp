@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="20dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="10dp"
+    android:layout_margin="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/profileImage"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_person"
+            app:civ_border_color="#3f51b5"
+            app:civ_border_width="2dp"
+            app:civ_shadow="true"
+            app:civ_border="true"
+            app:civ_shadow_color="#3f51b5"
+            app:civ_shadow_radius="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_doctor_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:text="Bhavesh Sharma"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@+id/cancel"
+            app:layout_constraintStart_toEndOf="@+id/profileImage"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_department"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:text="ENT"
+            android:layout_margin="5dp"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/profileImage"
+            app:layout_constraintTop_toBottomOf="@+id/text_doctor_name" />
+
+        <TextView
+            android:id="@+id/text_location"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:text="Agra"
+            android:visibility="visible"
+            android:layout_marginHorizontal="5dp"
+            android:drawableRight="@drawable/ic_location"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/profileImage"
+            app:layout_constraintTop_toBottomOf="@+id/text_department" />
+
+        <TextView
+            android:id="@+id/text_phoneNo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:text="1234567890"
+            android:layout_marginHorizontal="5dp"
+            android:drawableRight="@drawable/ic_phone"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/profileImage"
+            app:layout_constraintTop_toBottomOf="@+id/text_location" />
+
+        <ImageView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/text_department"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_doctor_name"
+            app:srcCompat="@drawable/ic_cancel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
