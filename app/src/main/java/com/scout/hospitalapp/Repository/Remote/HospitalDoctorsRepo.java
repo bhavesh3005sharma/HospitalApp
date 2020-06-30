@@ -2,12 +2,15 @@ package com.scout.hospitalapp.Repository.Remote;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelHospitalDoctor;
 import com.scout.hospitalapp.response.HospitalInfoResponse;
 import com.scout.hospitalapp.retrofit.ApiService;
 import com.scout.hospitalapp.retrofit.RetrofitNetworkApi;
+
 import java.util.ArrayList;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,7 +44,7 @@ public class HospitalDoctorsRepo {
 
             @Override
             public void onFailure(Call<HospitalInfoResponse> call, Throwable t) {
-                doctorsList.setValue(null);
+                doctorsList.postValue(null);
             }
         });
         return doctorsList;
@@ -52,8 +55,9 @@ public class HospitalDoctorsRepo {
             @Override
             public void onResponse(Call<ModelDoctorInfo> call, Response<ModelDoctorInfo> response) {
                 arrayList.add(response.body());
-                if (hospitalDoctorsList.size() == arrayList.size())
+                if (hospitalDoctorsList.size() == arrayList.size()) {
                     doctorsList.setValue(arrayList);
+                }
             }
 
             @Override

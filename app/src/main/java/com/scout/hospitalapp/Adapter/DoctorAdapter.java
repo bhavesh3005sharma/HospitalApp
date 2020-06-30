@@ -4,7 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,13 +21,15 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.viewHolder> {
+public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.viewHolder> implements Filterable {
+    ArrayList<ModelDoctorInfo> filteredList;
     ArrayList<ModelDoctorInfo> list;
     Context context;
     clickListener mListener;
 
     public DoctorAdapter(ArrayList<ModelDoctorInfo> list, Context context) {
         this.list = list;
+        this.filteredList = list;
         this.context = context;
     }
 
@@ -43,7 +46,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.viewHolder
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, final int position) {
-        ModelDoctorInfo doctorInfo = list.get(position);
+        ModelDoctorInfo doctorInfo = filteredList.get(position);
         holder.doctorName.setText(doctorInfo.getName());
         holder.department.setText(doctorInfo.getDepartment());
         holder.location.setText(doctorInfo.getAddress());
@@ -60,7 +63,41 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.viewHolder
 
     @Override
     public int getItemCount()   {
-        return(list!=null? list.size() : 0);
+        return(filteredList !=null? filteredList.size() : 0);
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    filteredList = list;
+                } else {
+                    ArrayList<ModelDoctorInfo> listFilterByQuery = new ArrayList<>();
+                    for (ModelDoctorInfo row : list) {
+
+                        // name match condition. this might differ depending on your requirement
+                        // here we are looking for name or phone number match
+                        if (row.getName().toLowerCase().contains(charString.toLowerCase()) || row.getDepartment().toLowerCase().contains(charString.toLowerCase())) {
+                            listFilterByQuery.add(row);
+                        }
+                    }
+                    filteredList = listFilterByQuery;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = filteredList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                filteredList = (ArrayList<ModelDoctorInfo>) results.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     public class viewHolder extends RecyclerView.ViewHolder{
