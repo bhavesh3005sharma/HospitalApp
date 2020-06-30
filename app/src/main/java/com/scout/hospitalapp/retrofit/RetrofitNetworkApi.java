@@ -1,5 +1,6 @@
 package com.scout.hospitalapp.retrofit;
 
+import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelHospitalRegisterRequest;
 import com.scout.hospitalapp.response.HospitalInfoResponse;
 
@@ -18,4 +19,6 @@ public interface RetrofitNetworkApi {
     @GET("Hospital/incoming_webhook/getHospitalInfo")
     Call<HospitalInfoResponse> getHospitalInfo(@Query("email") String email,@Query("hospital_id") String id);
 
+    @GET("Doctor/incoming_webhook/getDoctorInfo")
+    Call<ModelDoctorInfo> getDoctorInfo(@Query("email") String email, @Query("doctor_id") String id);
 }

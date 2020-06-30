@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.scout.hospitalapp">
+    package="com.scout.hospitalapp" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -10,17 +10,22 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".Activities.HomeActivity"></activity>
+        android:theme="@style/AppTheme" >
         <activity
-            android:name=".Activities.Auth.ForgotPasswordActivity"
+            android:name=".Activities.View.HomeActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity android:name=".Activities.HomeActivity" />
+        <activity
+            android:name=".Activities.View.Auth.ForgotPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activities.Auth.SignUpActivity"
+            android:name=".Activities.View.Auth.SignUpActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activities.Auth.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".Activities.View.Auth.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

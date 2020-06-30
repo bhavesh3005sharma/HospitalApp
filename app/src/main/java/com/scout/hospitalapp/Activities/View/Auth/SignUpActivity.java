@@ -1,4 +1,4 @@
-package com.scout.hospitalapp.Activities.Auth;
+package com.scout.hospitalapp.Activities.View.Auth;
 
 import android.content.Intent;
 import android.os.Bundle;

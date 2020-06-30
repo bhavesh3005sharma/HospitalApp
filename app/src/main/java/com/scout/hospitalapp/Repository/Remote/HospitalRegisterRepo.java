@@ -109,4 +109,13 @@ public class HospitalRegisterRepo {
     public LiveData<HospitalInfoResponse> getHospitalInfoResponse(){
         return hospitalInfo;
     }
+
+
+    public LiveData<Boolean> isUserLoggedIn() {
+        MutableLiveData<Boolean> isUserLoggedIn = new MutableLiveData<>();
+        isUserLoggedIn.setValue(false);
+        if (mAuth.getCurrentUser()!=null)
+            isUserLoggedIn.setValue(true);
+        return isUserLoggedIn;
+    }
 }

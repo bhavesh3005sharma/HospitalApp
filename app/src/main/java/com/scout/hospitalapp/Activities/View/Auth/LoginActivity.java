@@ -1,6 +1,7 @@
-package com.scout.hospitalapp.Activities.Auth;
+package com.scout.hospitalapp.Activities.View.Auth;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -13,7 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.scout.hospitalapp.Activities.HomeActivity;
+import com.scout.hospitalapp.Activities.View.HomeActivity;
 import com.scout.hospitalapp.R;
 import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
 import com.scout.hospitalapp.Utils.HelperClass;
@@ -121,5 +122,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void openHomeActivity() {
         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
         finish();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        authViewModel.isUserLoggedIn().observe( this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean==true)
+                    openHomeActivity();
+            }
+        });
     }
 }

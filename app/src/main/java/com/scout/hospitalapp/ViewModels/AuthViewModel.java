@@ -2,6 +2,7 @@ package com.scout.hospitalapp.ViewModels;
 
 import android.util.Patterns;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelHospitalRegisterRequest;
@@ -69,6 +70,12 @@ public class AuthViewModel extends ViewModel {
     }
 
     public LiveData<HospitalInfoResponse> getHospitalInfoResponse(){
+        hospitalRegisterRepo = HospitalRegisterRepo.getInstance();
         return hospitalRegisterRepo.getHospitalInfoResponse();
+    }
+
+    public LiveData<Boolean> isUserLoggedIn(){
+        hospitalRegisterRepo = HospitalRegisterRepo.getInstance();
+        return hospitalRegisterRepo.isUserLoggedIn();
     }
 }

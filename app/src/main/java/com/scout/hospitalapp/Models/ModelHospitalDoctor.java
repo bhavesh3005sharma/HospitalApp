@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-class ModelHospitalDoctor {
+public class ModelHospitalDoctor {
     @SerializedName("department")
     String department;
     @SerializedName("doctor_id")
