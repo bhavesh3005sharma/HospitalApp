@@ -1,7 +1,6 @@
 package com.scout.hospitalapp.Activities.View.Auth;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -26,7 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    @BindView(R.id.textInputEmailLogin) TextInputLayout textInputEmail;
+    @BindView(R.id.textInputDepartmentName) TextInputLayout textInputEmail;
     @BindView(R.id.textForgotPassword) TextView textForgotPassword;
     @BindView(R.id.textInputPassword) TextInputLayout textInputPassword;
     @BindView(R.id.btnLogin) Button btnLogin;

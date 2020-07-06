@@ -1,26 +1,32 @@
 package com.scout.hospitalapp.Repository.Remote;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
-import com.scout.hospitalapp.Models.ModelHospitalDoctor;
+import com.scout.hospitalapp.Models.ModelDepartment;
+import com.scout.hospitalapp.Models.ModelRequestId;
 import com.scout.hospitalapp.response.HospitalInfoResponse;
 import com.scout.hospitalapp.retrofit.ApiService;
 import com.scout.hospitalapp.retrofit.RetrofitNetworkApi;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HospitalDoctorsRepo {
-    RetrofitNetworkApi networkApi = ApiService.getAPIService();
+    private RetrofitNetworkApi networkApi = ApiService.getAPIService();
     private static HospitalDoctorsRepo instance;
     private MutableLiveData<ArrayList<ModelDoctorInfo>> doctorsList = new MutableLiveData<>();
+//    private MutableLiveData<ArrayList<String>> listDepartments = new MutableLiveData<>();
+    private MutableLiveData<ModelRequestId> registeredDoctorId = new MutableLiveData<>();
     private ArrayList<ModelDoctorInfo> arrayList = new ArrayList<>();
-    ArrayList<ModelHospitalDoctor> hospitalDoctorsList = new ArrayList<>();
+    private ArrayList<ModelRequestId> hospitalDoctorsList = new ArrayList<>();
 
     public static HospitalDoctorsRepo getInstance(){
         if(instance == null){
@@ -34,12 +40,17 @@ public class HospitalDoctorsRepo {
         networkApi.getHospitalInfo(null,hospitalId).enqueue(new Callback<HospitalInfoResponse>() {
             @Override
             public void onResponse(Call<HospitalInfoResponse> call, Response<HospitalInfoResponse> response) {
-                hospitalDoctorsList = response.body().getHospitalDoctors();
-                arrayList.clear();
+                assert response.body() != null;
+                if (response.body().getHospitalDoctors()!=null) {
+                    hospitalDoctorsList = response.body().getHospitalDoctors();
+                    arrayList.clear();
 
-                for(ModelHospitalDoctor hospitalDoctor : hospitalDoctorsList){
-                    getDoctorDetails(hospitalDoctor.getDoctorId().getId());
-                }
+                    for (ModelRequestId hospitalDoctor : hospitalDoctorsList) {
+                        getDoctorDetails(hospitalDoctor.getId());
+                    }
+                    if (hospitalDoctorsList.size()==0)
+                        doctorsList.postValue(null);
+                }else doctorsList.postValue(null);
             }
 
             @Override
@@ -64,5 +75,52 @@ public class HospitalDoctorsRepo {
             public void onFailure(Call<ModelDoctorInfo> call, Throwable t) {
             }
         });
+    }
+
+    public void registerDoctor(ModelDoctorInfo doctorInfo) {
+        networkApi.registerDoctor(doctorInfo).enqueue(new Callback<ModelRequestId>() {
+            @Override
+            public void onResponse(Call<ModelRequestId> call, Response<ModelRequestId> response) {
+                Log.d("ResponseDoctorRegister",""+response.isSuccessful()+response.code()+response.body());
+                registeredDoctorId.postValue(response.body());
+                // Response code is not working well and response body is alo null.
+                if (response.isSuccessful() && response.code()==200 && response.body()!=null)
+                    registeredDoctorId.postValue(response.body());
+                else
+                    registeredDoctorId.postValue(null);
+            }
+
+            @Override
+            public void onFailure(Call<ModelRequestId> call, Throwable t) {
+                Log.d("ErrorDoctorRegister",t.getMessage());
+                registeredDoctorId.postValue(null);
+            }
+        });
+    }
+
+//    public LiveData<ArrayList<String>> getDepartmentsList() {
+//        return listDepartments;
+//    }
+
+    public LiveData<ModelRequestId> getDoctorRegisterId() {
+        return registeredDoctorId;
+    }
+
+    public LiveData<Boolean> removeDoctor(String doctorId, String hospitalId) {
+        MutableLiveData<Boolean> isDoctorRemoved = new MutableLiveData<>();
+        networkApi.removeDoctor(hospitalId,doctorId).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.code()==200)
+                    isDoctorRemoved.postValue(true);
+                else isDoctorRemoved.postValue(false);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                isDoctorRemoved.postValue(false);
+            }
+        });
+        return isDoctorRemoved;
     }
 }

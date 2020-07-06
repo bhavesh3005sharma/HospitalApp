@@ -1,11 +1,13 @@
 package com.scout.hospitalapp.ViewModels;
 
+import android.content.res.Resources;
 import android.util.Patterns;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelHospitalRegisterRequest;
+import com.scout.hospitalapp.R;
 import com.scout.hospitalapp.Repository.Remote.HospitalRegisterRepo;
 import com.scout.hospitalapp.response.HospitalInfoResponse;
 
@@ -49,10 +51,22 @@ public class AuthViewModel extends ViewModel {
             return "Please specify Working Experience.";
         if (doctorInfo.getLearningHistory().isEmpty())
             return "Please Mention about his Studies.";
-        if (doctorInfo.getDepartment().isEmpty())
+        if (doctorInfo.getDepartment().equals("Please Select Department"))
             return "Please Mention his Department.";
+        if (doctorInfo.getAvgCheckupTime().isEmpty())
+            return "Please Specify Average Checkup Time.";
+        if (doctorInfo.getAvailabilityType()==null || doctorInfo.getAvailabilityType().isEmpty())
+            return "Please Specify Doctor's Availability Type.";
+        if (!doctorInfo.getAvailabilityType().equals("Daily") && doctorInfo.getDoctorAvailability().isEmpty()) {
+            if (doctorInfo.getAvailabilityType().equals("Weekly"))
+                return "Please Specify Available Week Days.";
+            if (doctorInfo.getAvailabilityType().equals("Monthly"))
+                return "Please Specify Available Dates.";
+        }
+        if (doctorInfo.getDoctorAvailabilityTime().isEmpty())
+            return "Please Specify Doctor's Availability Time.";
 
-        return  "Correct";//Resources.getSystem().getString(R.string.correct);
+        return  "Correct";
     }
 
     public void registerHospital(ModelHospitalRegisterRequest registerRequest) {

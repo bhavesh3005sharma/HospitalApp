@@ -15,12 +15,12 @@ public class ModelHospitalRegisterRequest {
     @SerializedName("year_of_establishment")
     String year_of_establishment;
     @SerializedName("departments")
-    ArrayList<String> departments;
+    ArrayList<ModelDepartment> departments;
     @SerializedName("doctors_list")
     ArrayList<ModelDoctorInfo> doctors;
     String password;
 
-    public ModelHospitalRegisterRequest(String name, String email,String password, String phone_no, String address, String year_of_establishment, ArrayList<String> departments, ArrayList<ModelDoctorInfo> doctors) {
+    public ModelHospitalRegisterRequest(String name, String email,String password, String phone_no, String address, String year_of_establishment, ArrayList<ModelDepartment> departments, ArrayList<ModelDoctorInfo> doctors) {
         this.name = name;
         this.email = email;
         this.password = password;

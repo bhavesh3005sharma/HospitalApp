@@ -1,7 +1,7 @@
 package com.scout.hospitalapp.response;
 
 import com.google.gson.annotations.SerializedName;
-import com.scout.hospitalapp.Models.ModelHospitalDoctor;
+import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.Models.ModelRequestId;
 
 import java.util.ArrayList;
@@ -20,15 +20,15 @@ public class HospitalInfoResponse {
     @SerializedName("year_of_establishment")
     String year_of_establishment;
     @SerializedName("departments")
-    ArrayList<String> departments;
+    ArrayList<ModelDepartment> departments;
     @SerializedName("hospital_doctors")
-    ArrayList<ModelHospitalDoctor> hospitalDoctors;
+    ArrayList<ModelRequestId> hospitalDoctors;
 
-    public ArrayList<ModelHospitalDoctor> getHospitalDoctors() {
+    public ArrayList<ModelRequestId> getHospitalDoctors() {
         return hospitalDoctors;
     }
 
-    public void setHospitalDoctors(ArrayList<ModelHospitalDoctor> hospitalDoctors) {
+    public void setHospitalDoctors(ArrayList<ModelRequestId> hospitalDoctors) {
         this.hospitalDoctors = hospitalDoctors;
     }
 
@@ -80,11 +80,11 @@ public class HospitalInfoResponse {
         this.year_of_establishment = year_of_establishment;
     }
 
-    public ArrayList<String> getDepartments() {
+    public ArrayList<ModelDepartment> getDepartments() {
         return departments;
     }
 
-    public void setDepartments(ArrayList<String> departments) {
+    public void setDepartments(ArrayList<ModelDepartment> departments) {
         this.departments = departments;
     }
 }

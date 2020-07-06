@@ -40,11 +40,12 @@ public class HospitalRegisterRepo {
                     mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+                            mAuth.signOut();
                             if (task.isSuccessful()){
                                 networkApi.registerHospital(registerRequest).enqueue(new Callback<ResponseBody>() {
                                     @Override
                                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                        if (response.isSuccessful() || response.code()==200){
+                                        if (response.isSuccessful() && response.code()==200){
                                             mutableLiveData.setValue("Registered Successfully\n Verification Email Sent Verify to Login.");
                                         }else
                                             mutableLiveData.setValue(response.errorBody().toString());
@@ -52,8 +53,8 @@ public class HospitalRegisterRepo {
 
                                     @Override
                                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                        Log.d("Error..",t.getMessage().toString());
-                                        mutableLiveData.setValue(t.getMessage().toString());
+                                        Log.d("Error..", t.getMessage());
+                                        mutableLiveData.setValue(t.getMessage());
                                     }
                                 });
                             }else

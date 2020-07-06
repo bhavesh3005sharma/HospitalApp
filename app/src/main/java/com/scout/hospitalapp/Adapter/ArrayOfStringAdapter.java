@@ -6,24 +6,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.R;
-
 import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DepartmentsAdapter extends RecyclerView.Adapter<DepartmentsAdapter.viewHolder> {
-    ArrayList<ModelDepartment> list;
+public class ArrayOfStringAdapter extends RecyclerView.Adapter<ArrayOfStringAdapter.viewHolder> {
+    ArrayList<String> list;
     Context context;
     clickListener mListener;
 
-    public DepartmentsAdapter(ArrayList<ModelDepartment> list, Context context) {
+    public ArrayOfStringAdapter(ArrayList<String> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -35,14 +30,13 @@ public class DepartmentsAdapter extends RecyclerView.Adapter<DepartmentsAdapter.
     @NonNull
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_department, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_single_string_title, parent, false);
         return new viewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, final int position) {
-        holder.title.setText(list.get(position).getDepartmentName());
-        holder.description.setText(list.get(position).getDescription());
+        holder.title.setText(list.get(position));
 
         holder.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,9 +55,10 @@ public class DepartmentsAdapter extends RecyclerView.Adapter<DepartmentsAdapter.
     }
 
     public class viewHolder extends RecyclerView.ViewHolder{
-        @BindView(R.id.title) TextView title;
-        @BindView(R.id.body) TextView description;
-        @BindView(R.id.cancel) ImageView cancel;
+        @BindView(R.id.title)
+        TextView title;
+        @BindView(R.id.cancel)
+        ImageView cancel;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

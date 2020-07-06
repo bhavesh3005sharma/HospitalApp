@@ -15,14 +15,13 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.scout.hospitalapp.R;
 import com.scout.hospitalapp.Utils.HelperClass;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
-    @BindView(R.id.textInputEmailLogin) TextInputLayout textInputEmail;
-    @BindView(R.id.buttonResetPassword) Button buttonResetPassword;
+    @BindView(R.id.textInputDepartmentName) TextInputLayout textInputEmail;
+    @BindView(R.id.buttonAddDepartment) Button buttonResetPassword;
     @BindView(R.id.progressBar) ProgressBar progressBar;
 
     Unbinder unbinder;

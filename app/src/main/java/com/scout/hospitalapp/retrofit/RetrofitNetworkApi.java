@@ -2,6 +2,7 @@ package com.scout.hospitalapp.retrofit;
 
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelHospitalRegisterRequest;
+import com.scout.hospitalapp.Models.ModelRequestId;
 import com.scout.hospitalapp.response.HospitalInfoResponse;
 
 import okhttp3.ResponseBody;
@@ -21,4 +22,10 @@ public interface RetrofitNetworkApi {
 
     @GET("Doctor/incoming_webhook/getDoctorInfo")
     Call<ModelDoctorInfo> getDoctorInfo(@Query("email") String email, @Query("doctor_id") String id);
+
+    @POST("Hospital/incoming_webhook/registerDoctor")
+    Call<ModelRequestId> registerDoctor(@Body ModelDoctorInfo doctorInfo);
+
+    @GET("Hospital/incoming_webhook/removeDoctor")
+    Call<ResponseBody> removeDoctor(@Query("hospital_id")String hospitalId,@Query("doctor_id")String doctorId);
 }

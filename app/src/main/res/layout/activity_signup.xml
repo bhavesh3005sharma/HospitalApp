@@ -78,8 +78,7 @@
             android:layout_height="wrap_content"
             android:text="@string/login"
             android:layout_weight="1"
-            android:textColor="@android:color/holo_blue_dark"
-            android:outlineSpotShadowColor="@color/colorPrimary" />
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
