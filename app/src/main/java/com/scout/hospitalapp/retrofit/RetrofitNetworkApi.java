@@ -1,5 +1,6 @@
 package com.scout.hospitalapp.retrofit;
 
+import com.scout.hospitalapp.Models.ModelDepartmentRequest;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelHospitalRegisterRequest;
 import com.scout.hospitalapp.Models.ModelRequestId;
@@ -28,4 +29,10 @@ public interface RetrofitNetworkApi {
 
     @GET("Hospital/incoming_webhook/removeDoctor")
     Call<ResponseBody> removeDoctor(@Query("hospital_id")String hospitalId,@Query("doctor_id")String doctorId);
+
+    @POST("Hospital/incoming_webhook/addDepartment")
+    Call<ResponseBody> addDepartment(@Body ModelDepartmentRequest request);
+
+    @POST("Hospital/incoming_webhook/removeDepartment")
+    Call<ResponseBody> removeDepartment(@Body ModelDepartmentRequest request);
 }

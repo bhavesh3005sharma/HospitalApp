@@ -1,7 +1,6 @@
 package com.scout.hospitalapp.ViewModels;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.Patterns;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelRequestId;
-import com.scout.hospitalapp.R;
+import com.scout.hospitalapp.Repository.Remote.HospitalDepartmentRepo;
 import com.scout.hospitalapp.Repository.Remote.HospitalDoctorsRepo;
 import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
 import java.util.ArrayList;
@@ -33,14 +32,9 @@ public class DoctorsViewModel extends ViewModel {
         return doctorsList;
     }
 
-    public LiveData<ArrayList<String>> getDepartmentsList(Context context) {
-        ArrayList<ModelDepartment> departmentArrayList = SharedPref.getLoginUserData(context).getDepartments();
-        ArrayList<String> departNames = new ArrayList<>();
-        for (ModelDepartment department : departmentArrayList)
-            departNames.add(department.getDepartmentName());
-        MutableLiveData<ArrayList<String>> data = new MutableLiveData<>();
-        data.setValue(departNames);
-        return data;
+    public LiveData<ArrayList<ModelDepartment>> getDepartmentsList(String hospitalId) {
+        HospitalDepartmentRepo departmentRepo = HospitalDepartmentRepo.getInstance();
+        return departmentRepo.getDepartmentsList(hospitalId);
     }
 
     public void registerDoctor(ModelDoctorInfo doctorInfo) {

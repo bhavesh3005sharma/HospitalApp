@@ -44,11 +44,9 @@ public class DepartmentsAdapter extends RecyclerView.Adapter<DepartmentsAdapter.
         holder.title.setText(list.get(position).getDepartmentName());
         holder.description.setText(list.get(position).getDescription());
 
-        holder.cancel.setOnClickListener(new View.OnClickListener() {
+        holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                list.remove(position);
-                notifyDataSetChanged();
                 if(mListener!=null)
                 mListener.removeItem(position);
             }
@@ -63,7 +61,7 @@ public class DepartmentsAdapter extends RecyclerView.Adapter<DepartmentsAdapter.
     public class viewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.title) TextView title;
         @BindView(R.id.body) TextView description;
-        @BindView(R.id.cancel) ImageView cancel;
+        @BindView(R.id.remove) ImageView remove;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

@@ -1,6 +1,7 @@
 package com.scout.hospitalapp.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,11 +47,14 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.viewHolder
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, final int position) {
+        Log.d("Adapter",filteredList.toString());
         ModelDoctorInfo doctorInfo = filteredList.get(position);
-        holder.doctorName.setText(doctorInfo.getName());
-        holder.department.setText(doctorInfo.getDepartment());
-        holder.location.setText(doctorInfo.getAddress());
-        holder.text_phoneNo.setText(doctorInfo.getPhone_no());
+        if (doctorInfo!=null) {
+            holder.doctorName.setText(doctorInfo.getName());
+            holder.department.setText(doctorInfo.getDepartment());
+            holder.location.setText(doctorInfo.getAddress());
+            holder.text_phoneNo.setText(doctorInfo.getPhone_no());
+        }
 
         holder.location.setVisibility(View.GONE);
         holder.cancel.setOnClickListener(new View.OnClickListener() {

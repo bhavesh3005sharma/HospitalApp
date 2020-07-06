@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -34,8 +35,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.scout.hospitalapp.Adapter.ArrayOfStringAdapter;
 import com.scout.hospitalapp.Adapter.DoctorAdapter;
+import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelRequestId;
+import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
 import com.scout.hospitalapp.Utils.MultiSelectionSpinner;
 import com.scout.hospitalapp.Utils.HelperClass;
 import com.scout.hospitalapp.ViewModels.DoctorsViewModel;
@@ -90,12 +93,14 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
             }
         });
 
-        doctorsViewModel.getDepartmentsList(getContext()).observe(getViewLifecycleOwner(), new Observer<ArrayList<String>>() {
+        doctorsViewModel.getDepartmentsList(hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelDepartment>>() {
             @Override
-            public void onChanged(ArrayList<String> strings) {
+            public void onChanged(ArrayList<ModelDepartment> modelDepartmentArrayList) {
                 listDepartments.clear();
-                if(strings!=null)
-                listDepartments.addAll(strings);
+                ArrayList<String> departNames = new ArrayList<>();
+                for (ModelDepartment department : modelDepartmentArrayList)
+                    departNames.add(department.getDepartmentName());
+                listDepartments.addAll(departNames);
             }
         });
 
@@ -158,7 +163,7 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                if (list.get(position).getDoctorId()!=null) {
+                if (list.get(position)!=null && list.get(position).getDoctorId()!=null) {
                     HelperClass.showProgressbar(progressBar);
                     doctorsViewModel.deleteDoctor(list.get(position).getDoctorId().getId(), hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<Boolean>() {
                         @Override
@@ -338,18 +343,33 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
         doctorsViewModel.getIsDoctorRegistered().observe(getViewLifecycleOwner(), new Observer<ModelRequestId>() {
             @Override
             public void onChanged(ModelRequestId registeredDoctorId) {
-                HelperClass.hideProgressbar(progressBarDialogue);
-                dialogueDoctorRegister.dismiss();
-                if (registeredDoctorId!=null){
-                    if (doctorInfo!=null) {
-                        doctorInfo.setDoctorId(registeredDoctorId);
-                        list.add(doctorInfo);
+
+                doctorsViewModel.getDoctors(hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelDoctorInfo>>() {
+                    @Override
+                    public void onChanged(@Nullable ArrayList<ModelDoctorInfo> data) {
+                        if (data!=null) {
+                            list.clear();
+                            list.addAll(data);
+                        }
                         doctorAdapter.notifyDataSetChanged();
                         HelperClass.toast(getContext(), "Doctor " + doctorInfo.getName() + " added Successfully.");
-                        doctorInfo = null;
+                        HelperClass.hideProgressbar(progressBarDialogue);
+                        dialogueDoctorRegister.dismiss();
                     }
-                }
-                else HelperClass.toast(getContext(),"Oops Some error occurred \n Try Again. ");
+                });
+
+//                HelperClass.hideProgressbar(progressBarDialogue);
+//                dialogueDoctorRegister.dismiss();
+//                if (registeredDoctorId!=null){
+//                    if (doctorInfo!=null) {
+//                        doctorInfo.setDoctorId(registeredDoctorId);
+//                        list.add(doctorInfo);
+//                        doctorAdapter.notifyDataSetChanged();
+//                        HelperClass.toast(getContext(), "Doctor " + doctorInfo.getName() + " added Successfully.");
+//                        doctorInfo = null;
+//                    }
+//                }
+//                else HelperClass.toast(getContext(),"Oops Some error occurred \n Try Again. ");
             }
         });
     }
