@@ -1,52 +1,41 @@
-package com.scout.hospitalapp.Fragments;
+package com.scout.hospitalapp.Activities;
 
-import android.app.TimePickerDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.NumberPicker;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.TimePicker;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.TimePickerDialog;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.NumberPicker;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
+
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
-import com.scout.hospitalapp.Activities.DoctorProfileActivity;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.scout.hospitalapp.Adapter.ArrayOfStringAdapter;
-import com.scout.hospitalapp.Adapter.DoctorAdapter;
 import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelRequestId;
-import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
-import com.scout.hospitalapp.Utils.MultiSelectionSpinner;
-import com.scout.hospitalapp.Utils.HelperClass;
-import com.scout.hospitalapp.ViewModels.DoctorsViewModel;
 import com.scout.hospitalapp.R;
+import com.scout.hospitalapp.Utils.HelperClass;
+import com.scout.hospitalapp.Utils.MultiSelectionSpinner;
+import com.scout.hospitalapp.ViewModels.DoctorProfileViewModel;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -54,49 +43,49 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class DoctorsFragment extends Fragment implements DoctorAdapter.clickListener {
-    @BindView(R.id.doctorRecyclerView) RecyclerView doctorRecyclerView;
-    @BindView(R.id.progressBarDoctorsFrag) ProgressBar progressBar;
+public class DoctorProfileActivity extends AppCompatActivity {
+    @BindView(R.id.profileImage) ImageView profileImg;
+    @BindView(R.id.textName) TextView textName;
+    @BindView(R.id.textSpecialisation) TextView textSpecialisation;
+    @BindView(R.id.textDoctorAvailability) TextView textDoctorAvailability;
+    @BindView(R.id.textDoctorAvailabilityTime) TextView textDoctorAvailabilityTime;
+    @BindView(R.id.textCareerHistory) TextView textCareerHistory;
+    @BindView(R.id.textLearningHistory) TextView textLearningHistory;
+    @BindView(R.id.textEmail) TextView textEmail;
+    @BindView(R.id.textPhoneNo) TextView textPhoneNo;
+    @BindView(R.id.textAddress) TextView textAddress;
+    @BindView(R.id.profileLayout) ConstraintLayout profileLayout;
+    @BindView(R.id.progressBar) ProgressBar progressBar;
+    @BindView(R.id.buttonEditProfile) Button buttonEditProfile;
     ProgressBar progressBarDialogue;
-    @BindView(R.id.fab_add_doctor) FloatingActionButton addDoctorFab;
 
+    Unbinder unbinder;
+    ModelDoctorInfo doctorInfo;
+    DoctorProfileViewModel doctorProfileViewModel;
     private ArrayOfStringAdapter datesAdapter;
     private ArrayOfStringAdapter timeAdapter;
     private AlertDialog alertDialogNumberPicker;
     private ArrayList<String> selectedDates = new ArrayList<>();
-    private Unbinder unbinder;
     private ArrayList<String> listDepartments = new ArrayList<>();
     private ArrayList<String> listTimes = new ArrayList<>();
-    private ArrayList<ModelDoctorInfo> list = new ArrayList<>();
-    private DoctorsViewModel doctorsViewModel;
-    private DoctorAdapter doctorAdapter;
     private ModelRequestId hospitalId;
-    private AlertDialog dialogueDoctorRegister;
-    private ModelDoctorInfo doctorInfo;
+    private AlertDialog dialogueDoctorEdit;
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+    }
 
-        doctorsViewModel = ViewModelProviders.of(this).get(DoctorsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_doctors, container, false);
-        unbinder = ButterKnife.bind(this, root);
-        setHasOptionsMenu(true);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dcotor_profile);
+        unbinder = ButterKnife.bind(this);
+        doctorProfileViewModel = ViewModelProviders.of(this).get(DoctorProfileViewModel.class);
 
-        initRecyclerView();
-        HelperClass.showProgressbar(progressBar);
-        hospitalId = doctorsViewModel.getHospitalId(getContext());
-        doctorsViewModel.getDoctors(hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelDoctorInfo>>() {
-            @Override
-            public void onChanged(@Nullable ArrayList<ModelDoctorInfo> data) {
-                if (data!=null) {
-                    list.clear();
-                    list.addAll(data);
-                }
-                doctorAdapter.notifyDataSetChanged();
-                HelperClass.hideProgressbar(progressBar);
-            }
-        });
-
-        doctorsViewModel.getDepartmentsList(hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelDepartment>>() {
+        doctorInfo = (ModelDoctorInfo) getIntent().getSerializableExtra("ProfileModel");
+        doctorProfileViewModel.getDepartmentsList(doctorInfo.getHospitalObjectId().getId()).observe(DoctorProfileActivity.this, new Observer<ArrayList<ModelDepartment>>() {
             @Override
             public void onChanged(ArrayList<ModelDepartment> modelDepartmentArrayList) {
                 listDepartments.clear();
@@ -106,110 +95,26 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
                 listDepartments.addAll(departNames);
             }
         });
-
-        addDoctorFab.setOnClickListener(new View.OnClickListener() {
+        setToolbar(doctorInfo.getName());
+        setProfileData(doctorInfo);
+        buttonEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openAlertDialogue();
-                listTimes.clear();
-                selectedDates.clear();
+                openEditProfileDialogue();
             }
         });
-        return root;
     }
 
-    private void initRecyclerView() {
-        doctorRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        doctorRecyclerView.hasFixedSize();
-        doctorAdapter = new DoctorAdapter(list, getContext());
-        doctorRecyclerView.setAdapter(doctorAdapter);
-        doctorAdapter.setOnClickListener(DoctorsFragment.this);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.search_view_menu,menu);
-        MenuItem item = menu.findItem(R.id.search_bar);
-        SearchView searchView = (SearchView) item.getActionView();
-        searchView.setQueryHint("Search Here!");
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                doctorAdapter.getFilter().filter(newText);
-                return true;
-            }
-        });
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void removeDoctor(int position) {
-        openDelConfirmationDialogue(position);
-    }
-
-    @Override
-    public void onItemClick(int position) {
-        Intent intent = new Intent(getContext(), DoctorProfileActivity.class);
-        intent.putExtra("ProfileModel",list.get(position));
-        startActivity(intent);
-    }
-
-    private void openDelConfirmationDialogue(int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder( getContext() );
-        builder.setTitle(getString(R.string.title_delete_doctor));
-        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                if (list.get(position)!=null && list.get(position).getDoctorId()!=null) {
-                    HelperClass.showProgressbar(progressBar);
-                    doctorsViewModel.deleteDoctor(list.get(position).getDoctorId().getId(), hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-                        @Override
-                        public void onChanged(Boolean aBoolean) {
-                            HelperClass.hideProgressbar(progressBar);
-                            if (aBoolean) {
-                                list.remove(position);
-                                doctorAdapter.notifyDataSetChanged();
-                                HelperClass.toast(getContext(), "Doctor Removed Successfully.");
-                            } else
-                                HelperClass.toast(getContext(), "Oops Some error occurred \n Try Again. ");
-                        }
-                    });
-                }
-            }
-        });
-
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.create().show();
-    }
-
-    private void openAlertDialogue() {
-        AlertDialog.Builder builder = new AlertDialog.Builder( getContext() );
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialogue_register_doctor, null, false);
+    private void openEditProfileDialogue() {
+        AlertDialog.Builder builder = new AlertDialog.Builder( DoctorProfileActivity.this );
+        View view = LayoutInflater.from(DoctorProfileActivity.this).inflate(R.layout.dialogue_register_doctor, null, false);
         builder.setView(view);
 
-        dialogueDoctorRegister = builder.create();
-        dialogueDoctorRegister.show();
-        dialogueDoctorRegister.setCancelable(false);
+        dialogueDoctorEdit = builder.create();
+        dialogueDoctorEdit.show();
+        dialogueDoctorEdit.setCancelable(false);
 
+        final TextView title = view.findViewById(R.id.textViewTitle);
         final TextInputLayout name = view.findViewById(R.id.textInputName);
         final TextInputLayout email = view.findViewById(R.id.textInputEmailRegister);
         final TextInputLayout phoneNo = view.findViewById(R.id.textInputPhoneNo);
@@ -228,12 +133,30 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
         final String[] availabilityType = new String[1];
         MultiSelectionSpinner spinnerToSelectWeekDays = view.findViewById(R.id.multiSelectSpinner);
         spinnerToSelectWeekDays.setItems(getResources().getStringArray(R.array.weekDays));
-
         final Spinner spinner = view.findViewById(R.id.department);
         ArrayList<String> listForSpinner = new ArrayList<>();
         listForSpinner.add(getString(R.string.select_department));
         listForSpinner.addAll(listDepartments);
-         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, listForSpinner);
+
+        title.setText(getString(R.string.title_update_doctor));
+        Objects.requireNonNull(name.getEditText()).setText(doctorInfo.getName());
+        Objects.requireNonNull(email.getEditText()).setText(doctorInfo.getEmail());
+        Objects.requireNonNull(phoneNo.getEditText()).setText(doctorInfo.getPhone_no());
+        Objects.requireNonNull(address.getEditText()).setText(doctorInfo.getAddress());
+        Objects.requireNonNull(careerHistory.getEditText()).setText(doctorInfo.getCareerHistory());
+        Objects.requireNonNull(learningHistory.getEditText()).setText(doctorInfo.getLearningHistory());
+        Objects.requireNonNull(avgCheckupTime.getEditText()).setText(doctorInfo.getAvgCheckupTime());
+        add.setText(getString(R.string.update));
+        listTimes.clear();
+        listTimes.addAll(doctorInfo.getDoctorAvailabilityTime());
+        if (doctorInfo.getAvailabilityType().equals(getString(R.string.monthly))) {
+            selectedDates.clear();
+            selectedDates.addAll(doctorInfo.getDoctorAvailability());
+        }if (doctorInfo.getAvailabilityType().equals(getString(R.string.weekly))) {
+            spinnerToSelectWeekDays.setSelection(doctorInfo.getDoctorAvailability());
+        }
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(DoctorProfileActivity.this,android.R.layout.simple_spinner_item, listForSpinner);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
 
@@ -244,7 +167,7 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
                 int hour = mCurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mCurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(DoctorProfileActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         startTimeButton.setText(selectedHour + ":" + selectedMinute);
@@ -262,7 +185,7 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
                 int hour = mCurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mCurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(DoctorProfileActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         endTimeButton.setText(selectedHour + ":" + selectedMinute);
@@ -277,7 +200,7 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
             @Override
             public void onClick(View v) {
                 if (startTimeButton.getText().equals(getString(R.string.start_time)) || endTimeButton.getText().equals(getString(R.string.end_time))) {
-                    HelperClass.toast(getContext(), "Please Select Time");
+                    HelperClass.toast(DoctorProfileActivity.this, "Please Select Time");
                     return;
                 }
                 listTimes.add(startTimeButton.getText()+" - "+endTimeButton.getText());
@@ -301,7 +224,7 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
                 if (checkedId==R.id.choice_chip_weekly){
                     availabilityType[0] = getString(R.string.weekly);
                     spinnerToSelectWeekDays.setVisibility(View.VISIBLE);
-                    HelperClass.toast(getContext(),"Please Select Weekdays");
+                    HelperClass.toast(DoctorProfileActivity.this,"Please Select Weekdays");
                 }
                 if (checkedId==R.id.choice_chip_monthly){
                     availabilityType[0] = getString(R.string.monthly);
@@ -314,7 +237,7 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogueDoctorRegister.dismiss();
+                dialogueDoctorEdit.dismiss();
             }
         });
 
@@ -327,44 +250,69 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
                 if (availabilityType[0]!=null && availabilityType[0].equals(getString(R.string.monthly)))
                     doctorsAvailability.addAll(selectedDates);
 
-                 doctorInfo = new ModelDoctorInfo(name.getEditText().getText().toString().trim(),
+                ModelDoctorInfo updateRequestModel = new ModelDoctorInfo(name.getEditText().getText().toString().trim(),
                         email.getEditText().getText().toString().trim(),phoneNo.getEditText().getText().toString().trim(),
                         address.getEditText().getText().toString().trim(),spinner.getSelectedItem().toString().trim(),
                         careerHistory.getEditText().getText().toString().trim(),learningHistory.getEditText().getText().toString().trim()
-                        ,avgCheckupTime.getEditText().getText().toString().trim(),availabilityType[0],doctorsAvailability,listTimes,hospitalId.getId());
+                        ,avgCheckupTime.getEditText().getText().toString().trim(),availabilityType[0],doctorsAvailability,listTimes,doctorInfo.getDoctorId().getId());
 
-                String msg = doctorsViewModel.validateDataOfDoctor(doctorInfo);
+                String msg = doctorProfileViewModel.validateDataOfDoctor(updateRequestModel);
                 if (msg.equals(getString(R.string.correct))){
                     HelperClass.showProgressbar(progressBarDialogue);
-                    doctorsViewModel.registerDoctor(doctorInfo);
-                    checkForResponse();
+                    doctorProfileViewModel.updateDoctor(updateRequestModel).observe(DoctorProfileActivity.this, new Observer<String>() {
+                        @Override
+                        public void onChanged(String s) {
+                            dialogueDoctorEdit.dismiss();
+                            HelperClass.hideProgressbar(progressBarDialogue);
+                            HelperClass.toast(DoctorProfileActivity.this,s);
+                            if (s.equals("Doctor Updated Successfully")) {
+                                setProfileData(updateRequestModel);
+                                setToolbar(updateRequestModel.getName());
+                            }
+                        }
+                    });
                 }else
-                    HelperClass.toast(getContext(),msg);
+                    HelperClass.toast(DoctorProfileActivity.this,msg);
             }
         });
 
-        timeRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
+        timeRecyclerView.setLayoutManager(new GridLayoutManager(DoctorProfileActivity.this, 1));
         timeRecyclerView.hasFixedSize();
-        timeAdapter = new ArrayOfStringAdapter(listTimes, getContext());
+        timeAdapter = new ArrayOfStringAdapter(listTimes, DoctorProfileActivity.this);
         timeRecyclerView.setAdapter(timeAdapter);
     }
 
-    private void checkForResponse() {
-        doctorsViewModel.getIsDoctorRegistered().observe(getViewLifecycleOwner(), new Observer<ModelRequestId>() {
-            @Override
-            public void onChanged(ModelRequestId registeredDoctorId) {
+    private void setToolbar(String title) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(title);
+    }
 
-                HelperClass.toast(getContext(), "Doctor " + doctorInfo.getName() + " added Successfully.");
-                HelperClass.hideProgressbar(progressBarDialogue);
-                HelperClass.showProgressbar(progressBar);
-                dialogueDoctorRegister.dismiss();
-            }
-        });
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    private void setProfileData(ModelDoctorInfo doctorInfo) {
+        textName.setText(doctorInfo.getName());
+        textSpecialisation.setText(doctorInfo.getDepartment());
+        textCareerHistory.setText(doctorInfo.getCareerHistory());
+        textLearningHistory.setText(doctorInfo.getLearningHistory());
+        textEmail.setText(doctorInfo.getEmail());
+        textPhoneNo.setText(doctorInfo.getPhone_no());
+        textAddress.setText(doctorInfo.getAddress());
+
+        textDoctorAvailability.setText(doctorProfileViewModel.getAvailabilityType(doctorInfo.getAvailabilityType(),doctorInfo.getDoctorAvailability(),this));
+        textDoctorAvailabilityTime.setText(doctorProfileViewModel.getAvailabilityTime(doctorInfo.getAvgCheckupTime(),doctorInfo.getDoctorAvailabilityTime(),this));
+
+        HelperClass.hideProgressbar(progressBar);
+        profileLayout.setVisibility(View.VISIBLE);
     }
 
     private void openDateSelectorDialogue() {
-        AlertDialog.Builder builder = new AlertDialog.Builder( getContext() );
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_number_picker_dialogue, null, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder( DoctorProfileActivity.this );
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_number_picker_dialogue, null, false);
         builder.setView(view);
 
         alertDialogNumberPicker = builder.create();
@@ -399,13 +347,12 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
             public void onClick(View v) {
                 selectedDates.add(String.valueOf(numberPicker.getValue()));
                 datesAdapter.notifyDataSetChanged();
-                Log.d("ListS",selectedDates.toString());
             }
         });
 
-        recyclerViewSelectedDates.setLayoutManager(new GridLayoutManager(getContext(), 1));
+        recyclerViewSelectedDates.setLayoutManager(new GridLayoutManager(DoctorProfileActivity.this, 1));
         recyclerViewSelectedDates.hasFixedSize();
-        datesAdapter = new ArrayOfStringAdapter(selectedDates, getContext());
+        datesAdapter = new ArrayOfStringAdapter(selectedDates, DoctorProfileActivity.this);
         recyclerViewSelectedDates.setAdapter(datesAdapter);
     }
 }

@@ -1,4 +1,4 @@
-package com.scout.hospitalapp.Activities.View.Auth;
+package com.scout.hospitalapp.Activities.Auth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

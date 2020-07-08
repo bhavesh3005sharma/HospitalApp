@@ -21,7 +21,7 @@
                 android:paddingBottom="20dp">
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/textViewTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/add_doctor"
@@ -40,12 +40,12 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:hint="@string/doctor_name"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     app:errorIconTint="@android:color/holo_red_light"
                     app:errorTextColor="@android:color/holo_red_light"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
                     app:startIconDrawable="@drawable/ic_person">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:hint="@string/email"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     app:startIconDrawable="@drawable/email_ic"
                     app:errorTextColor="@android:color/holo_red_light"
                     app:errorIconTint="@android:color/holo_red_light"
@@ -84,7 +84,7 @@
                     app:errorTextColor="@android:color/holo_red_light"
                     app:errorIconTint="@android:color/holo_red_light"
                     app:startIconDrawable="@drawable/ic_phone"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textInputEmailRegister">
@@ -106,7 +106,7 @@
                     app:errorIconTint="@android:color/holo_red_light"
                     app:startIconDrawable="@drawable/ic_address"
                     app:layout_constraintEnd_toEndOf="parent"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textInputPhoneNo">
 
@@ -126,13 +126,13 @@
                     app:errorTextColor="@android:color/holo_red_light"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     app:layout_constraintTop_toBottomOf="@+id/textInputAddress"
                     app:startIconDrawable="@drawable/ic_business">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
-                        android:layout_height="47dp"
+                        android:layout_height="wrap_content"
                         android:textSize="15sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -146,7 +146,7 @@
                     app:errorIconTint="@android:color/holo_red_light"
                     app:startIconDrawable="@drawable/ic_book"
                     app:layout_constraintEnd_toEndOf="parent"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/careerHistory">
 
@@ -168,7 +168,7 @@
                     app:errorIconTint="@android:color/holo_red_light"
                     app:startIconDrawable="@drawable/ic_book"
                     app:layout_constraintEnd_toEndOf="parent"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/learningHistory">
 

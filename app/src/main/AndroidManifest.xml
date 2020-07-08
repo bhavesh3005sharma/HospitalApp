@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.scout.hospitalapp" >
+    package="com.scout.hospitalapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -11,27 +11,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activities.DoctorProfileActivity"></activity>
         <activity
-            android:name=".Activities.View.HomeActivity"
+            android:name=".Activities.HomeActivity"
+            android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/title_activity_home"
-            android:configChanges="keyboard|orientation|screenSize"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Activities.View.Auth.ForgotPasswordActivity"
+            android:name=".Activities.Auth.ForgotPasswordActivity"
             android:configChanges="keyboard|orientation|screenSize"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Activities.View.Auth.SignUpActivity"
+            android:name=".Activities.Auth.SignUpActivity"
             android:configChanges="keyboard|orientation|screenSize"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Activities.View.Auth.LoginActivity"
+            android:name=".Activities.Auth.LoginActivity"
             android:configChanges="keyboard|orientation|screenSize"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

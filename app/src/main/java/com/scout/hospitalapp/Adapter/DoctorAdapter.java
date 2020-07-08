@@ -114,16 +114,24 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.viewHolder
         @BindView(R.id.text_phoneNo)
         TextView text_phoneNo;
         @BindView(R.id.profileImage)
-        CircularImageView profileImage;
+        ImageView profileImage;
         @BindView(R.id.cancel)
         ImageView cancel;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onItemClick(getAdapterPosition());
+                }
+            });
         }
     }
 
     public interface clickListener{
         void removeDoctor(int position);
+
+        void onItemClick(int adapterPosition);
     }
 }

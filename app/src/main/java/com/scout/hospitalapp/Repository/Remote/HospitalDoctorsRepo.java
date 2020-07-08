@@ -81,6 +81,7 @@ public class HospitalDoctorsRepo {
             @Override
             public void onResponse(Call<ModelRequestId> call, Response<ModelRequestId> response) {
                 Log.d("ResponseDoctorRegister",""+response.isSuccessful()+response.code()+response.body()+response.errorBody());
+               getDoctorsList(doctorInfo.getHospitalStringId());
                 // Response code is not working well and response body is also null.
                 if (response.isSuccessful() && response.code()==200 && response.body()!=null)
                     registeredDoctorId.postValue(response.body());
@@ -116,5 +117,24 @@ public class HospitalDoctorsRepo {
             }
         });
         return isDoctorRemoved;
+    }
+
+    public LiveData<String> updateDoctor(ModelDoctorInfo doctorInfo) {
+        MutableLiveData<String> result = new MutableLiveData<>();
+        networkApi.updateDoctor(doctorInfo).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.code()==200)
+                    result.postValue("Doctor Updated Successfully");
+                else
+                    result.postValue(response.errorBody().toString());
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                result.postValue(t.getMessage());
+            }
+        });
+        return result;
     }
 }

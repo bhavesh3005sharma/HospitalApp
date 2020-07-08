@@ -1,4 +1,4 @@
-package com.scout.hospitalapp.Activities.View.Auth;
+package com.scout.hospitalapp.Activities.Auth;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -414,5 +414,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             textNoOfDoctor.setText(""+listDoctors.size());
             textNoOfDoctor.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onItemClick(int adapterPosition) {
+
     }
 }

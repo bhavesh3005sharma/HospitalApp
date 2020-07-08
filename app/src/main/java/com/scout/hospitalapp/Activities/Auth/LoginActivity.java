@@ -1,4 +1,4 @@
-package com.scout.hospitalapp.Activities.View.Auth;
+package com.scout.hospitalapp.Activities.Auth;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.scout.hospitalapp.Activities.View.HomeActivity;
+import com.scout.hospitalapp.Activities.HomeActivity;
 import com.scout.hospitalapp.R;
 import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
 import com.scout.hospitalapp.Utils.HelperClass;

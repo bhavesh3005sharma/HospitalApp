@@ -1,16 +1,14 @@
-package com.scout.hospitalapp.Activities.View;
+package com.scout.hospitalapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Menu;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.scout.hospitalapp.Activities.View.Auth.LoginActivity;
+import com.scout.hospitalapp.Activities.Auth.LoginActivity;
 import com.scout.hospitalapp.R;
 import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
 

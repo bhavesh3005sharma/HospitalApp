@@ -50,7 +50,7 @@
     <string name="daily">Daily</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
-    <string name="select_availability_time">Select Doctor\'s Availability Time</string>
+    <string name="select_availability_time">Doctor\'s Availability Time</string>
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
     <string name="checkup_time">Average Checkup Time (in min.)</string>
@@ -61,4 +61,8 @@
     <string name="doctor_department_register_later">** You can register Your Doctors and Departments after login also.</string>
     <string name="add_department">Add A Department</string>
     <string name="title_delete_doctor">Are You suru You want to Delete Doctor?</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="contact_info">Contact Info</string>
+    <string name="update">Update</string>
+    <string name="title_update_doctor">Update Doctor\'s Profile</string>
 </resources>
