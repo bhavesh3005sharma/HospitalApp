@@ -73,13 +73,13 @@ public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.
         addDepartmentFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openAddDepartmentDialogue();
+                openDepartmentDialogue(false,0);
             }
         });
         return root;
     }
 
-    private void openAddDepartmentDialogue() {
+    private void openDepartmentDialogue(Boolean isEditDialogue,int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder( getContext() );
         View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_input_department_dialogue, null, false);
         builder.setView(view);
@@ -90,6 +90,12 @@ public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.
         final TextInputLayout textInputDepartmentName = view.findViewById(R.id.textInputDepartmentName);
         final EditText editTextDescription = view.findViewById(R.id.editTextDescription);
         final Button buttonAddDepartment = view.findViewById(R.id.buttonAddDepartment);
+
+        if (isEditDialogue){
+            textInputDepartmentName.getEditText().setText(list.get(position).getDepartmentName());
+            editTextDescription.setText(list.get(position).getDescription());
+            buttonAddDepartment.setText(getString(R.string.update));
+        }
 
         buttonAddDepartment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,18 +119,36 @@ public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.
                 ModelDepartment department = new ModelDepartment(departmentName,departmentDescription);
                 HelperClass.showProgressbar(progressBar);
                 ModelDepartmentRequest request = new ModelDepartmentRequest(hospitalId.getId(),department);
-                departmentsViewModel.addDepartment(request).observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-                    @Override
-                    public void onChanged(Boolean aBoolean) {
-                        HelperClass.hideProgressbar(progressBar);
-                        if (aBoolean){
-                            list.add(department);
-                            departmentsAdapter.notifyDataSetChanged();
-                            HelperClass.toast(getContext(),"Department Added Successfully");
-                        }else
-                            HelperClass.toast(getContext(),"Oops Some Error Occurred\n Try Again");
-                    }
-                });
+
+                if (isEditDialogue) {
+                    departmentsViewModel.updateDepartment(request).observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                        @Override
+                        public void onChanged(Boolean aBoolean) {
+                            HelperClass.hideProgressbar(progressBar);
+                            if (aBoolean) {
+                                list.remove(position);
+                                list.add(department);
+                                departmentsAdapter.notifyDataSetChanged();
+                                HelperClass.toast(getContext(),"Update Successful");
+                            } else
+                                HelperClass.toast(getContext(), "Oops Some Error Occurred\n Try Again");
+                        }
+                    });
+                }
+                else {
+                    departmentsViewModel.addDepartment(request).observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                        @Override
+                        public void onChanged(Boolean aBoolean) {
+                            HelperClass.hideProgressbar(progressBar);
+                            if (aBoolean) {
+                                list.add(department);
+                                departmentsAdapter.notifyDataSetChanged();
+                                HelperClass.toast(getContext(), "Department Added Successfully");
+                            } else
+                                HelperClass.toast(getContext(), "Oops Some Error Occurred\n Try Again");
+                        }
+                    });
+                }
                 alertDialog.dismiss();
             }
         });
@@ -141,6 +165,11 @@ public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.
     @Override
     public void removeItem(int position) {
         openDelConfirmationDialogue(position);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        openDepartmentDialogue(true,position);
     }
 
     private void openDelConfirmationDialogue(int position) {

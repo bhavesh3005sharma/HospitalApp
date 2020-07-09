@@ -38,4 +38,7 @@ public interface RetrofitNetworkApi {
 
     @POST("Hospital/incoming_webhook/updateDoctor")
     Call<ResponseBody> updateDoctor(@Body ModelDoctorInfo doctorInfo);
+
+    @POST("Hospital/incoming_webhook/updateDepartment")
+    Call<ResponseBody> updateDepartment(@Body ModelDepartmentRequest request);
 }

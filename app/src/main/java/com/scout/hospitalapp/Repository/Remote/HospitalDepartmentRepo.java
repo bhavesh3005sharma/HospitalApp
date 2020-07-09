@@ -79,4 +79,23 @@ public class HospitalDepartmentRepo {
         });
         return isSuccess;
     }
+
+    public LiveData<Boolean> updateDepartment(ModelDepartmentRequest request) {
+        MutableLiveData<Boolean> isUpdated = new MutableLiveData<>();
+        networkApi.updateDepartment(request).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.code()==200)
+                    isUpdated.postValue(true);
+                else isUpdated.postValue(false);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                isUpdated.postValue(false);
+            }
+        });
+
+        return isUpdated;
+    }
 }

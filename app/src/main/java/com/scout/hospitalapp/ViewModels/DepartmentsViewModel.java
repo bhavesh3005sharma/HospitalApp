@@ -3,6 +3,8 @@ package com.scout.hospitalapp.ViewModels;
 import android.content.Context;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.scout.hospitalapp.Fragments.DepartmentsFragment;
 import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.Models.ModelDepartmentRequest;
 import com.scout.hospitalapp.Models.ModelRequestId;
@@ -30,5 +32,10 @@ public class DepartmentsViewModel extends ViewModel {
     public LiveData<Boolean> removeDepartment(ModelDepartmentRequest request) {
         hospitalDepartmentRepo = HospitalDepartmentRepo.getInstance();
         return hospitalDepartmentRepo.removeDepartment(request);
+    }
+
+    public LiveData<Boolean> updateDepartment(ModelDepartmentRequest request) {
+        hospitalDepartmentRepo = HospitalDepartmentRepo.getInstance();
+        return hospitalDepartmentRepo.updateDepartment(request);
     }
 }

@@ -65,10 +65,19 @@ public class DepartmentsAdapter extends RecyclerView.Adapter<DepartmentsAdapter.
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onItemClick(getAdapterPosition());
+                }
+            });
         }
     }
 
     public interface clickListener{
         void removeItem(int position);
+
+        void onItemClick(int position);
     }
 }
