@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.DoctorProfileActivity"></activity>
+        <activity android:name=".Activities.ProfileActivity"></activity>
+        <activity android:name=".Activities.DoctorProfileActivity" />
         <activity
             android:name=".Activities.HomeActivity"
             android:configChanges="keyboard|orientation|screenSize"

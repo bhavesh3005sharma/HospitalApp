@@ -2,47 +2,81 @@ package com.scout.hospitalapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
 
-import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.scout.hospitalapp.Activities.Auth.LoginActivity;
+import com.scout.hospitalapp.Adapter.PageViewAdapter;
+import com.scout.hospitalapp.Fragments.AppointmentRequestsFragment;
+import com.scout.hospitalapp.Fragments.DepartmentsFragment;
+import com.scout.hospitalapp.Fragments.DoctorsFragment;
+import com.scout.hospitalapp.Fragments.HomeFragment;
+import com.scout.hospitalapp.Fragments.NotificationFragment;
 import com.scout.hospitalapp.R;
 import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class HomeActivity extends AppCompatActivity {
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.collapsingToolbar) CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.viewpager) ViewPager viewPager;
+    @BindView(R.id.tabLayout) TabLayout tabLayout;
 
-    private AppBarConfiguration mAppBarConfiguration;
+    Unbinder unbinder;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        unbinder = ButterKnife.bind(this);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_doctors, R.id.nav_departments,R.id.nav_profile,R.id.nav_logout)
-                .setDrawerLayout(drawer)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+        setUpToolbar();
+
+        setUpViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_group);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_business);
+        tabLayout.getTabAt(3).setIcon(R.drawable.ic_menu_gallery);
+        tabLayout.getTabAt(4).setIcon(R.drawable.ic_notifications);
+    }
+
+    private void setUpToolbar() {
+        setSupportActionBar(toolbar);
+        collapsingToolbar.setTitleEnabled(false);
+    }
+
+    public void setUpViewPager(ViewPager viewPager) {
+        PageViewAdapter pageViewAdapter = new PageViewAdapter(getSupportFragmentManager(),0);
+        HomeFragment homeFragmentTab = new HomeFragment();
+        AppointmentRequestsFragment appointmentRequestsFragmentTab = new AppointmentRequestsFragment();
+        DoctorsFragment doctorsFragmentTab = new DoctorsFragment();
+        DepartmentsFragment departmentsFragmentTab = new DepartmentsFragment();
+        NotificationFragment notificationFragmentTab = new NotificationFragment();
+
+        pageViewAdapter.addFragment(homeFragmentTab,"Home");
+        pageViewAdapter.addFragment(appointmentRequestsFragmentTab,"Requests");
+        pageViewAdapter.addFragment(doctorsFragmentTab,"Doctors");
+        pageViewAdapter.addFragment(departmentsFragmentTab,"Departments");
+        pageViewAdapter.addFragment(notificationFragmentTab,"Notifications");
+        viewPager.setAdapter(pageViewAdapter);
     }
 
     @Override
@@ -53,20 +87,15 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_settings:
-                Log.d("option item logout","clicked");
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                 SharedPref.deleteLoginUserData(this);
+                break;
+            case R.id.menu_profile:
+                startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 break;
         }
         return true;

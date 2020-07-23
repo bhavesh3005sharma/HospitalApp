@@ -30,6 +30,9 @@ public interface RetrofitNetworkApi {
     @GET("Hospital/incoming_webhook/removeDoctor")
     Call<ResponseBody> removeDoctor(@Query("hospital_id")String hospitalId,@Query("doctor_id")String doctorId);
 
+    @GET("Hospital/incoming_webhook/PendingAppointments")
+    Call<ResponseBody> getPendingAppointmentsList(@Query("hospital_id")String hospitalId);
+
     @POST("Hospital/incoming_webhook/addDepartment")
     Call<ResponseBody> addDepartment(@Body ModelDepartmentRequest request);
 

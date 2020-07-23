@@ -17,15 +17,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HospitalRegisterRepo {
+public class HospitalDataRepo {
     RetrofitNetworkApi networkApi = ApiService.getAPIService();
-    private static HospitalRegisterRepo instance;
+    private static HospitalDataRepo instance;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     MutableLiveData<HospitalInfoResponse> hospitalInfo = new MutableLiveData<>();
 
-    public static HospitalRegisterRepo getInstance(){
+    public static HospitalDataRepo getInstance(){
         if(instance == null){
-            instance = new HospitalRegisterRepo();
+            instance = new HospitalDataRepo();
         }
         return instance;
     }

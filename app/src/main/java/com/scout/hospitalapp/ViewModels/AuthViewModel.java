@@ -1,18 +1,15 @@
 package com.scout.hospitalapp.ViewModels;
 
-import android.content.res.Resources;
 import android.util.Patterns;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelHospitalRegisterRequest;
-import com.scout.hospitalapp.R;
-import com.scout.hospitalapp.Repository.Remote.HospitalRegisterRepo;
+import com.scout.hospitalapp.Repository.Remote.HospitalDataRepo;
 import com.scout.hospitalapp.response.HospitalInfoResponse;
 
 public class AuthViewModel extends ViewModel {
-    HospitalRegisterRepo hospitalRegisterRepo;
+    HospitalDataRepo hospitalRegisterRepo;
     LiveData<String> message;
 
     public String isDetailsValid(String name, String email, String password, String phoneNo, String address, String yearOfEstablishment) {
@@ -70,7 +67,7 @@ public class AuthViewModel extends ViewModel {
     }
 
     public void registerHospital(ModelHospitalRegisterRequest registerRequest) {
-        hospitalRegisterRepo = HospitalRegisterRepo.getInstance();
+        hospitalRegisterRepo = HospitalDataRepo.getInstance();
         message = hospitalRegisterRepo.registerHospital(registerRequest);
     }
 
@@ -79,17 +76,17 @@ public class AuthViewModel extends ViewModel {
     }
 
     public void loginUser(String email, String password) {
-        hospitalRegisterRepo = HospitalRegisterRepo.getInstance();
+        hospitalRegisterRepo = HospitalDataRepo.getInstance();
         message = hospitalRegisterRepo.loginUser(email,password);
     }
 
     public LiveData<HospitalInfoResponse> getHospitalInfoResponse(){
-        hospitalRegisterRepo = HospitalRegisterRepo.getInstance();
+        hospitalRegisterRepo = HospitalDataRepo.getInstance();
         return hospitalRegisterRepo.getHospitalInfoResponse();
     }
 
     public LiveData<Boolean> isUserLoggedIn(){
-        hospitalRegisterRepo = HospitalRegisterRepo.getInstance();
+        hospitalRegisterRepo = HospitalDataRepo.getInstance();
         return hospitalRegisterRepo.isUserLoggedIn();
     }
 }
