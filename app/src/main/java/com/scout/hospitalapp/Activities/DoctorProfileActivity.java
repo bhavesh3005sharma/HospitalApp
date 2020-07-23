@@ -31,6 +31,7 @@ import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelRequestId;
 import com.scout.hospitalapp.R;
+import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
 import com.scout.hospitalapp.Utils.HelperClass;
 import com.scout.hospitalapp.Utils.MultiSelectionSpinner;
 import com.scout.hospitalapp.ViewModels.DoctorProfileViewModel;
@@ -59,6 +60,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
     @BindView(R.id.buttonEditProfile) Button buttonEditProfile;
     ProgressBar progressBarDialogue;
 
+    private String hospitalName;
     Unbinder unbinder;
     ModelDoctorInfo doctorInfo;
     DoctorProfileViewModel doctorProfileViewModel;
@@ -68,7 +70,6 @@ public class DoctorProfileActivity extends AppCompatActivity {
     private ArrayList<String> selectedDates = new ArrayList<>();
     private ArrayList<String> listDepartments = new ArrayList<>();
     private ArrayList<String> listTimes = new ArrayList<>();
-    private ModelRequestId hospitalId;
     private AlertDialog dialogueDoctorEdit;
 
     @Override
@@ -85,6 +86,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
         doctorProfileViewModel = ViewModelProviders.of(this).get(DoctorProfileViewModel.class);
 
         doctorInfo = (ModelDoctorInfo) getIntent().getSerializableExtra("ProfileModel");
+        hospitalName = doctorInfo.getHospitalName();
         doctorProfileViewModel.getDepartmentsList(doctorInfo.getHospitalObjectId().getId()).observe(DoctorProfileActivity.this, new Observer<ArrayList<ModelDepartment>>() {
             @Override
             public void onChanged(ArrayList<ModelDepartment> modelDepartmentArrayList) {
@@ -254,7 +256,8 @@ public class DoctorProfileActivity extends AppCompatActivity {
                         email.getEditText().getText().toString().trim(),phoneNo.getEditText().getText().toString().trim(),
                         address.getEditText().getText().toString().trim(),spinner.getSelectedItem().toString().trim(),
                         careerHistory.getEditText().getText().toString().trim(),learningHistory.getEditText().getText().toString().trim()
-                        ,avgCheckupTime.getEditText().getText().toString().trim(),availabilityType[0],doctorsAvailability,listTimes,doctorInfo.getDoctorId().getId());
+                        ,avgCheckupTime.getEditText().getText().toString().trim(),availabilityType[0],doctorsAvailability,
+                        listTimes,doctorInfo.getDoctorId().getId(),hospitalName);
 
                 String msg = doctorProfileViewModel.validateDataOfDoctor(updateRequestModel);
                 if (msg.equals(getString(R.string.correct))){

@@ -10,6 +10,8 @@ public class ModelDoctorInfo implements Serializable {
     ModelRequestId doctorId;
     @SerializedName("name")
     String name;
+    @SerializedName("hospital_name")
+    String hospitalName;
     @SerializedName("email")
     String email;
     @SerializedName("phone_no")
@@ -35,7 +37,7 @@ public class ModelDoctorInfo implements Serializable {
     @SerializedName("hospital_string_id")
     String hospitalStringId;
 
-    public ModelDoctorInfo(String name, String email, String phone_no, String address, String department, String careerHistory, String learningHistory, String avgCheckupTime, String availabilityType, ArrayList<String> doctorAvailability, ArrayList<String> doctorAvailabilityTime, String hospitalId) {
+    public ModelDoctorInfo(String name, String email, String phone_no, String address, String department, String careerHistory, String learningHistory, String avgCheckupTime, String availabilityType, ArrayList<String> doctorAvailability, ArrayList<String> doctorAvailabilityTime, String hospitalId, String hospitalName) {
         this.name = name;
         this.email = email;
         this.phone_no = phone_no;
@@ -48,6 +50,7 @@ public class ModelDoctorInfo implements Serializable {
         DoctorAvailability = doctorAvailability;
         DoctorAvailabilityTime = doctorAvailabilityTime;
         this.hospitalStringId = hospitalId;
+        this.hospitalName = hospitalName;
     }
 
     public ModelDoctorInfo(String name, String email, String phone_no, String address, String department, String careerHistory, String learningHistory, String avgCheckupTime, String availabilityType, ArrayList<String> doctorAvailability, ArrayList<String> doctorAvailabilityTime) {
@@ -62,6 +65,10 @@ public class ModelDoctorInfo implements Serializable {
         AvailabilityType = availabilityType;
         DoctorAvailability = doctorAvailability;
         DoctorAvailabilityTime = doctorAvailabilityTime;
+    }
+
+    public String getHospitalName() {
+        return hospitalName;
     }
 
     public String getHospitalStringId() {

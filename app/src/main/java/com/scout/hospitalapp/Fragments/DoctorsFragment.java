@@ -73,6 +73,7 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
     private ModelRequestId hospitalId;
     private AlertDialog dialogueDoctorRegister;
     private ModelDoctorInfo doctorInfo;
+    private String hospitalName;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -84,6 +85,7 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
         initRecyclerView();
         HelperClass.showProgressbar(progressBar);
         hospitalId = doctorsViewModel.getHospitalId(getContext());
+        hospitalName = doctorsViewModel.getHospitalName(getContext());
         doctorsViewModel.getDoctors(hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelDoctorInfo>>() {
             @Override
             public void onChanged(@Nullable ArrayList<ModelDoctorInfo> data) {
@@ -331,7 +333,8 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
                         email.getEditText().getText().toString().trim(),phoneNo.getEditText().getText().toString().trim(),
                         address.getEditText().getText().toString().trim(),spinner.getSelectedItem().toString().trim(),
                         careerHistory.getEditText().getText().toString().trim(),learningHistory.getEditText().getText().toString().trim()
-                        ,avgCheckupTime.getEditText().getText().toString().trim(),availabilityType[0],doctorsAvailability,listTimes,hospitalId.getId());
+                        ,avgCheckupTime.getEditText().getText().toString().trim(),availabilityType[0],doctorsAvailability
+                         , listTimes,hospitalId.getId(),hospitalName);
 
                 String msg = doctorsViewModel.validateDataOfDoctor(doctorInfo);
                 if (msg.equals(getString(R.string.correct))){

@@ -26,6 +26,10 @@ public class DoctorsViewModel extends ViewModel {
         return SharedPref.getLoginUserData(context).getHospitalId();
     }
 
+    public String getHospitalName(Context context) {
+        return SharedPref.getLoginUserData(context).getName();
+    }
+
     public LiveData<ArrayList<ModelDoctorInfo>> getDoctors(String hospitalId) {
         hospitalDoctorsRepo = HospitalDoctorsRepo.getInstance();
         doctorsList = hospitalDoctorsRepo.getDoctorsList(hospitalId);

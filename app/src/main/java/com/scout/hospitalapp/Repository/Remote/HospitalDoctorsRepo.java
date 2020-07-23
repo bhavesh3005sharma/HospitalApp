@@ -1,12 +1,9 @@
 package com.scout.hospitalapp.Repository.Remote;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
-import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.Models.ModelRequestId;
 import com.scout.hospitalapp.response.HospitalInfoResponse;
 import com.scout.hospitalapp.retrofit.ApiService;
@@ -80,7 +77,6 @@ public class HospitalDoctorsRepo {
         networkApi.registerDoctor(doctorInfo).enqueue(new Callback<ModelRequestId>() {
             @Override
             public void onResponse(Call<ModelRequestId> call, Response<ModelRequestId> response) {
-                Log.d("ResponseDoctorRegister",""+response.isSuccessful()+response.code()+response.body()+response.errorBody());
                getDoctorsList(doctorInfo.getHospitalStringId());
                 // Response code is not working well and response body is also null.
                 if (response.isSuccessful() && response.code()==200 && response.body()!=null)
@@ -91,7 +87,6 @@ public class HospitalDoctorsRepo {
 
             @Override
             public void onFailure(Call<ModelRequestId> call, Throwable t) {
-                Log.d("ErrorDoctorRegister",t.getMessage());
                 registeredDoctorId.postValue(null);
             }
         });
