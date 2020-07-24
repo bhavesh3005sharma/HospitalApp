@@ -65,4 +65,16 @@
     <string name="contact_info">Contact Info</string>
     <string name="update">Update</string>
     <string name="title_update_doctor">Update Doctor\'s Profile</string>
+    <string name="confirm">Confirm</string>
+    <string name="consultation_with">Consultation With</string>
+
+    <!--     Appointment Status-->
+    <string name="pending">Pending</string>
+    <string name="accepted">Accepted</string>
+    <string name="rejected">Rejected</string>
+    <string name="completed">Completed</string>
+    <string name="not_attempted">Not Attempted</string>
+    <string name="appointment_confirmed">Appointment has been Confirmed.</string>
+    <string name="appointment_rejected">Appointment has been Rejected.</string>
+
 </resources>

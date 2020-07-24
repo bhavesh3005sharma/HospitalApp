@@ -1,5 +1,6 @@
 package com.scout.hospitalapp.retrofit;
 
+import com.scout.hospitalapp.Models.ModelAppointment;
 import com.scout.hospitalapp.Models.ModelDepartmentRequest;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelHospitalRegisterRequest;
@@ -31,7 +32,7 @@ public interface RetrofitNetworkApi {
     Call<ResponseBody> removeDoctor(@Query("hospital_id")String hospitalId,@Query("doctor_id")String doctorId);
 
     @GET("Hospital/incoming_webhook/PendingAppointments")
-    Call<ResponseBody> getPendingAppointmentsList(@Query("hospital_id")String hospitalId);
+    Call<HospitalInfoResponse> getPendingAppointmentsList(@Query("hospital_id")String hospitalId);
 
     @POST("Hospital/incoming_webhook/addDepartment")
     Call<ResponseBody> addDepartment(@Body ModelDepartmentRequest request);
@@ -44,4 +45,10 @@ public interface RetrofitNetworkApi {
 
     @POST("Hospital/incoming_webhook/updateDepartment")
     Call<ResponseBody> updateDepartment(@Body ModelDepartmentRequest request);
+
+    @GET("Hospital/incoming_webhook/AppointmentDetails")
+    Call<ModelAppointment> getAppointmentsDetails(@Query("appointment_id") String appointmentId);
+
+    @GET("Hospital/incoming_webhook/SetAppointmentStatus")
+    Call<ResponseBody> SetAppointmentStatus(@Query("hospital_id")String hospitalId,@Query("appointment_id") String appointmentId,@Query("status")String status);
 }

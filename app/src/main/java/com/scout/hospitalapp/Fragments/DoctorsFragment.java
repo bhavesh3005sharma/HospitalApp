@@ -56,8 +56,7 @@ import butterknife.Unbinder;
 
 public class DoctorsFragment extends Fragment implements DoctorAdapter.clickListener {
     @BindView(R.id.doctorRecyclerView) RecyclerView doctorRecyclerView;
-    @BindView(R.id.progressBarDoctorsFrag) ProgressBar progressBar;
-    ProgressBar progressBarDialogue;
+    @BindView(R.id.progressBarDoctorsFrag) ProgressBar progressBar;ProgressBar progressBarDialogue;
     @BindView(R.id.fab_add_doctor) FloatingActionButton addDoctorFab;
 
     private ArrayOfStringAdapter datesAdapter;

@@ -15,7 +15,7 @@ import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
 import java.util.ArrayList;
 
 public class DoctorsViewModel extends ViewModel {
-    HospitalDoctorsRepo hospitalDoctorsRepo;
+    private HospitalDoctorsRepo hospitalDoctorsRepo;
     private LiveData<ArrayList<ModelDoctorInfo>> doctorsList;
 
     public DoctorsViewModel() {
