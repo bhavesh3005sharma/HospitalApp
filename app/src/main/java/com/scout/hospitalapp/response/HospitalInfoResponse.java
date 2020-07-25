@@ -25,9 +25,21 @@ public class HospitalInfoResponse {
     ArrayList<ModelRequestId> hospitalDoctors;
     @SerializedName("pending_appointment_list")
     ArrayList<ModelRequestId> pendingAppointmentsList;
+    @SerializedName("confirmed_appointment_list")
+    ArrayList<ModelRequestId> confirmedAppointmentsList;
+    @SerializedName("past_appointment_list")
+    ArrayList<ModelRequestId> pastAppointmentsList;
 
     public ArrayList<ModelRequestId> getPendingAppointmentsList() {
         return pendingAppointmentsList;
+    }
+
+    public ArrayList<ModelRequestId> getConfirmedAppointmentsList() {
+        return confirmedAppointmentsList;
+    }
+
+    public ArrayList<ModelRequestId> getPastAppointmentsList() {
+        return pastAppointmentsList;
     }
 
     public ArrayList<ModelRequestId> getHospitalDoctors() {

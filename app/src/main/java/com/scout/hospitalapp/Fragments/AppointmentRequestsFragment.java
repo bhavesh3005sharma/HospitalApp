@@ -1,7 +1,5 @@
 package com.scout.hospitalapp.Fragments;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.scout.hospitalapp.Adapter.AppointmentsAdapter;
+import com.scout.hospitalapp.Adapter.AppointmentsRequestAdapter;
 import com.scout.hospitalapp.Models.ModelAppointment;
 import com.scout.hospitalapp.R;
 import com.scout.hospitalapp.Utils.HelperClass;
@@ -30,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class AppointmentRequestsFragment extends Fragment implements AppointmentsAdapter.interfaceClickListener, SwipeRefreshLayout.OnRefreshListener{
+public class AppointmentRequestsFragment extends Fragment implements AppointmentsRequestAdapter.interfaceClickListener, SwipeRefreshLayout.OnRefreshListener{
     @BindView(R.id.recyclerViewAppointmentRequest) RecyclerView recyclerView;
     @BindView(R.id.shimmerLayout) ShimmerFrameLayout shimmerLayout;
     @BindView(R.id.progressBar) ProgressBar progressBar;
@@ -38,7 +36,7 @@ public class AppointmentRequestsFragment extends Fragment implements Appointment
 
     private ArrayList<ModelAppointment> list = new ArrayList<ModelAppointment>();
     private Unbinder unbinder;
-    private AppointmentsAdapter adapter;
+    private AppointmentsRequestAdapter adapter;
     private Boolean isScrolling = false , isLoading = false;
     private int currentItems, totalItems, scrollOutItems, startingIndex=-1;
     private AppointmentsViewModel appointmentsViewModel;
@@ -80,7 +78,6 @@ public class AppointmentRequestsFragment extends Fragment implements Appointment
             @Override
             public void onChanged(Integer integer) {
                 startingIndex = integer;
-                Log.d("startingIndex","InActivity - "+startingIndex);
             }
         });
 
@@ -92,7 +89,7 @@ public class AppointmentRequestsFragment extends Fragment implements Appointment
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         recyclerView.hasFixedSize();
-        adapter = new AppointmentsAdapter(getContext(), list);
+        adapter = new AppointmentsRequestAdapter(getContext(), list);
         recyclerView.setAdapter(adapter);
         adapter.setUpOnClickListener(AppointmentRequestsFragment.this);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

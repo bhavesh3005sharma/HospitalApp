@@ -1,6 +1,7 @@
 package com.scout.hospitalapp.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Menu;
@@ -13,6 +14,7 @@ import com.scout.hospitalapp.Adapter.PageViewAdapter;
 import com.scout.hospitalapp.Fragments.AppointmentRequestsFragment;
 import com.scout.hospitalapp.Fragments.DepartmentsFragment;
 import com.scout.hospitalapp.Fragments.DoctorsFragment;
+import com.scout.hospitalapp.Fragments.HistoryFragment;
 import com.scout.hospitalapp.Fragments.HomeFragment;
 import com.scout.hospitalapp.Fragments.NotificationFragment;
 import com.scout.hospitalapp.R;
@@ -20,6 +22,7 @@ import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
@@ -56,6 +59,7 @@ public class HomeActivity extends AppCompatActivity {
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_business);
         tabLayout.getTabAt(3).setIcon(R.drawable.ic_menu_gallery);
         tabLayout.getTabAt(4).setIcon(R.drawable.ic_notifications);
+        tabLayout.getTabAt(5).setIcon(R.drawable.ic_history);
     }
 
     private void setUpToolbar() {
@@ -70,12 +74,14 @@ public class HomeActivity extends AppCompatActivity {
         DoctorsFragment doctorsFragmentTab = new DoctorsFragment();
         DepartmentsFragment departmentsFragmentTab = new DepartmentsFragment();
         NotificationFragment notificationFragmentTab = new NotificationFragment();
+        HistoryFragment historyFragment = new HistoryFragment();
 
         pageViewAdapter.addFragment(homeFragmentTab,"Home");
         pageViewAdapter.addFragment(appointmentRequestsFragmentTab,"Requests");
         pageViewAdapter.addFragment(doctorsFragmentTab,"Doctors");
         pageViewAdapter.addFragment(departmentsFragmentTab,"Departments");
         pageViewAdapter.addFragment(notificationFragmentTab,"Notifications");
+        pageViewAdapter.addFragment(historyFragment,"Appointments History");
         viewPager.setAdapter(pageViewAdapter);
     }
 
@@ -83,19 +89,34 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
+
+        MenuItem item = menu.findItem(R.id.search_bar);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setQueryHint("Search Here!");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+               // doctorAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.action_settings:
+            case R.id.menu_profile:
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                 SharedPref.deleteLoginUserData(this);
-                break;
-            case R.id.menu_profile:
-                startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
+                //startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 break;
         }
         return true;

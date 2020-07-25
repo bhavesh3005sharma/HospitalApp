@@ -2,12 +2,15 @@ package com.scout.hospitalapp.Repository.Remote;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
 import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.Models.ModelDepartmentRequest;
 import com.scout.hospitalapp.response.HospitalInfoResponse;
 import com.scout.hospitalapp.retrofit.ApiService;
 import com.scout.hospitalapp.retrofit.RetrofitNetworkApi;
+
 import java.util.ArrayList;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;

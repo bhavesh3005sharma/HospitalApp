@@ -3,25 +3,29 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parentCard"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:elevation="20dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#3F51B5"
-        android:paddingBottom="50dp">
+        android:paddingBottom="30dp">
 
         <TextView
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="40dp"
             android:text="@string/consultation_with"
+            android:layout_marginTop="20sp"
             android:textColor="@android:color/white"
             android:textSize="25sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/textViewStatus"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,11 +43,27 @@
             app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
         <TextView
+            android:id="@+id/textViewStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/accepted_backgrounded"
+            android:padding="10dp"
+            android:text="@string/accepted"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/textView7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView7"
+            app:layout_constraintTop_toTopOf="@+id/textView7" />
+
+        <TextView
             android:id="@+id/textViewName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Bhavesh Sharma"
             android:layout_marginHorizontal="20dp"
+            android:text="Bhavesh Sharma"
             android:textColor="@android:color/primary_text_dark_nodisable"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -138,5 +158,19 @@
             app:layout_constraintEnd_toEndOf="@+id/textViewAge"
             app:layout_constraintStart_toStartOf="@+id/textViewAge"
             app:layout_constraintTop_toBottomOf="@+id/textViewAge" />
+
+        <Spinner
+            android:id="@+id/selectionSpinner"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@drawable/black_border_backgrounded"
+            android:entries="@array/array_status"
+            android:padding="10dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/imageView8"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDisease" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

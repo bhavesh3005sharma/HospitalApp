@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".Activities.HomeActivity">
 
-    <include layout="@layout/content_home"/>
+    <include layout="@layout/content_home" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_height="wrap_content"

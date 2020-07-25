@@ -2,6 +2,7 @@ package com.scout.hospitalapp.Fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -33,16 +35,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.clickListener{
+public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.clickListener , SwipeRefreshLayout.OnRefreshListener{
     @BindView(R.id.departmentRecyclerView) RecyclerView departmentRecyclerView;
     @BindView(R.id.progressBarDepartmentFrag) ProgressBar progressBar;
     @BindView(R.id.fab_add_department) FloatingActionButton addDepartmentFab;
+    @BindView(R.id.swipe_container) SwipeRefreshLayout swipeRefreshLayout;
 
     private ArrayList<ModelDepartment> list = new ArrayList<>();
     private DepartmentsViewModel departmentsViewModel;
     private DepartmentsAdapter departmentsAdapter;
     private Unbinder unbinder;
     private ModelRequestId hospitalId;
+    private Boolean isLoading = false;
 
     @Override
     public void onDestroyView() {
@@ -54,13 +58,16 @@ public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.
         departmentsViewModel = ViewModelProviders.of(this).get(DepartmentsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_departments, container, false);
         unbinder = ButterKnife.bind(this,root);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         hospitalId = departmentsViewModel.getHospitalId(getContext());
-        HelperClass.showProgressbar(progressBar);
         initRecyclerView();
+
+        isLoading = true;
         departmentsViewModel.getDepartmentsList(hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelDepartment>>() {
             @Override
             public void onChanged(ArrayList<ModelDepartment> data) {
+                isLoading= false;
                 if (data!=null){
                     list.clear();
                     list.addAll(data);
@@ -203,5 +210,27 @@ public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.
         });
 
         builder.create().show();
+    }
+
+    @Override
+    public void onRefresh() {
+        if (!isLoading) {
+            list.clear();
+            isLoading = true;
+            HelperClass.showProgressbar(progressBar);
+            departmentsViewModel.getDepartmentsList(hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelDepartment>>() {
+                @Override
+                public void onChanged(ArrayList<ModelDepartment> data) {
+                    isLoading= false;
+                    if (data!=null){
+                        list.clear();
+                        list.addAll(data);
+                    }
+                    HelperClass.hideProgressbar(progressBar);
+                    departmentsAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

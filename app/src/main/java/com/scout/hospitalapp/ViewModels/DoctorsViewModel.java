@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class DoctorsViewModel extends ViewModel {
     private HospitalDoctorsRepo hospitalDoctorsRepo;
     private LiveData<ArrayList<ModelDoctorInfo>> doctorsList;
+    private LiveData<ArrayList<ModelDepartment>> departmentsList;
 
     public DoctorsViewModel() {
         doctorsList = new MutableLiveData<>();
@@ -38,7 +39,8 @@ public class DoctorsViewModel extends ViewModel {
 
     public LiveData<ArrayList<ModelDepartment>> getDepartmentsList(String hospitalId) {
         HospitalDepartmentRepo departmentRepo = HospitalDepartmentRepo.getInstance();
-        return departmentRepo.getDepartmentsList(hospitalId);
+        departmentsList = departmentRepo.getDepartmentsList(hospitalId);
+        return departmentsList;
     }
 
     public void registerDoctor(ModelDoctorInfo doctorInfo) {

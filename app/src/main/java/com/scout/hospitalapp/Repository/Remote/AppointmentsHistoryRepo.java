@@ -1,47 +1,53 @@
 package com.scout.hospitalapp.Repository.Remote;
 
 import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.scout.hospitalapp.Models.ModelAppointment;
 import com.scout.hospitalapp.Models.ModelRequestId;
 import com.scout.hospitalapp.response.HospitalInfoResponse;
 import com.scout.hospitalapp.retrofit.ApiService;
 import com.scout.hospitalapp.retrofit.RetrofitNetworkApi;
+
 import java.util.ArrayList;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentRepo {
+public class AppointmentsHistoryRepo {
     RetrofitNetworkApi networkApi = ApiService.getAPIService();
-    private static AppointmentRepo instance;
-    ArrayList<ModelRequestId> appointmentsIdsList = new ArrayList<>();
-    MutableLiveData<ArrayList<ModelAppointment>> appointmentsListLive = new MutableLiveData<>();
-    MutableLiveData<Integer> startingIndexForList = new MutableLiveData<>();
+    private static AppointmentsHistoryRepo instance;
+    private ArrayList<ModelRequestId> appointmentsIdsList = new ArrayList<>();
+    private MutableLiveData<ArrayList<ModelAppointment>> appointmentsListLive = new MutableLiveData<>();
+    private MutableLiveData<Integer> startingIndexForList = new MutableLiveData<>();
 
-    public static AppointmentRepo getInstance(){
+    public static AppointmentsHistoryRepo getInstance(){
         if(instance == null){
-            instance = new AppointmentRepo();
+            instance = new AppointmentsHistoryRepo();
         }
         return instance;
     }
-    
-    public void loadAppointmentRequestsIdsList(String hospitalId) {
-        networkApi.getPendingAppointmentsList(hospitalId).enqueue(new Callback<HospitalInfoResponse>() {
+
+    public void loadAppointmentIdsList(String hospitalId) {
+        networkApi = ApiService.getAPIService();
+        networkApi.getAppointmentsHistoryList(hospitalId).enqueue(new Callback<HospitalInfoResponse>() {
             @Override
             public void onResponse(Call<HospitalInfoResponse> call, Response<HospitalInfoResponse> response) {
                 if (response.isSuccessful() && response.code()==200){
-                    if (response.body().getPendingAppointmentsList()!=null) {
+                    if (response.body().getPastAppointmentsList()!=null) {
+                        Log.d("Result",response.body().getPastAppointmentsList().toString());
                         appointmentsIdsList.clear();
-                        appointmentsIdsList.addAll(response.body().getPendingAppointmentsList());
+                        appointmentsIdsList.addAll(response.body().getPastAppointmentsList());
                         loadAppointmentList(0);
+                    }else {
+                        // User have no confirmed Appointments.
+                        appointmentsListLive.setValue(null);
                     }
                 } else {
+                    Log.d("Result",response.errorBody().toString());
                     appointmentsListLive.setValue(null);
                 }
             }
@@ -49,6 +55,7 @@ public class AppointmentRepo {
             @Override
             public void onFailure(Call<HospitalInfoResponse> call, Throwable t) {
                 appointmentsListLive.setValue(null);
+                Log.d("Result",t.getMessage());
             }
         });
     }
@@ -98,22 +105,5 @@ public class AppointmentRepo {
 
     public LiveData<Integer> getStartingIndexOfList() {
         return startingIndexForList;
-    }
-
-    public void setStatus(String hospitalId, String appointmentId, String status) {
-        networkApi = ApiService.getAPIService();
-        networkApi.SetAppointmentStatus(hospitalId,appointmentId,status).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.code()==200){
-                    // Appointment Status Updated Successfully.
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
     }
 }

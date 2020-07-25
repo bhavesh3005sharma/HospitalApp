@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 public class DepartmentsViewModel extends ViewModel {
     HospitalDepartmentRepo hospitalDepartmentRepo;
+    private LiveData<ArrayList<ModelDepartment>> departmentsList;
 
     public ModelRequestId getHospitalId(Context context) {
         return SharedPref.getLoginUserData(context).getHospitalId();
@@ -21,7 +22,8 @@ public class DepartmentsViewModel extends ViewModel {
 
     public LiveData<ArrayList<ModelDepartment>> getDepartmentsList(String hospitalId) {
         hospitalDepartmentRepo = HospitalDepartmentRepo.getInstance();
-        return hospitalDepartmentRepo.getDepartmentsList(hospitalId);
+        departmentsList = hospitalDepartmentRepo.getDepartmentsList(hospitalId);
+        return departmentsList;
     }
 
     public LiveData<Boolean> addDepartment(ModelDepartmentRequest request) {

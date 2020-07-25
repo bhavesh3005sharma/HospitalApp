@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -54,10 +55,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class DoctorsFragment extends Fragment implements DoctorAdapter.clickListener {
+public class DoctorsFragment extends Fragment implements DoctorAdapter.clickListener, SwipeRefreshLayout.OnRefreshListener {
     @BindView(R.id.doctorRecyclerView) RecyclerView doctorRecyclerView;
     @BindView(R.id.progressBarDoctorsFrag) ProgressBar progressBar;ProgressBar progressBarDialogue;
     @BindView(R.id.fab_add_doctor) FloatingActionButton addDoctorFab;
+    @BindView(R.id.swipe_container) SwipeRefreshLayout swipeRefreshLayout;
 
     private ArrayOfStringAdapter datesAdapter;
     private ArrayOfStringAdapter timeAdapter;
@@ -73,21 +75,24 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
     private AlertDialog dialogueDoctorRegister;
     private ModelDoctorInfo doctorInfo;
     private String hospitalName;
+    private Boolean isLoading = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         doctorsViewModel = ViewModelProviders.of(this).get(DoctorsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_doctors, container, false);
         unbinder = ButterKnife.bind(this, root);
-        setHasOptionsMenu(true);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         initRecyclerView();
-        HelperClass.showProgressbar(progressBar);
         hospitalId = doctorsViewModel.getHospitalId(getContext());
         hospitalName = doctorsViewModel.getHospitalName(getContext());
+
+        isLoading = true;
         doctorsViewModel.getDoctors(hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelDoctorInfo>>() {
             @Override
             public void onChanged(@Nullable ArrayList<ModelDoctorInfo> data) {
+                isLoading = false;
                 if (data!=null) {
                     list.clear();
                     list.addAll(data);
@@ -131,28 +136,6 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.search_view_menu,menu);
-        MenuItem item = menu.findItem(R.id.search_bar);
-        SearchView searchView = (SearchView) item.getActionView();
-        searchView.setQueryHint("Search Here!");
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                doctorAdapter.getFilter().filter(newText);
-                return true;
-            }
-        });
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -409,5 +392,17 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
         recyclerViewSelectedDates.hasFixedSize();
         datesAdapter = new ArrayOfStringAdapter(selectedDates, getContext());
         recyclerViewSelectedDates.setAdapter(datesAdapter);
+    }
+
+    @Override
+    public void onRefresh() {
+        if (!isLoading) {
+            list.clear();
+            isLoading = true;
+            HelperClass.showProgressbar(progressBar);
+            doctorsViewModel.getDoctors(hospitalId.getId());
+            doctorsViewModel.getDepartmentsList(hospitalId.getId());
+        }
+        swipeRefreshLayout.setRefreshing(false);
     }
 }
