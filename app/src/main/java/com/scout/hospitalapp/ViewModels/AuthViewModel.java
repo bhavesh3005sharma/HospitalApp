@@ -80,9 +80,9 @@ public class AuthViewModel extends ViewModel {
         message = hospitalRegisterRepo.loginUser(email,password);
     }
 
-    public LiveData<HospitalInfoResponse> getHospitalInfoResponse(){
+    public LiveData<HospitalInfoResponse> getHospitalInfoResponse(String email, String id){
         hospitalRegisterRepo = HospitalDataRepo.getInstance();
-        return hospitalRegisterRepo.getHospitalInfoResponse();
+        return hospitalRegisterRepo.getHospitalInfoResponse(email,id);
     }
 
     public LiveData<Boolean> isUserLoggedIn(){

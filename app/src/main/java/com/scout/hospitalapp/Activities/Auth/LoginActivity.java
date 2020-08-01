@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     AuthViewModel authViewModel;
     Unbinder unbinder;
+    String loggedInEmail;
 
     @Override
     protected void onDestroy() {
@@ -80,6 +81,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     return;
                 }else textInputPassword.setError(null);
 
+                loggedInEmail = email;
                 authViewModel.loginUser(email,password);
                 HelperClass.showProgressbar(progressBar);
                 checkForResponse();
@@ -103,14 +105,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         saveHospitalInfo();
                         openHomeActivity();
                     }
-                    HelperClass.toast(LoginActivity.this,s);
                 }
             }
         });
     }
 
     private void saveHospitalInfo() {
-        authViewModel.getHospitalInfoResponse().observe(this, new Observer<HospitalInfoResponse>() {
+        authViewModel.getHospitalInfoResponse(loggedInEmail,null).observe(this, new Observer<HospitalInfoResponse>() {
             @Override
             public void onChanged(HospitalInfoResponse hospitalInfoResponse) {
                 SharedPref.saveLoginUserData(LoginActivity.this,hospitalInfoResponse);

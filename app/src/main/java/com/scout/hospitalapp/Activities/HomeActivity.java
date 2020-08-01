@@ -1,24 +1,18 @@
 package com.scout.hospitalapp.Activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Menu;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.scout.hospitalapp.Activities.Auth.LoginActivity;
 import com.scout.hospitalapp.Adapter.PageViewAdapter;
 import com.scout.hospitalapp.Fragments.AppointmentRequestsFragment;
-import com.scout.hospitalapp.Fragments.DepartmentsFragment;
-import com.scout.hospitalapp.Fragments.DoctorsFragment;
 import com.scout.hospitalapp.Fragments.HistoryFragment;
 import com.scout.hospitalapp.Fragments.HomeFragment;
 import com.scout.hospitalapp.Fragments.NotificationFragment;
 import com.scout.hospitalapp.R;
-import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -107,10 +101,10 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_profile:
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-                SharedPref.deleteLoginUserData(this);
-                //startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
+//                FirebaseAuth.getInstance().signOut();
+//                startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+//                SharedPref.deleteLoginUserData(this);
+                startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 break;
         }
         return true;

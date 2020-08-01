@@ -4,7 +4,6 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.scout.hospitalapp.Fragments.DepartmentsFragment;
 import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.Models.ModelDepartmentRequest;
 import com.scout.hospitalapp.Models.ModelRequestId;

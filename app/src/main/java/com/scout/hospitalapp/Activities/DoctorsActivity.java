@@ -1,4 +1,4 @@
-package com.scout.hospitalapp.Fragments;
+package com.scout.hospitalapp.Activities;
 
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
@@ -6,9 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -22,9 +19,8 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -35,27 +31,23 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
-import com.scout.hospitalapp.Activities.DoctorProfileActivity;
 import com.scout.hospitalapp.Adapter.ArrayOfStringAdapter;
 import com.scout.hospitalapp.Adapter.DoctorAdapter;
 import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelRequestId;
-import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
 import com.scout.hospitalapp.Utils.MultiSelectionSpinner;
 import com.scout.hospitalapp.Utils.HelperClass;
 import com.scout.hospitalapp.ViewModels.DoctorsViewModel;
 import com.scout.hospitalapp.R;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class DoctorsFragment extends Fragment implements DoctorAdapter.clickListener, SwipeRefreshLayout.OnRefreshListener {
+public class DoctorsActivity extends AppCompatActivity implements DoctorAdapter.clickListener, SwipeRefreshLayout.OnRefreshListener {
     @BindView(R.id.doctorRecyclerView) RecyclerView doctorRecyclerView;
     @BindView(R.id.progressBarDoctorsFrag) ProgressBar progressBar;ProgressBar progressBarDialogue;
     @BindView(R.id.fab_add_doctor) FloatingActionButton addDoctorFab;
@@ -77,19 +69,20 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
     private String hospitalName;
     private Boolean isLoading = false;
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         doctorsViewModel = ViewModelProviders.of(this).get(DoctorsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_doctors, container, false);
-        unbinder = ButterKnife.bind(this, root);
+        setContentView(R.layout.fragment_doctors);
+        unbinder = ButterKnife.bind(this);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         initRecyclerView();
-        hospitalId = doctorsViewModel.getHospitalId(getContext());
-        hospitalName = doctorsViewModel.getHospitalName(getContext());
+        hospitalId = doctorsViewModel.getHospitalId(DoctorsActivity.this);
+        hospitalName = doctorsViewModel.getHospitalName(DoctorsActivity.this);
 
         isLoading = true;
-        doctorsViewModel.getDoctors(hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelDoctorInfo>>() {
+        doctorsViewModel.getDoctors(hospitalId.getId()).observe(DoctorsActivity.this, new Observer<ArrayList<ModelDoctorInfo>>() {
             @Override
             public void onChanged(@Nullable ArrayList<ModelDoctorInfo> data) {
                 isLoading = false;
@@ -102,7 +95,7 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
             }
         });
 
-        doctorsViewModel.getDepartmentsList(hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelDepartment>>() {
+        doctorsViewModel.getDepartmentsList(hospitalId.getId()).observe(DoctorsActivity.this, new Observer<ArrayList<ModelDepartment>>() {
             @Override
             public void onChanged(ArrayList<ModelDepartment> modelDepartmentArrayList) {
                 listDepartments.clear();
@@ -121,20 +114,19 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
                 selectedDates.clear();
             }
         });
-        return root;
     }
 
     private void initRecyclerView() {
-        doctorRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        doctorRecyclerView.setLayoutManager(new LinearLayoutManager(DoctorsActivity.this, LinearLayoutManager.VERTICAL, false));
         doctorRecyclerView.hasFixedSize();
-        doctorAdapter = new DoctorAdapter(list, getContext());
+        doctorAdapter = new DoctorAdapter(list, DoctorsActivity.this);
         doctorRecyclerView.setAdapter(doctorAdapter);
-        doctorAdapter.setOnClickListener(DoctorsFragment.this);
+        doctorAdapter.setOnClickListener(DoctorsActivity.this);
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDestroy() {
+        super.onDestroy();
         unbinder.unbind();
     }
 
@@ -145,13 +137,13 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
 
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(getContext(), DoctorProfileActivity.class);
+        Intent intent = new Intent(DoctorsActivity.this, DoctorProfileActivity.class);
         intent.putExtra("ProfileModel",list.get(position));
         startActivity(intent);
     }
 
     private void openDelConfirmationDialogue(int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder( getContext() );
+        AlertDialog.Builder builder = new AlertDialog.Builder( DoctorsActivity.this );
         builder.setTitle(getString(R.string.title_delete_doctor));
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
@@ -159,16 +151,16 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
                 dialog.dismiss();
                 if (list.get(position)!=null && list.get(position).getDoctorId()!=null) {
                     HelperClass.showProgressbar(progressBar);
-                    doctorsViewModel.deleteDoctor(list.get(position).getDoctorId().getId(), hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                    doctorsViewModel.deleteDoctor(list.get(position).getDoctorId().getId(), hospitalId.getId()).observe(DoctorsActivity.this, new Observer<Boolean>() {
                         @Override
                         public void onChanged(Boolean aBoolean) {
                             HelperClass.hideProgressbar(progressBar);
                             if (aBoolean) {
                                 list.remove(position);
                                 doctorAdapter.notifyDataSetChanged();
-                                HelperClass.toast(getContext(), "Doctor Removed Successfully.");
+                                HelperClass.toast(DoctorsActivity.this, "Doctor Removed Successfully.");
                             } else
-                                HelperClass.toast(getContext(), "Oops Some error occurred \n Try Again. ");
+                                HelperClass.toast(DoctorsActivity.this, "Oops Some error occurred \n Try Again. ");
                         }
                     });
                 }
@@ -186,8 +178,8 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
     }
 
     private void openAlertDialogue() {
-        AlertDialog.Builder builder = new AlertDialog.Builder( getContext() );
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialogue_register_doctor, null, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder( DoctorsActivity.this );
+        View view = LayoutInflater.from(DoctorsActivity.this).inflate(R.layout.dialogue_register_doctor, null, false);
         builder.setView(view);
 
         dialogueDoctorRegister = builder.create();
@@ -217,7 +209,7 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
         ArrayList<String> listForSpinner = new ArrayList<>();
         listForSpinner.add(getString(R.string.select_department));
         listForSpinner.addAll(listDepartments);
-         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, listForSpinner);
+         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(DoctorsActivity.this,android.R.layout.simple_spinner_item, listForSpinner);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
 
@@ -228,7 +220,7 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
                 int hour = mCurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mCurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(DoctorsActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         startTimeButton.setText(selectedHour + ":" + selectedMinute);
@@ -246,7 +238,7 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
                 int hour = mCurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mCurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(DoctorsActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         endTimeButton.setText(selectedHour + ":" + selectedMinute);
@@ -261,7 +253,7 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
             @Override
             public void onClick(View v) {
                 if (startTimeButton.getText().equals(getString(R.string.start_time)) || endTimeButton.getText().equals(getString(R.string.end_time))) {
-                    HelperClass.toast(getContext(), "Please Select Time");
+                    HelperClass.toast(DoctorsActivity.this, "Please Select Time");
                     return;
                 }
                 listTimes.add(startTimeButton.getText()+" - "+endTimeButton.getText());
@@ -285,7 +277,7 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
                 if (checkedId==R.id.choice_chip_weekly){
                     availabilityType[0] = getString(R.string.weekly);
                     spinnerToSelectWeekDays.setVisibility(View.VISIBLE);
-                    HelperClass.toast(getContext(),"Please Select Weekdays");
+                    HelperClass.toast(DoctorsActivity.this,"Please Select Weekdays");
                 }
                 if (checkedId==R.id.choice_chip_monthly){
                     availabilityType[0] = getString(R.string.monthly);
@@ -324,22 +316,22 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
                     doctorsViewModel.registerDoctor(doctorInfo);
                     checkForResponse();
                 }else
-                    HelperClass.toast(getContext(),msg);
+                    HelperClass.toast(DoctorsActivity.this,msg);
             }
         });
 
-        timeRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
+        timeRecyclerView.setLayoutManager(new GridLayoutManager(DoctorsActivity.this, 1));
         timeRecyclerView.hasFixedSize();
-        timeAdapter = new ArrayOfStringAdapter(listTimes, getContext());
+        timeAdapter = new ArrayOfStringAdapter(listTimes, DoctorsActivity.this);
         timeRecyclerView.setAdapter(timeAdapter);
     }
 
     private void checkForResponse() {
-        doctorsViewModel.getIsDoctorRegistered().observe(getViewLifecycleOwner(), new Observer<ModelRequestId>() {
+        doctorsViewModel.getIsDoctorRegistered().observe(DoctorsActivity.this, new Observer<ModelRequestId>() {
             @Override
             public void onChanged(ModelRequestId registeredDoctorId) {
 
-                HelperClass.toast(getContext(), "Doctor " + doctorInfo.getName() + " added Successfully.");
+                HelperClass.toast(DoctorsActivity.this, "Doctor " + doctorInfo.getName() + " added Successfully.");
                 HelperClass.hideProgressbar(progressBarDialogue);
                 HelperClass.showProgressbar(progressBar);
                 dialogueDoctorRegister.dismiss();
@@ -348,8 +340,8 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
     }
 
     private void openDateSelectorDialogue() {
-        AlertDialog.Builder builder = new AlertDialog.Builder( getContext() );
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_number_picker_dialogue, null, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder( DoctorsActivity.this );
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_number_picker_dialogue, null, false);
         builder.setView(view);
 
         alertDialogNumberPicker = builder.create();
@@ -388,9 +380,9 @@ public class DoctorsFragment extends Fragment implements DoctorAdapter.clickList
             }
         });
 
-        recyclerViewSelectedDates.setLayoutManager(new GridLayoutManager(getContext(), 1));
+        recyclerViewSelectedDates.setLayoutManager(new GridLayoutManager(DoctorsActivity.this, 1));
         recyclerViewSelectedDates.hasFixedSize();
-        datesAdapter = new ArrayOfStringAdapter(selectedDates, getContext());
+        datesAdapter = new ArrayOfStringAdapter(selectedDates, DoctorsActivity.this);
         recyclerViewSelectedDates.setAdapter(datesAdapter);
     }
 

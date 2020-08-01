@@ -24,11 +24,12 @@
             android:paddingBottom="20dp">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView2"
+                android:id="@+id/cardViewImage"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_margin="20dp"
                 app:cardCornerRadius="20dp"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -38,8 +39,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    android:src="@color/placeholder_bg" />
+                    android:src="@drawable/hospital_image"
+                    android:scaleType="fitXY" />
             </androidx.cardview.widget.CardView>
 
             <TextView
@@ -52,15 +53,24 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/editProfile"
-                app:layout_constraintStart_toStartOf="@+id/cardView2"
-                app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+                app:layout_constraintStart_toStartOf="@+id/cardViewImage"
+                app:layout_constraintTop_toBottomOf="@+id/cardViewImage" />
+
+            <ImageView
+                android:id="@+id/editProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/cardViewImage"
+                app:layout_constraintTop_toBottomOf="@+id/cardViewImage"
+                app:srcCompat="@drawable/ic_edit" />
 
             <TextView
                 android:id="@+id/year_establishment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:text="@string/established_in"
                 app:layout_constraintEnd_toEndOf="@+id/textViewHospitalName"
                 app:layout_constraintStart_toStartOf="@+id/textViewHospitalName"
                 app:layout_constraintTop_toBottomOf="@+id/textViewHospitalName" />
@@ -73,6 +83,7 @@
                 android:background="@drawable/background_account"
                 android:orientation="vertical"
                 android:padding="10dp"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@+id/year_establishment">
 
                 <TextView
@@ -136,15 +147,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/editProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/cardView2"
-                app:layout_constraintTop_toBottomOf="@+id/cardView2"
-                app:srcCompat="@drawable/ic_edit" />
-
             <Button
                 android:id="@+id/buttonDoctors"
                 android:layout_width="match_parent"
@@ -152,6 +154,7 @@
                 android:text="@string/your_doctors"
                 android:textSize="15sp"
                 android:layout_margin="30dp"
+                android:visibility="gone"
                 android:backgroundTint="#4CAF50"
                 android:gravity="start|center_vertical"
                 android:drawableEnd="@drawable/ic_arrow_forward"
@@ -169,6 +172,7 @@
                 android:gravity="start|center_vertical"
                 android:text="@string/your_departments"
                 android:textSize="15sp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@+id/buttonDoctors"
                 app:layout_constraintStart_toStartOf="@+id/buttonDoctors"
                 app:layout_constraintTop_toBottomOf="@+id/buttonDoctors" />

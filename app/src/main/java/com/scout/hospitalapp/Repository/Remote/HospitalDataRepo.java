@@ -78,22 +78,7 @@ public class HospitalDataRepo {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     if(mAuth.getCurrentUser().isEmailVerified()){
-                        networkApi.getHospitalInfo(email,null).enqueue(new Callback<HospitalInfoResponse>() {
-                            @Override
-                            public void onResponse(Call<HospitalInfoResponse> call, Response<HospitalInfoResponse> response) {
-                                if (response.isSuccessful() || response.code()==200){
-                                    // save User Data.
-                                    hospitalInfo.setValue(response.body());
-                                    mutableLiveData.setValue("Correct");
-                                }else
-                                    mutableLiveData.setValue(response.errorBody().toString());
-                            }
-
-                            @Override
-                            public void onFailure(Call<HospitalInfoResponse> call, Throwable t) {
-                                mutableLiveData.setValue(t.getMessage().toString());
-                            }
-                        });
+                        mutableLiveData.setValue("Correct");
                     }
                     else{
                         mutableLiveData.setValue("User not Verified\n  check Email");
@@ -107,7 +92,22 @@ public class HospitalDataRepo {
         return mutableLiveData;
     }
 
-    public LiveData<HospitalInfoResponse> getHospitalInfoResponse(){
+    public LiveData<HospitalInfoResponse> getHospitalInfoResponse(String email, String id){
+        networkApi.getHospitalInfo(email,id).enqueue(new Callback<HospitalInfoResponse>() {
+            @Override
+            public void onResponse(Call<HospitalInfoResponse> call, Response<HospitalInfoResponse> response) {
+                if (response.isSuccessful() || response.code()==200){
+                    // save User Data.
+                    hospitalInfo.setValue(response.body());
+                }else
+                    hospitalInfo.setValue(null);
+            }
+
+            @Override
+            public void onFailure(Call<HospitalInfoResponse> call, Throwable t) {
+                hospitalInfo.setValue(null);
+            }
+        });
         return hospitalInfo;
     }
 

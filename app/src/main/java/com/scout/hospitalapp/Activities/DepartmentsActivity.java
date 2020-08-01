@@ -1,18 +1,16 @@
-package com.scout.hospitalapp.Fragments;
+package com.scout.hospitalapp.Activities;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.clickListener , SwipeRefreshLayout.OnRefreshListener{
+public class DepartmentsActivity extends AppCompatActivity implements DepartmentsAdapter.clickListener , SwipeRefreshLayout.OnRefreshListener{
     @BindView(R.id.departmentRecyclerView) RecyclerView departmentRecyclerView;
     @BindView(R.id.progressBarDepartmentFrag) ProgressBar progressBar;
     @BindView(R.id.fab_add_department) FloatingActionButton addDepartmentFab;
@@ -49,22 +47,24 @@ public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.
     private Boolean isLoading = false;
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDestroy() {
+        super.onDestroy();
         unbinder.unbind();
     }
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         departmentsViewModel = ViewModelProviders.of(this).get(DepartmentsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_departments, container, false);
-        unbinder = ButterKnife.bind(this,root);
+        setContentView(R.layout.fragment_departments);
+        unbinder = ButterKnife.bind(this);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        hospitalId = departmentsViewModel.getHospitalId(getContext());
+        hospitalId = departmentsViewModel.getHospitalId(this);
         initRecyclerView();
 
         isLoading = true;
-        departmentsViewModel.getDepartmentsList(hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelDepartment>>() {
+        departmentsViewModel.getDepartmentsList(hospitalId.getId()).observe(this, new Observer<ArrayList<ModelDepartment>>() {
             @Override
             public void onChanged(ArrayList<ModelDepartment> data) {
                 isLoading= false;
@@ -83,12 +83,11 @@ public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.
                 openDepartmentDialogue(false,0);
             }
         });
-        return root;
     }
 
     private void openDepartmentDialogue(Boolean isEditDialogue,int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder( getContext() );
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_input_department_dialogue, null, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder( this );
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_input_department_dialogue, null, false);
         builder.setView(view);
 
         AlertDialog alertDialog = builder.create();
@@ -128,7 +127,7 @@ public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.
                 ModelDepartmentRequest request = new ModelDepartmentRequest(hospitalId.getId(),department);
 
                 if (isEditDialogue) {
-                    departmentsViewModel.updateDepartment(request).observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                    departmentsViewModel.updateDepartment(request).observe(DepartmentsActivity.this, new Observer<Boolean>() {
                         @Override
                         public void onChanged(Boolean aBoolean) {
                             HelperClass.hideProgressbar(progressBar);
@@ -136,23 +135,23 @@ public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.
                                 list.remove(position);
                                 list.add(department);
                                 departmentsAdapter.notifyDataSetChanged();
-                                HelperClass.toast(getContext(),"Update Successful");
+                                HelperClass.toast(DepartmentsActivity.this,"Update Successful");
                             } else
-                                HelperClass.toast(getContext(), "Oops Some Error Occurred\n Try Again");
+                                HelperClass.toast(DepartmentsActivity.this, "Oops Some Error Occurred\n Try Again");
                         }
                     });
                 }
                 else {
-                    departmentsViewModel.addDepartment(request).observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                    departmentsViewModel.addDepartment(request).observe(DepartmentsActivity.this, new Observer<Boolean>() {
                         @Override
                         public void onChanged(Boolean aBoolean) {
                             HelperClass.hideProgressbar(progressBar);
                             if (aBoolean) {
                                 list.add(department);
                                 departmentsAdapter.notifyDataSetChanged();
-                                HelperClass.toast(getContext(), "Department Added Successfully");
+                                HelperClass.toast(DepartmentsActivity.this, "Department Added Successfully");
                             } else
-                                HelperClass.toast(getContext(), "Oops Some Error Occurred\n Try Again");
+                                HelperClass.toast(DepartmentsActivity.this, "Oops Some Error Occurred\n Try Again");
                         }
                     });
                 }
@@ -162,11 +161,11 @@ public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.
     }
 
     private void initRecyclerView() {
-        departmentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        departmentRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         departmentRecyclerView.hasFixedSize();
-        departmentsAdapter = new DepartmentsAdapter(list, getContext());
+        departmentsAdapter = new DepartmentsAdapter(list, this);
         departmentRecyclerView.setAdapter(departmentsAdapter);
-        departmentsAdapter.setOnClickListener(DepartmentsFragment.this);
+        departmentsAdapter.setOnClickListener(DepartmentsActivity.this);
     }
 
     @Override
@@ -180,23 +179,23 @@ public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.
     }
 
     private void openDelConfirmationDialogue(int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder( getContext() );
+        AlertDialog.Builder builder = new AlertDialog.Builder( this );
         builder.setTitle(getString(R.string.title_delete_doctor));
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 HelperClass.showProgressbar(progressBar);
-                departmentsViewModel.removeDepartment(new ModelDepartmentRequest(hospitalId.getId(),list.get(position))).observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                departmentsViewModel.removeDepartment(new ModelDepartmentRequest(hospitalId.getId(),list.get(position))).observe(DepartmentsActivity.this, new Observer<Boolean>() {
                     @Override
                     public void onChanged(Boolean aBoolean) {
                         HelperClass.hideProgressbar(progressBar);
                         if (aBoolean) {
                             list.remove(position);
                             departmentsAdapter.notifyDataSetChanged();
-                            HelperClass.toast(getContext(), "Department Removed Successfully.");
+                            HelperClass.toast(DepartmentsActivity.this, "Department Removed Successfully.");
                         } else
-                            HelperClass.toast(getContext(), "Oops Some error occurred \n Try Again. ");
+                            HelperClass.toast(DepartmentsActivity.this, "Oops Some error occurred \n Try Again. ");
                     }
                 });
             }
@@ -218,7 +217,7 @@ public class DepartmentsFragment extends Fragment implements DepartmentsAdapter.
             list.clear();
             isLoading = true;
             HelperClass.showProgressbar(progressBar);
-            departmentsViewModel.getDepartmentsList(hospitalId.getId()).observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelDepartment>>() {
+            departmentsViewModel.getDepartmentsList(hospitalId.getId()).observe(this, new Observer<ArrayList<ModelDepartment>>() {
                 @Override
                 public void onChanged(ArrayList<ModelDepartment> data) {
                     isLoading= false;
