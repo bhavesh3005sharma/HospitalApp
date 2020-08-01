@@ -76,5 +76,11 @@
     <string name="not_attempted">Not Attempted</string>
     <string name="appointment_confirmed">Appointment has been Confirmed.</string>
     <string name="appointment_rejected">Appointment has been Rejected.</string>
+    <string name="established_in">Established in</string>
+    <string name="contact_information">Contact Information</string>
+    <string name="address">Address</string>
+    <string name="information">Information</string>
+    <string name="your_doctors">Your Doctors</string>
+    <string name="your_departments">Your Departments</string>
 
 </resources>

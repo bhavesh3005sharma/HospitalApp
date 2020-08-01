@@ -56,10 +56,8 @@ public class HomeActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_group);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_business);
-        tabLayout.getTabAt(3).setIcon(R.drawable.ic_menu_gallery);
-        tabLayout.getTabAt(4).setIcon(R.drawable.ic_notifications);
-        tabLayout.getTabAt(5).setIcon(R.drawable.ic_history);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_notifications);
+        tabLayout.getTabAt(3).setIcon(R.drawable.ic_history);
     }
 
     private void setUpToolbar() {
@@ -71,15 +69,11 @@ public class HomeActivity extends AppCompatActivity {
         PageViewAdapter pageViewAdapter = new PageViewAdapter(getSupportFragmentManager(),0);
         HomeFragment homeFragmentTab = new HomeFragment();
         AppointmentRequestsFragment appointmentRequestsFragmentTab = new AppointmentRequestsFragment();
-        DoctorsFragment doctorsFragmentTab = new DoctorsFragment();
-        DepartmentsFragment departmentsFragmentTab = new DepartmentsFragment();
         NotificationFragment notificationFragmentTab = new NotificationFragment();
         HistoryFragment historyFragment = new HistoryFragment();
 
         pageViewAdapter.addFragment(homeFragmentTab,"Home");
         pageViewAdapter.addFragment(appointmentRequestsFragmentTab,"Requests");
-        pageViewAdapter.addFragment(doctorsFragmentTab,"Doctors");
-        pageViewAdapter.addFragment(departmentsFragmentTab,"Departments");
         pageViewAdapter.addFragment(notificationFragmentTab,"Notifications");
         pageViewAdapter.addFragment(historyFragment,"Appointments History");
         viewPager.setAdapter(pageViewAdapter);
