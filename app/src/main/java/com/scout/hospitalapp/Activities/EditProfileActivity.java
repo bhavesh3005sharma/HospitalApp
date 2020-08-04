@@ -141,7 +141,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                     textViewAddress.setError(null);
 
                 HelperClass.showProgressbar(progressBar);
-                viewModel.updateProfile(new HospitalInfoResponse(name,hospitalInfoResponse.getEmail(),contactNo,address,year))
+                viewModel.updateProfile(new HospitalInfoResponse(name,hospitalInfoResponse.getHospitalId().getId(),hospitalInfoResponse.getEmail(),contactNo,address,year))
                         .observe(this, new Observer<String>() {
                             @Override
                             public void onChanged(String s) {

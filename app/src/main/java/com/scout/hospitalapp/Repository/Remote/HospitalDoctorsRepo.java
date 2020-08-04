@@ -3,6 +3,7 @@ package com.scout.hospitalapp.Repository.Remote;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.scout.hospitalapp.Models.ModelDateTime;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelRequestId;
 import com.scout.hospitalapp.response.HospitalInfoResponse;
@@ -128,6 +129,28 @@ public class HospitalDoctorsRepo {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 result.postValue(t.getMessage());
+            }
+        });
+        return result;
+    }
+
+    public LiveData<ArrayList<ModelDateTime>> getUnavailableDates(ModelDoctorInfo doctorProfileInfo) {
+        MutableLiveData<ArrayList<ModelDateTime>> result = new MutableLiveData<>();
+        networkApi = ApiService.getAPIService();
+        networkApi.getUnavailableDates(doctorProfileInfo.getDoctorId().getId()).enqueue(new Callback<ModelDoctorInfo>() {
+            @Override
+            public void onResponse(Call<ModelDoctorInfo> call, Response<ModelDoctorInfo> response) {
+                if(response.isSuccessful() && response.code()==200){
+                    result.setValue(response.body().getUnAvailableDates());
+                }
+                else {
+                    result.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ModelDoctorInfo> call, Throwable t) {
+                result.setValue(null);
             }
         });
         return result;

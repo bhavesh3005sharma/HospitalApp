@@ -1,5 +1,6 @@
 package com.scout.hospitalapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.scout.hospitalapp.Activities.BookAppointmentActivity;
 import com.scout.hospitalapp.Adapter.AppointmentsAdapter;
 import com.scout.hospitalapp.Models.ModelAppointment;
 import com.scout.hospitalapp.R;
@@ -33,6 +37,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @BindView(R.id.shimmerLayout) ShimmerFrameLayout shimmerLayout;
     @BindView(R.id.progressBar) ProgressBar progressBar;
     @BindView(R.id.swipe_container) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.fab_book_appointment) ExtendedFloatingActionButton fabBookAppointment;
 
     private ArrayList<ModelAppointment> list = new ArrayList<ModelAppointment>();
     private Unbinder unbinder;
@@ -57,6 +62,13 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         isLoading = true;
         hospitalId = homeViewModel.getHospitalId(getContext());
         homeViewModel.loadAppointmentIdsList(hospitalId);
+
+        fabBookAppointment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), BookAppointmentActivity.class));
+            }
+        });
 
         homeViewModel.getAppointmentsList().observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelAppointment>>() {
             @Override

@@ -1,11 +1,13 @@
 package com.scout.hospitalapp.retrofit;
 
 import com.scout.hospitalapp.Models.ModelAppointment;
+import com.scout.hospitalapp.Models.ModelBookAppointment;
 import com.scout.hospitalapp.Models.ModelDepartmentRequest;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelHospitalRegisterRequest;
 import com.scout.hospitalapp.Models.ModelRequestId;
 import com.scout.hospitalapp.response.HospitalInfoResponse;
+import com.scout.hospitalapp.response.ResponseMessage;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -49,11 +51,17 @@ public interface RetrofitNetworkApi {
     @POST("Hospital/incoming_webhook/updateDoctor")
     Call<ResponseBody> updateDoctor(@Body ModelDoctorInfo doctorInfo);
 
+    @GET("Doctor/incoming_webhook/unavailableDates")
+    Call<ModelDoctorInfo> getUnavailableDates(@Query("doctor_id") String id);
+
     @POST("Hospital/incoming_webhook/updateDepartment")
     Call<ResponseBody> updateDepartment(@Body ModelDepartmentRequest request);
 
     @GET("Hospital/incoming_webhook/AppointmentDetails")
     Call<ModelAppointment> getAppointmentsDetails(@Query("appointment_id") String appointmentId);
+
+    @POST("Hospital/incoming_webhook/bookAppointment")
+    Call<ResponseMessage> bookAppointment(@Body ModelBookAppointment appointment);
 
     @GET("Hospital/incoming_webhook/SetAppointmentStatus")
     Call<ResponseBody> SetAppointmentStatus(@Query("hospital_id")String hospitalId,@Query("appointment_id") String appointmentId,@Query("status")String status);

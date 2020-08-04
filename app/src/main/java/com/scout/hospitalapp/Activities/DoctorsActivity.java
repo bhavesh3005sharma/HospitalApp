@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -16,11 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -35,6 +32,7 @@ import com.scout.hospitalapp.Adapter.ArrayOfStringAdapter;
 import com.scout.hospitalapp.Adapter.DoctorAdapter;
 import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
+import com.scout.hospitalapp.Models.ModelIntent;
 import com.scout.hospitalapp.Models.ModelRequestId;
 import com.scout.hospitalapp.Utils.MultiSelectionSpinner;
 import com.scout.hospitalapp.Utils.HelperClass;
@@ -68,14 +66,24 @@ public class DoctorsActivity extends AppCompatActivity implements DoctorAdapter.
     private ModelDoctorInfo doctorInfo;
     private String hospitalName;
     private Boolean isLoading = false;
+    private ModelIntent modelIntent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         doctorsViewModel = ViewModelProviders.of(this).get(DoctorsViewModel.class);
-        setContentView(R.layout.fragment_doctors);
+        setContentView(R.layout.activity_doctors);
         unbinder = ButterKnife.bind(this);
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        getSupportActionBar().setTitle("Doctors");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        if (getIntent().hasExtra("modelIntent"))
+            modelIntent = (ModelIntent) getIntent().getSerializableExtra("modelIntent");
+        else
+            modelIntent = new ModelIntent();
 
         initRecyclerView();
         hospitalId = doctorsViewModel.getHospitalId(DoctorsActivity.this);
@@ -125,6 +133,12 @@ public class DoctorsActivity extends AppCompatActivity implements DoctorAdapter.
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
@@ -137,9 +151,16 @@ public class DoctorsActivity extends AppCompatActivity implements DoctorAdapter.
 
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(DoctorsActivity.this, DoctorProfileActivity.class);
-        intent.putExtra("ProfileModel",list.get(position));
-        startActivity(intent);
+        if (modelIntent.getBookAppointmentData()!=null){
+            Intent intent = new Intent(DoctorsActivity.this, BookAppointmentActivity.class);
+            modelIntent.setDoctorProfileInfo(list.get(position));
+            intent.putExtra("modelIntent",modelIntent);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(DoctorsActivity.this, DoctorProfileActivity.class);
+            intent.putExtra("ProfileModel",list.get(position));
+            startActivity(intent);
+        }
     }
 
     private void openDelConfirmationDialogue(int position) {

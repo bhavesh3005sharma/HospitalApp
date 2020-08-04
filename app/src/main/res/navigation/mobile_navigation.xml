@@ -15,13 +15,13 @@
         android:id="@+id/nav_doctors"
         android:name="com.scout.hospitalapp.Activities.DoctorsActivity"
         android:label="@string/doctors"
-        tools:layout="@layout/fragment_doctors" />
+        tools:layout="@layout/activity_doctors" />
 
     <fragment
         android:id="@+id/nav_departments"
         android:name="com.scout.hospitalapp.Activities.DepartmentsActivity"
         android:label="@string/department"
-        tools:layout="@layout/fragment_departments" />
+        tools:layout="@layout/activity_departments" />
 
     <fragment
         android:id="@+id/nav_profile"

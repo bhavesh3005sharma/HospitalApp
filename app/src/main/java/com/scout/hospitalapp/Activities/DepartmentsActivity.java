@@ -56,9 +56,13 @@ public class DepartmentsActivity extends AppCompatActivity implements Department
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         departmentsViewModel = ViewModelProviders.of(this).get(DepartmentsViewModel.class);
-        setContentView(R.layout.fragment_departments);
+        setContentView(R.layout.activity_departments);
         unbinder = ButterKnife.bind(this);
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        getSupportActionBar().setTitle("Departments");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         hospitalId = departmentsViewModel.getHospitalId(this);
         initRecyclerView();
@@ -83,6 +87,12 @@ public class DepartmentsActivity extends AppCompatActivity implements Department
                 openDepartmentDialogue(false,0);
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private void openDepartmentDialogue(Boolean isEditDialogue,int position) {

@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.DepartmentsActivity" >
-
+    tools:context=".Activities.DoctorsActivity" >
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
@@ -17,13 +16,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/departmentRecyclerView"
+        android:id="@+id/doctorRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ProgressBar
-        android:id="@+id/progressBarDepartmentFrag"
+        android:id="@+id/progressBarDoctorsFrag"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,11 +32,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_department"
+        android:id="@+id/fab_add_doctor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_margin="@dimen/fab_margin"
         android:layout_marginBottom="50dp"
         style="@style/Widget.MaterialComponents.FloatingActionButton"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -32,9 +32,20 @@ public class HospitalInfoResponse implements Serializable {
     ArrayList<ModelRequestId> confirmedAppointmentsList;
     @SerializedName("past_appointment_list")
     ArrayList<ModelRequestId> pastAppointmentsList;
+    @SerializedName("hospital_id")
+    String hospitalStrId;
 
     public HospitalInfoResponse( String name,String email, String phone_no, String address, String year_of_establishment) {
         this.name = name;
+        this.email = email;
+        this.phone_no = phone_no;
+        this.address = address;
+        this.year_of_establishment = year_of_establishment;
+    }
+
+    public HospitalInfoResponse( String name,String id ,String email, String phone_no, String address, String year_of_establishment) {
+        this.name = name;
+        this.hospitalStrId = id;
         this.email = email;
         this.phone_no = phone_no;
         this.address = address;

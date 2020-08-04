@@ -6,8 +6,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.scout.hospitalapp.Models.ModelAppointment;
+import com.scout.hospitalapp.Models.ModelBookAppointment;
 import com.scout.hospitalapp.Models.ModelRequestId;
 import com.scout.hospitalapp.response.HospitalInfoResponse;
+import com.scout.hospitalapp.response.ResponseMessage;
 import com.scout.hospitalapp.retrofit.ApiService;
 import com.scout.hospitalapp.retrofit.RetrofitNetworkApi;
 
@@ -102,5 +104,30 @@ public class AppointmentsRepo {
 
     public LiveData<Integer> getStartingIndexOfList() {
         return startingIndexForList;
+    }
+
+    public LiveData<String> bookAppointment(ModelBookAppointment appointment) {
+        MutableLiveData<String> message = new MutableLiveData<>();
+        networkApi = ApiService.getAPIService();
+        networkApi.bookAppointment(appointment).enqueue(new Callback<ResponseMessage>() {
+            @Override
+            public void onResponse(Call<ResponseMessage> call, Response<ResponseMessage> response) {
+                if (response.isSuccessful() && response.code()==200) {
+                    if (response.body()!=null)
+                        message.setValue(response.body().getMessage());
+                    else
+                        message.setValue("Appointment Booked");
+                }
+                else {
+                    message.setValue(response.errorBody().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseMessage> call, Throwable t) {
+                message.setValue(t.getMessage());
+            }
+        });
+        return message;
     }
 }

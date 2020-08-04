@@ -83,5 +83,16 @@
     <string name="authenticate">Authenticate</string>
     <string name="cancel">Cancel</string>
     <string name="save_for_profile_pic">Save For Profile Pic</string>
+    <string name="appointment_for">Appointment For</string>
+    <string name="patient_name">Patient Name</string>
+    <string name="symptoms">Symptoms</string>
+    <string name="age">Age</string>
+    <string name="select_doctor">Select Doctor</string>
+    <string name="book_appointment">Book Appointment</string>
+    <string name="select_date">Select Date</string>
+    <string name="appointment_date_time">Select Date/Time</string>
+    <string name="doctor_info">Doctor Info</string>
+    <string name="specialists">Specialist</string>
+    <string name="change_doctor">Change Doctor</string>
 
 </resources>
