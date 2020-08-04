@@ -70,7 +70,7 @@ public class HospitalDataRepo {
         return mutableLiveData;
     }
 
-    public LiveData<String> loginUser(final String email, String password) {
+    public LiveData<String> isCorrectUser(final String email, String password) {
         final MutableLiveData<String> mutableLiveData = new MutableLiveData<>();
 
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -118,5 +118,45 @@ public class HospitalDataRepo {
         if (mAuth.getCurrentUser()!=null)
             isUserLoggedIn.setValue(true);
         return isUserLoggedIn;
+    }
+
+    public LiveData<String> updateHospitalProfile(HospitalInfoResponse requestData) {
+        MutableLiveData<String> message = new MutableLiveData<>();
+        networkApi = ApiService.getAPIService();
+        networkApi.updateHospitalProfile(requestData).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.code()==200)
+                    message.setValue("Profile Updated Successfully");
+                else
+                    message.setValue(response.errorBody().toString());
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                message.setValue(t.getMessage());
+            }
+        });
+        return message;
+    }
+
+    public LiveData<String> updateHospitalProfilePic(String id, String url) {
+        MutableLiveData<String> message = new MutableLiveData<>();
+        networkApi = ApiService.getAPIService();
+        networkApi.updateHospitalProfilePic(id,url).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.code()==200)
+                    message.setValue("Profile Pic Updated Successfully");
+                else
+                    message.setValue(response.errorBody().toString());
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                message.setValue(t.getMessage());
+            }
+        });
+        return message;
     }
 }

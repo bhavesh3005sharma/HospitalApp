@@ -77,23 +77,6 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
-
-        MenuItem item = menu.findItem(R.id.search_bar);
-        SearchView searchView = (SearchView) item.getActionView();
-        searchView.setQueryHint("Search Here!");
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-               // doctorAdapter.getFilter().filter(newText);
-                return true;
-            }
-        });
         return true;
     }
 

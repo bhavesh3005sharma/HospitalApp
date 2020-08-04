@@ -57,4 +57,10 @@ public interface RetrofitNetworkApi {
 
     @GET("Hospital/incoming_webhook/SetAppointmentStatus")
     Call<ResponseBody> SetAppointmentStatus(@Query("hospital_id")String hospitalId,@Query("appointment_id") String appointmentId,@Query("status")String status);
+
+    @POST("Hospital/incoming_webhook/profileUpdate")
+    Call<ResponseBody> updateHospitalProfile(@Body HospitalInfoResponse requestData);
+
+    @GET("Hospital/incoming_webhook/profilePicUpdate")
+    Call<ResponseBody> updateHospitalProfilePic(@Query("hospital_id") String id, @Query("url") String url);
 }

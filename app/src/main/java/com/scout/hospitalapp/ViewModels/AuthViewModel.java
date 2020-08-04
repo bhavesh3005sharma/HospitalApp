@@ -77,7 +77,7 @@ public class AuthViewModel extends ViewModel {
 
     public void loginUser(String email, String password) {
         hospitalRegisterRepo = HospitalDataRepo.getInstance();
-        message = hospitalRegisterRepo.loginUser(email,password);
+        message = hospitalRegisterRepo.isCorrectUser(email,password);
     }
 
     public LiveData<HospitalInfoResponse> getHospitalInfoResponse(String email, String id){

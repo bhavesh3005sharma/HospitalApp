@@ -61,14 +61,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:layout_toLeftOf="@+id/saveChenges"
+                        android:layout_toLeftOf="@+id/saveChanges"
                         android:gravity="center"
                         android:text="@string/information"
                         android:textColor="@android:color/black"
                         android:textSize="20sp" />
 
                     <Button
-                        android:id="@+id/saveChenges"
+                        android:id="@+id/saveChanges"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
@@ -102,8 +102,8 @@
                     android:id="@+id/year_establishment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
                     android:layout_marginTop="10dp"
+                    android:inputType="number"
                     android:padding="5dp" />
 
                 <TextView
@@ -121,38 +121,38 @@
                     android:layout_marginTop="10dp"
                     android:padding="5dp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:text="@string/email"
-                    android:textSize="16sp" />
+<!--                <TextView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="30dp"-->
+<!--                    android:text="@string/email"-->
+<!--                    android:textSize="16sp" />-->
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingTop="10dp">
+<!--                <RelativeLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center_vertical"-->
+<!--                    android:paddingTop="10dp">-->
 
-                    <EditText
-                        android:id="@+id/email"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:layout_alignParentStart="true"
-                        android:inputType="textEmailAddress"
-                        android:layout_toStartOf="@+id/emailedit"
-                        android:gravity="center_vertical"
-                        android:padding="5dp" />
+<!--                    <EditText-->
+<!--                        android:id="@+id/email"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:layout_alignParentStart="true"-->
+<!--                        android:inputType="textEmailAddress"-->
+<!--                        android:layout_toStartOf="@+id/updateEmail"-->
+<!--                        android:gravity="center_vertical"-->
+<!--                        android:padding="5dp" />-->
 
-                    <TextView
-                        android:id="@+id/emailedit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:layout_alignParentEnd="true"
-                        android:gravity="center"
-                        android:text="@string/update"
-                        android:textColor="@android:color/holo_green_light" />
-                </RelativeLayout>
+<!--                    <TextView-->
+<!--                        android:id="@+id/updateEmail"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:layout_alignParentEnd="true"-->
+<!--                        android:gravity="center"-->
+<!--                        android:text="@string/update"-->
+<!--                        android:textColor="@android:color/holo_green_light" />-->
+<!--                </RelativeLayout>-->
 
                 <TextView
                     android:layout_width="match_parent"
@@ -161,31 +161,40 @@
                     android:text="@string/phoneNo"
                     android:textSize="16sp" />
 
-                <RelativeLayout
+                <EditText
+                    android:id="@+id/contactNo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingTop="10dp">
+                    android:inputType="textMultiLine"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp" />
 
-                    <EditText
-                        android:id="@+id/contactNo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:layout_alignParentStart="true"
-                        android:inputType="phone"
-                        android:layout_toLeftOf="@+id/phoneNoEdit"
-                        android:gravity="center_vertical"
-                        android:padding="5dp" />
+<!--                <RelativeLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center_vertical"-->
+<!--                    android:paddingTop="10dp">-->
 
-                    <TextView
-                        android:id="@+id/phoneNoEdit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:layout_alignParentEnd="true"
-                        android:gravity="center"
-                        android:text="@string/update"
-                        android:textColor="@android:color/holo_green_light" />
-                </RelativeLayout>
+<!--                    <EditText-->
+<!--                        android:id="@+id/contactNo"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:layout_alignParentStart="true"-->
+<!--                        android:inputType="phone"-->
+<!--                        android:layout_toLeftOf="@+id/updatePhoneNo"-->
+<!--                        android:gravity="center_vertical"-->
+<!--                        android:padding="5dp" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/updatePhoneNo"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:layout_alignParentEnd="true"-->
+<!--                        android:gravity="center"-->
+<!--                        android:text="@string/update"-->
+<!--                        android:visibility="gone"-->
+<!--                        android:textColor="@android:color/holo_green_light" />-->
+<!--                </RelativeLayout>-->
 
             </LinearLayout>
 

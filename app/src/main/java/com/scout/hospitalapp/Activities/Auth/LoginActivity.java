@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -103,7 +104,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (s!=null){
                     if (s.equals(getString(R.string.correct))) {
                         saveHospitalInfo();
-                        openHomeActivity();
                     }
                 }
             }
@@ -114,7 +114,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         authViewModel.getHospitalInfoResponse(loggedInEmail,null).observe(this, new Observer<HospitalInfoResponse>() {
             @Override
             public void onChanged(HospitalInfoResponse hospitalInfoResponse) {
+                Log.d("Saved",hospitalInfoResponse.getEmail()+"\n"+hospitalInfoResponse.getName());
                 SharedPref.saveLoginUserData(LoginActivity.this,hospitalInfoResponse);
+                openHomeActivity();
             }
         });
     }

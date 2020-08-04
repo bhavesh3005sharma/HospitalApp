@@ -2,9 +2,10 @@ package com.scout.hospitalapp.Models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ModelDepartment {
+public class ModelDepartment implements Serializable {
     @SerializedName("department_Name")
     String departmentName;
     @SerializedName("description")

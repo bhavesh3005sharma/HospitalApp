@@ -4,9 +4,10 @@ import com.google.gson.annotations.SerializedName;
 import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.Models.ModelRequestId;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class HospitalInfoResponse {
+public class HospitalInfoResponse implements Serializable {
     @SerializedName("_id")
     ModelRequestId hospitalId;
     @SerializedName("name")
@@ -17,6 +18,8 @@ public class HospitalInfoResponse {
     String phone_no;
     @SerializedName("address")
     String address;
+    @SerializedName("url")
+    String url;
     @SerializedName("year_of_establishment")
     String year_of_establishment;
     @SerializedName("departments")
@@ -29,6 +32,22 @@ public class HospitalInfoResponse {
     ArrayList<ModelRequestId> confirmedAppointmentsList;
     @SerializedName("past_appointment_list")
     ArrayList<ModelRequestId> pastAppointmentsList;
+
+    public HospitalInfoResponse( String name,String email, String phone_no, String address, String year_of_establishment) {
+        this.name = name;
+        this.email = email;
+        this.phone_no = phone_no;
+        this.address = address;
+        this.year_of_establishment = year_of_establishment;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 
     public ArrayList<ModelRequestId> getPendingAppointmentsList() {
         return pendingAppointmentsList;

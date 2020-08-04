@@ -20,7 +20,6 @@
     <string name="doctor_name">Doctor\'s Name</string>
     <string name="career_history">Career History</string>
     <string name="learning_history">Learning History</string>
-    <string name="cancel">Cancel</string>
     <string name="add">Add</string>
     <string name="select_department">Please Select Department</string>
     <string name="correct">Correct</string>
@@ -81,5 +80,8 @@
     <string name="information">Information</string>
     <string name="your_doctors">Your Doctors</string>
     <string name="your_departments">Your Departments</string>
+    <string name="authenticate">Authenticate</string>
+    <string name="cancel">Cancel</string>
+    <string name="save_for_profile_pic">Save For Profile Pic</string>
 
 </resources>
