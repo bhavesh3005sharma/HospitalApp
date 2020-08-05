@@ -1,18 +1,29 @@
 package com.scout.hospitalapp.Activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.TimePickerDialog;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -22,6 +33,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputLayout;
@@ -29,13 +41,13 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.scout.hospitalapp.Adapter.ArrayOfStringAdapter;
 import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
-import com.scout.hospitalapp.Models.ModelRequestId;
 import com.scout.hospitalapp.R;
-import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
 import com.scout.hospitalapp.Utils.HelperClass;
 import com.scout.hospitalapp.Utils.MultiSelectionSpinner;
 import com.scout.hospitalapp.ViewModels.DoctorProfileViewModel;
+import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
@@ -44,7 +56,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class DoctorProfileActivity extends AppCompatActivity {
+public class DoctorProfileActivity extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.profileImage) ImageView profileImg;
     @BindView(R.id.textName) TextView textName;
     @BindView(R.id.textSpecialisation) TextView textSpecialisation;
@@ -71,17 +83,15 @@ public class DoctorProfileActivity extends AppCompatActivity {
     private ArrayList<String> listDepartments = new ArrayList<>();
     private ArrayList<String> listTimes = new ArrayList<>();
     private AlertDialog dialogueDoctorEdit;
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
-    }
+    private CircularImageView profileImage;
+    TextView gallery,camera,cancel;
+    AlertDialog alertDialogChoose;
+    Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dcotor_profile);
+        setContentView(R.layout.activity_doctor_profile);
         unbinder = ButterKnife.bind(this);
         doctorProfileViewModel = ViewModelProviders.of(this).get(DoctorProfileViewModel.class);
 
@@ -117,6 +127,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
         dialogueDoctorEdit.setCancelable(false);
 
         final TextView title = view.findViewById(R.id.textViewTitle);
+        profileImage = view.findViewById(R.id.profileImage);
         final TextInputLayout name = view.findViewById(R.id.textInputName);
         final TextInputLayout email = view.findViewById(R.id.textInputEmailRegister);
         final TextInputLayout phoneNo = view.findViewById(R.id.textInputPhoneNo);
@@ -141,6 +152,8 @@ public class DoctorProfileActivity extends AppCompatActivity {
         listForSpinner.addAll(listDepartments);
 
         title.setText(getString(R.string.title_update_doctor));
+        if (profileImage!=null && doctorInfo.getUrl()!=null)
+            Picasso.get().load(Uri.parse(doctorInfo.getUrl())).placeholder(R.drawable.ic_profile).into(profileImage);
         Objects.requireNonNull(name.getEditText()).setText(doctorInfo.getName());
         Objects.requireNonNull(email.getEditText()).setText(doctorInfo.getEmail());
         Objects.requireNonNull(phoneNo.getEditText()).setText(doctorInfo.getPhone_no());
@@ -172,7 +185,12 @@ public class DoctorProfileActivity extends AppCompatActivity {
                 mTimePicker = new TimePickerDialog(DoctorProfileActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        startTimeButton.setText(selectedHour + ":" + selectedMinute);
+                        String hr = ""+selectedHour,min = ""+selectedMinute;
+                        if (selectedHour<10)
+                            hr = "0"+selectedHour;
+                        if (selectedMinute<10)
+                            min = "0"+selectedMinute;
+                        startTimeButton.setText(hr + ":" + min);
                     }
                 }, hour, minute, false);//Yes 24 hour time
                 mTimePicker.setTitle("Select Start Time");
@@ -190,7 +208,12 @@ public class DoctorProfileActivity extends AppCompatActivity {
                 mTimePicker = new TimePickerDialog(DoctorProfileActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        endTimeButton.setText(selectedHour + ":" + selectedMinute);
+                        String hr = ""+selectedHour,min = ""+selectedMinute;
+                        if (selectedHour<10)
+                            hr = "0"+selectedHour;
+                        if (selectedMinute<10)
+                            min = "0"+selectedMinute;
+                        endTimeButton.setText(hr + ":" + min);
                     }
                 }, hour, minute, false);//Yes 24 hour time
                 mTimePicker.setTitle("Select End Time");
@@ -205,10 +228,14 @@ public class DoctorProfileActivity extends AppCompatActivity {
                     HelperClass.toast(DoctorProfileActivity.this, "Please Select Time");
                     return;
                 }
-                listTimes.add(startTimeButton.getText()+" - "+endTimeButton.getText());
-                timeAdapter.notifyDataSetChanged();
-                startTimeButton.setText(getString(R.string.start_time));
-                endTimeButton.setText(getString(R.string.end_time));
+                String time = startTimeButton.getText()+" - "+endTimeButton.getText();
+                if ((doctorProfileViewModel.getTimeDifference(time))>0) {
+                    listTimes.add(time);
+                    timeAdapter.notifyDataSetChanged();
+                    startTimeButton.setText(getString(R.string.start_time));
+                    endTimeButton.setText(getString(R.string.end_time));
+                }else
+                    HelperClass.toast(DoctorProfileActivity.this,"Please Provide Valid Time");
             }
         });
 
@@ -242,6 +269,8 @@ public class DoctorProfileActivity extends AppCompatActivity {
                 dialogueDoctorEdit.dismiss();
             }
         });
+
+        profileImage.setOnClickListener(this);
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -285,6 +314,137 @@ public class DoctorProfileActivity extends AppCompatActivity {
         timeRecyclerView.setAdapter(timeAdapter);
     }
 
+    private boolean checkForWritePermission() {
+        if (ActivityCompat.checkSelfPermission(DoctorProfileActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {   requestPermissions(
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                2000);
+            //Permission automatically granted for Api<23 on installation
+        }
+        else
+            return true;
+
+        return false;
+    }
+
+    private boolean checkForReadPermission() {
+        if(ActivityCompat.checkSelfPermission(DoctorProfileActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        { requestPermissions(
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                2000);
+            //Permission automatically granted for Api<23 on installation
+        }
+        else
+            return true;
+
+        return false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        alertDialogChoose.dismiss();
+        if (resultCode == RESULT_OK && data != null) {
+            if (requestCode == 1 && data.getData() != null) {
+                imageUri = data.getData();
+                if (imageUri!=null && profileImage!=null) {
+                    Picasso.get().load(imageUri).placeholder(R.drawable.ic_profile).into(profileImage);
+                    openAlertDialogueToShowPic();
+                }
+            } else if (requestCode == 2 && data.getExtras() != null) {
+                Bundle extras = data.getExtras();
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                if (profileImage!=null) {
+                    imageUri = getImageUri(DoctorProfileActivity.this, imageBitmap);
+                    openAlertDialogueToShowPic();
+                    profileImage.setImageBitmap(imageBitmap);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (alertDialogChoose!=null)
+            alertDialogChoose.dismiss();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (alertDialogChoose!=null)
+            alertDialogChoose.dismiss();
+        unbinder.unbind();
+    }
+
+    private void openAlertDialogueToShowPic() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(DoctorProfileActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        builder.setView(inflater.inflate(R.layout.layout_show_profile_image,null));
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        ImageView imageView = alertDialog.findViewById(R.id.profile_imageToShow);
+        TextView confirm = alertDialog.findViewById(R.id.confirm);
+        TextView cancel = alertDialog.findViewById(R.id.cancel);
+
+        Picasso.get().load(imageUri).placeholder(R.drawable.ic_profile).into(imageView);
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelperClass.showProgressbar(progressBarDialogue);
+                doctorProfileViewModel.saveProfilePic(DoctorProfileActivity.this,imageUri,"ProfilePic." + getFileExtension(imageUri),doctorInfo.getDoctorId().getId())
+                        .observe(DoctorProfileActivity.this, new Observer<String>() {
+                            @Override
+                            public void onChanged(String s) {
+                                HelperClass.toast(DoctorProfileActivity.this,s);
+                                HelperClass.hideProgressbar(progressBarDialogue);
+                            }
+                        });
+                alertDialog.dismiss();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+    }
+
+    private void openAlertDialogueChoose() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(DoctorProfileActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        builder.setView(inflater.inflate(R.layout.dialogue_choose,null));
+        alertDialogChoose = builder.create();
+        alertDialogChoose.show();
+
+        gallery = alertDialogChoose.findViewById(R.id.gallery);
+        camera =  alertDialogChoose.findViewById(R.id.camera);
+        cancel = alertDialogChoose.findViewById(R.id.cancel);
+
+        gallery.setOnClickListener(this);
+        camera.setOnClickListener(this);
+        cancel.setOnClickListener(this);
+    }
+
+    public String getFileExtension(Uri uri) {
+        ContentResolver cR = DoctorProfileActivity.this.getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
+
+    private Uri getImageUri(Context context, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
     private void setToolbar(String title) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -305,6 +465,8 @@ public class DoctorProfileActivity extends AppCompatActivity {
         textEmail.setText(doctorInfo.getEmail());
         textPhoneNo.setText(doctorInfo.getPhone_no());
         textAddress.setText(doctorInfo.getAddress());
+        if (profileImage!=null && doctorInfo.getUrl()!=null)
+            Picasso.get().load(Uri.parse(doctorInfo.getUrl())).placeholder(R.drawable.ic_profile).into(profileImage);
 
         textDoctorAvailability.setText(doctorProfileViewModel.getAvailabilityType(doctorInfo.getAvailabilityType(),doctorInfo.getDoctorAvailability(),this));
         textDoctorAvailabilityTime.setText(doctorProfileViewModel.getAvailabilityTime(doctorInfo.getAvgCheckupTime(),doctorInfo.getDoctorAvailabilityTime(),this));
@@ -357,5 +519,30 @@ public class DoctorProfileActivity extends AppCompatActivity {
         recyclerViewSelectedDates.hasFixedSize();
         datesAdapter = new ArrayOfStringAdapter(selectedDates, DoctorProfileActivity.this);
         recyclerViewSelectedDates.setAdapter(datesAdapter);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.profileImage :
+                if(checkForReadPermission() && checkForWritePermission())
+                    openAlertDialogueChoose();
+                break;
+            case R.id.gallery:
+                alertDialogChoose.dismiss();
+                Intent cameraIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                cameraIntent.setType("image/*");
+                startActivityForResult(cameraIntent,1);
+                break;
+            case R.id.camera:
+                alertDialogChoose.dismiss();
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(DoctorProfileActivity.this.getPackageManager()) != null)
+                    startActivityForResult(takePictureIntent, 2);
+                break;
+            case R.id.cancel:
+                alertDialogChoose.dismiss();
+                break;
+        }
     }
 }

@@ -46,7 +46,7 @@ public class ProfileActivityViewModel extends ViewModel {
         if (mUploadTask != null && mUploadTask.isInProgress())
             message.setValue("Profile Update is in Progress");
         else {
-            mStorageRef = FirebaseStorage.getInstance().getReference("ProfilePics"+ FirebaseAuth.getInstance().getUid());
+            mStorageRef = FirebaseStorage.getInstance().getReference(FirebaseAuth.getInstance().getUid()+"/Hospital ProfilePic");
             StorageReference fileReference = mStorageRef.child(fileName);
 
             mUploadTask = fileReference.putFile(mImageUri)

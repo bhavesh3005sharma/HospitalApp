@@ -1,17 +1,33 @@
 package com.scout.hospitalapp.ViewModels;
 
 import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
 import android.util.Patterns;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+import com.scout.hospitalapp.Activities.DoctorProfileActivity;
+import com.scout.hospitalapp.Activities.EditProfileActivity;
 import com.scout.hospitalapp.Models.ModelDepartment;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.R;
+import com.scout.hospitalapp.Repository.Remote.HospitalDataRepo;
 import com.scout.hospitalapp.Repository.Remote.HospitalDepartmentRepo;
 import com.scout.hospitalapp.Repository.Remote.HospitalDoctorsRepo;
+import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
+import com.scout.hospitalapp.response.HospitalInfoResponse;
 
 import java.util.ArrayList;
 
@@ -19,6 +35,8 @@ public class DoctorProfileViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
     HospitalDoctorsRepo hospitalDoctorsRepo;
+    private StorageTask mUploadTask;
+    StorageReference mStorageRef;
 
     public DoctorProfileViewModel() {
         mText = new MutableLiveData<>();
@@ -95,5 +113,66 @@ public class DoctorProfileViewModel extends ViewModel {
     public LiveData<ArrayList<ModelDepartment>> getDepartmentsList(String hospitalId) {
         HospitalDepartmentRepo departmentRepo = HospitalDepartmentRepo.getInstance();
         return departmentRepo.getDepartmentsList(hospitalId);
+    }
+
+    public int getTimeDifference(String s) {
+        String[] result,time1,time2;
+        result = s.split("-");
+        time1 = result[0].split(":");
+        time2 = result[1].split(":");
+        time1[0] = time1[0].replaceAll("\\s+", "");
+        time2[0] = time2[0].replaceAll("\\s+", "");
+        time1[1] = time1[1].replaceAll("\\s+", "");
+        time2[1] = time2[1].replaceAll("\\s+", "");
+        int h1,h2,m1,m2;
+        h1 = Integer.valueOf(time1[0]);
+        h2 = Integer.valueOf(time2[0]);
+        m1 = Integer.valueOf(time1[1]);
+        m2 = Integer.valueOf(time2[1]);
+
+        if(h2>h1 && m2<m1){
+            h2--;
+            m2+=60;
+        }
+        return ((h2-h1)*60)+(m2-m1);
+    }
+
+    public LiveData<String> saveProfilePic(DoctorProfileActivity doctorProfileActivity, Uri mImageUri, String fileName, String id) {
+        MutableLiveData<String> message = new MutableLiveData<>();
+        if (mUploadTask != null && mUploadTask.isInProgress())
+            message.setValue("Profile Update is in Progress");
+        else {
+            mStorageRef = FirebaseStorage.getInstance().getReference(FirebaseAuth.getInstance().getUid()+"/Doctor's ProfilePic/"+id);
+            StorageReference fileReference = mStorageRef.child(fileName);
+
+            mUploadTask = fileReference.putFile(mImageUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                            fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Log.d("uploadProfilePic", "success");
+                                    String url = uri.toString();
+                                    hospitalDoctorsRepo = HospitalDoctorsRepo.getInstance();
+                                    hospitalDoctorsRepo.updateDoctorProfilePic(id,url).observe(doctorProfileActivity, new Observer<String>() {
+                                        @Override
+                                        public void onChanged(String s) {
+                                            message.setValue(s);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            message.setValue(e.getMessage());
+                        }
+                    });
+        }
+        return message;
     }
 }

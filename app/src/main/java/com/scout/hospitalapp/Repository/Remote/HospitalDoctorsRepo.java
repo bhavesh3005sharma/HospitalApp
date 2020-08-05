@@ -155,4 +155,24 @@ public class HospitalDoctorsRepo {
         });
         return result;
     }
+
+    public LiveData<String> updateDoctorProfilePic(String id, String url) {
+        MutableLiveData<String> message = new MutableLiveData<>();
+        networkApi = ApiService.getAPIService();
+        networkApi.updateDoctorProfilePic(id,url).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.code()==200)
+                    message.setValue("Profile Pic Updated Successfully");
+                else
+                    message.setValue(response.errorBody().toString());
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                message.setValue(t.getMessage());
+            }
+        });
+        return message;
+    }
 }

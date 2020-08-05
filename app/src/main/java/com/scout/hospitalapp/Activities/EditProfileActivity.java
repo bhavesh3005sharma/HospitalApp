@@ -177,7 +177,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         {   requestPermissions(
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 2000);
-            Toast.makeText(EditProfileActivity.this, "Give Permissions and try again.", Toast.LENGTH_SHORT).show();
             //Permission automatically granted for Api<23 on installation
         }
         else

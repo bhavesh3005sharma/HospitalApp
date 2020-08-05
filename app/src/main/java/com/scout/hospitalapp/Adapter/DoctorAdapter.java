@@ -1,6 +1,7 @@
 package com.scout.hospitalapp.Adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -53,6 +55,8 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.viewHolder
             holder.department.setText(doctorInfo.getDepartment());
             holder.location.setText(doctorInfo.getAddress());
             holder.text_phoneNo.setText(doctorInfo.getPhone_no());
+            if (holder.profileImage!=null && doctorInfo.getUrl()!=null)
+                Picasso.get().load(Uri.parse(doctorInfo.getUrl())).placeholder(R.drawable.ic_profile).into(holder.profileImage);
         }
 
         holder.location.setVisibility(View.GONE);
