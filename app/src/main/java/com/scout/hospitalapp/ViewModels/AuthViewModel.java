@@ -89,4 +89,26 @@ public class AuthViewModel extends ViewModel {
         hospitalRegisterRepo = HospitalDataRepo.getInstance();
         return hospitalRegisterRepo.isUserLoggedIn();
     }
+
+    public int getTimeDifference(String s) {
+        String[] result,time1,time2;
+        result = s.split("-");
+        time1 = result[0].split(":");
+        time2 = result[1].split(":");
+        time1[0] = time1[0].replaceAll("\\s+", "");
+        time2[0] = time2[0].replaceAll("\\s+", "");
+        time1[1] = time1[1].replaceAll("\\s+", "");
+        time2[1] = time2[1].replaceAll("\\s+", "");
+        int h1,h2,m1,m2;
+        h1 = Integer.valueOf(time1[0]);
+        h2 = Integer.valueOf(time2[0]);
+        m1 = Integer.valueOf(time1[1]);
+        m2 = Integer.valueOf(time2[1]);
+
+        if(h2>h1 && m2<m1){
+            h2--;
+            m2+=60;
+        }
+        return ((h2-h1)*60)+(m2-m1);
+    }
 }

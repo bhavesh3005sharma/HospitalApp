@@ -244,7 +244,12 @@ public class DoctorsActivity extends AppCompatActivity implements DoctorAdapter.
                 mTimePicker = new TimePickerDialog(DoctorsActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        startTimeButton.setText(selectedHour + ":" + selectedMinute);
+                        String hr = ""+selectedHour,min = ""+selectedMinute;
+                        if (selectedHour<10)
+                            hr = "0"+selectedHour;
+                        if (selectedMinute<10)
+                            min = "0"+selectedMinute;
+                        startTimeButton.setText(hr + ":" + min);
                     }
                 }, hour, minute, false);//Yes 24 hour time
                 mTimePicker.setTitle("Select Start Time");
@@ -262,7 +267,12 @@ public class DoctorsActivity extends AppCompatActivity implements DoctorAdapter.
                 mTimePicker = new TimePickerDialog(DoctorsActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        endTimeButton.setText(selectedHour + ":" + selectedMinute);
+                        String hr = ""+selectedHour,min = ""+selectedMinute;
+                        if (selectedHour<10)
+                            hr = "0"+selectedHour;
+                        if (selectedMinute<10)
+                            min = "0"+selectedMinute;
+                        endTimeButton.setText(hr + ":" + min);
                     }
                 }, hour, minute, false);//Yes 24 hour time
                 mTimePicker.setTitle("Select End Time");
@@ -277,10 +287,14 @@ public class DoctorsActivity extends AppCompatActivity implements DoctorAdapter.
                     HelperClass.toast(DoctorsActivity.this, "Please Select Time");
                     return;
                 }
-                listTimes.add(startTimeButton.getText()+" - "+endTimeButton.getText());
-                timeAdapter.notifyDataSetChanged();
-                startTimeButton.setText(getString(R.string.start_time));
-                endTimeButton.setText(getString(R.string.end_time));
+                String time = startTimeButton.getText()+" - "+endTimeButton.getText();
+                if ((doctorsViewModel.getTimeDifference(time))>0) {
+                    listTimes.add(time);
+                    timeAdapter.notifyDataSetChanged();
+                    startTimeButton.setText(getString(R.string.start_time));
+                    endTimeButton.setText(getString(R.string.end_time));
+                }else
+                    HelperClass.toast(DoctorsActivity.this,"Please Provide Valid Time");
             }
         });
 

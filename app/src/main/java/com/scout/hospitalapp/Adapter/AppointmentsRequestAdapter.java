@@ -1,6 +1,7 @@
 package com.scout.hospitalapp.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.scout.hospitalapp.Models.ModelAppointment;
 import com.scout.hospitalapp.R;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -79,6 +87,58 @@ public class AppointmentsRequestAdapter extends RecyclerView.Adapter<Appointment
         return(filteredList!=null? filteredList.size() : 0);
     }
 
+    private void SortDateWise() {
+        Collections.sort(filteredList,new Comparator<ModelAppointment>() {
+            @Override
+            public int compare (ModelAppointment o1, ModelAppointment o2){
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                Log.d("DateStr",o1.getAppointmentDate()+" "+o2.getAppointmentDate());
+                Date date1 = new Date(), date2 = new Date();
+                try {
+                    date1 = sdf.parse(o1.getAppointmentDate());
+                    Log.d("Date",date1+"");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Log.d("Date","exception1");
+                }
+                try {
+                    date2 = sdf.parse(o2.getAppointmentDate());
+                    Log.d("Date",date1+"");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Log.d("Date","exception2");
+                }
+                if ((date1).compareTo(date2)==0){
+                    return getTimeDifference(o1.getAppointmentTime()+" - "+o2.getAppointmentTime())*-1;
+                }else
+                    return ((date1).compareTo(date2))*-1;
+            }
+        });
+        notifyDataSetChanged();
+    }
+
+    private int getTimeDifference(String s) {
+        String[] result,time1,time2;
+        result = s.split("-");
+        time1 = result[0].split(":");
+        time2 = result[1].split(":");
+        time1[0] = time1[0].replaceAll("\\s+", "");
+        time2[0] = time2[0].replaceAll("\\s+", "");
+        time1[1] = time1[1].replaceAll("\\s+", "");
+        time2[1] = time2[1].replaceAll("\\s+", "");
+        int h1,h2,m1,m2;
+        h1 = Integer.valueOf(time1[0]);
+        h2 = Integer.valueOf(time2[0]);
+        m1 = Integer.valueOf(time1[1]);
+        m2 = Integer.valueOf(time2[1]);
+
+        if(h2>h1 && m2<m1){
+            h2--;
+            m2+=60;
+        }
+        return ((h2-h1)*60)+(m2-m1);
+    }
+
     @Override
     public Filter getFilter() {
         return new Filter() {
@@ -109,7 +169,7 @@ public class AppointmentsRequestAdapter extends RecyclerView.Adapter<Appointment
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 filteredList = (ArrayList<ModelAppointment>) results.values;
-                notifyDataSetChanged();
+                SortDateWise();
             }
         };
     }

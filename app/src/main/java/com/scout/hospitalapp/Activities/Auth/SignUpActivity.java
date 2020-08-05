@@ -245,7 +245,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 mTimePicker = new TimePickerDialog(SignUpActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        startTimeButton.setText(selectedHour + ":" + selectedMinute);
+                        String hr = ""+selectedHour,min = ""+selectedMinute;
+                        if (selectedHour<10)
+                            hr = "0"+selectedHour;
+                        if (selectedMinute<10)
+                            min = "0"+selectedMinute;
+                        startTimeButton.setText(hr + ":" + min);
                     }
                 }, hour, minute, false);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
@@ -263,7 +268,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 mTimePicker = new TimePickerDialog(SignUpActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        endTimeButton.setText(selectedHour + ":" + selectedMinute);
+                        String hr = ""+selectedHour,min = ""+selectedMinute;
+                        if (selectedHour<10)
+                            hr = "0"+selectedHour;
+                        if (selectedMinute<10)
+                            min = "0"+selectedMinute;
+                        endTimeButton.setText(hr + ":" + min);
                     }
                 }, hour, minute, false);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
@@ -278,10 +288,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     HelperClass.toast(SignUpActivity.this, "Please Select Time");
                     return;
                 }
-                listTimes.add(startTimeButton.getText()+" - "+endTimeButton.getText());
-                timeAdapter.notifyDataSetChanged();
-                startTimeButton.setText(getString(R.string.start_time));
-                endTimeButton.setText(getString(R.string.end_time));
+                String time = startTimeButton.getText()+" - "+endTimeButton.getText();
+                if ((signUpActivityViewModel.getTimeDifference(time))>0) {
+                    listTimes.add(time);
+                    timeAdapter.notifyDataSetChanged();
+                    startTimeButton.setText(getString(R.string.start_time));
+                    endTimeButton.setText(getString(R.string.end_time));
+                }else
+                    HelperClass.toast(SignUpActivity.this,"Please Provide Valid Time");
             }
         });
 
