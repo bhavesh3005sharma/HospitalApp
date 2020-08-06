@@ -57,7 +57,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class DoctorProfileActivity extends AppCompatActivity implements View.OnClickListener {
-    @BindView(R.id.profileImage) ImageView profileImg;
+    @BindView(R.id.profileImage) CircularImageView profileImg;
     @BindView(R.id.textName) TextView textName;
     @BindView(R.id.textSpecialisation) TextView textSpecialisation;
     @BindView(R.id.textDoctorAvailability) TextView textDoctorAvailability;
@@ -83,7 +83,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements View.OnC
     private ArrayList<String> listDepartments = new ArrayList<>();
     private ArrayList<String> listTimes = new ArrayList<>();
     private AlertDialog dialogueDoctorEdit;
-    private CircularImageView profileImage;
+    private CircularImageView profileImageDialogue;
     TextView gallery,camera,cancel;
     AlertDialog alertDialogChoose;
     Uri imageUri;
@@ -127,7 +127,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements View.OnC
         dialogueDoctorEdit.setCancelable(false);
 
         final TextView title = view.findViewById(R.id.textViewTitle);
-        profileImage = view.findViewById(R.id.profileImage);
+        profileImageDialogue = view.findViewById(R.id.profileImage);
+        profileImageDialogue.setVisibility(View.VISIBLE);
         final TextInputLayout name = view.findViewById(R.id.textInputName);
         final TextInputLayout email = view.findViewById(R.id.textInputEmailRegister);
         final TextInputLayout phoneNo = view.findViewById(R.id.textInputPhoneNo);
@@ -152,8 +153,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements View.OnC
         listForSpinner.addAll(listDepartments);
 
         title.setText(getString(R.string.title_update_doctor));
-        if (profileImage!=null && doctorInfo.getUrl()!=null)
-            Picasso.get().load(Uri.parse(doctorInfo.getUrl())).placeholder(R.drawable.ic_profile).into(profileImage);
+        if (profileImageDialogue!=null && doctorInfo.getUrl()!=null)
+            Picasso.get().load(Uri.parse(doctorInfo.getUrl())).placeholder(R.drawable.ic_profile).into(profileImageDialogue);
         Objects.requireNonNull(name.getEditText()).setText(doctorInfo.getName());
         Objects.requireNonNull(email.getEditText()).setText(doctorInfo.getEmail());
         Objects.requireNonNull(phoneNo.getEditText()).setText(doctorInfo.getPhone_no());
@@ -270,7 +271,7 @@ public class DoctorProfileActivity extends AppCompatActivity implements View.OnC
             }
         });
 
-        profileImage.setOnClickListener(this);
+        profileImageDialogue.setOnClickListener(this);
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,17 +350,17 @@ public class DoctorProfileActivity extends AppCompatActivity implements View.OnC
         if (resultCode == RESULT_OK && data != null) {
             if (requestCode == 1 && data.getData() != null) {
                 imageUri = data.getData();
-                if (imageUri!=null && profileImage!=null) {
-                    Picasso.get().load(imageUri).placeholder(R.drawable.ic_profile).into(profileImage);
+                if (imageUri!=null && profileImageDialogue!=null) {
+                    Picasso.get().load(imageUri).placeholder(R.drawable.ic_profile).into(profileImageDialogue);
                     openAlertDialogueToShowPic();
                 }
             } else if (requestCode == 2 && data.getExtras() != null) {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
-                if (profileImage!=null) {
+                if (profileImageDialogue!=null) {
                     imageUri = getImageUri(DoctorProfileActivity.this, imageBitmap);
                     openAlertDialogueToShowPic();
-                    profileImage.setImageBitmap(imageBitmap);
+                    profileImageDialogue.setImageBitmap(imageBitmap);
                 }
             }
         }
@@ -465,8 +466,8 @@ public class DoctorProfileActivity extends AppCompatActivity implements View.OnC
         textEmail.setText(doctorInfo.getEmail());
         textPhoneNo.setText(doctorInfo.getPhone_no());
         textAddress.setText(doctorInfo.getAddress());
-        if (profileImage!=null && doctorInfo.getUrl()!=null)
-            Picasso.get().load(Uri.parse(doctorInfo.getUrl())).placeholder(R.drawable.ic_profile).into(profileImage);
+        if (profileImageDialogue!=null && doctorInfo.getUrl()!=null && !doctorInfo.getUrl().isEmpty())
+            Picasso.get().load(Uri.parse(doctorInfo.getUrl())).placeholder(R.drawable.ic_profile).into(profileImg);
 
         textDoctorAvailability.setText(doctorProfileViewModel.getAvailabilityType(doctorInfo.getAvailabilityType(),doctorInfo.getDoctorAvailability(),this));
         textDoctorAvailabilityTime.setText(doctorProfileViewModel.getAvailabilityTime(doctorInfo.getAvgCheckupTime(),doctorInfo.getDoctorAvailabilityTime(),this));

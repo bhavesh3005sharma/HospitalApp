@@ -1,6 +1,7 @@
 package com.scout.hospitalapp.ViewModels;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Patterns;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

@@ -41,6 +41,23 @@ public class ModelDoctorInfo implements Serializable {
     @SerializedName("unAvailableDates")
     ArrayList<ModelDateTime> unAvailableDates;
 
+    public ModelDoctorInfo(String name, String email, String phone_no, String address, String department, String careerHistory, String learningHistory, String avgCheckupTime, String availabilityType, ArrayList<String> doctorAvailability, ArrayList<String> doctorAvailabilityTime, String hospitalId, String hospitalName, String imageUri) {
+        this.name = name;
+        this.email = email;
+        this.phone_no = phone_no;
+        this.address = address;
+        this.department = department;
+        this.careerHistory = careerHistory;
+        this.learningHistory = learningHistory;
+        AvgCheckupTime = avgCheckupTime;
+        AvailabilityType = availabilityType;
+        DoctorAvailability = doctorAvailability;
+        DoctorAvailabilityTime = doctorAvailabilityTime;
+        this.hospitalStringId = hospitalId;
+        this.hospitalName = hospitalName;
+        this.url = imageUri;
+    }
+
     public ModelDoctorInfo(String name, String email, String phone_no, String address, String department, String careerHistory, String learningHistory, String avgCheckupTime, String availabilityType, ArrayList<String> doctorAvailability, ArrayList<String> doctorAvailabilityTime, String hospitalId, String hospitalName) {
         this.name = name;
         this.email = email;

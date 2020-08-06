@@ -1,23 +1,34 @@
 package com.scout.hospitalapp.Activities;
 
+import android.Manifest;
 import android.app.TimePickerDialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -28,6 +39,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.scout.hospitalapp.Adapter.ArrayOfStringAdapter;
 import com.scout.hospitalapp.Adapter.DoctorAdapter;
 import com.scout.hospitalapp.Models.ModelDepartment;
@@ -38,6 +50,9 @@ import com.scout.hospitalapp.Utils.MultiSelectionSpinner;
 import com.scout.hospitalapp.Utils.HelperClass;
 import com.scout.hospitalapp.ViewModels.DoctorsViewModel;
 import com.scout.hospitalapp.R;
+import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -67,6 +82,10 @@ public class DoctorsActivity extends AppCompatActivity implements DoctorAdapter.
     private String hospitalName;
     private Boolean isLoading = false;
     private ModelIntent modelIntent;
+    private CircularImageView profileImage;
+    TextView gallery,camera,cancel;
+    AlertDialog alertDialogChoose;
+    Uri imageUri;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,6 +127,7 @@ public class DoctorsActivity extends AppCompatActivity implements DoctorAdapter.
             public void onChanged(ArrayList<ModelDepartment> modelDepartmentArrayList) {
                 listDepartments.clear();
                 ArrayList<String> departNames = new ArrayList<>();
+                if (modelDepartmentArrayList!=null)
                 for (ModelDepartment department : modelDepartmentArrayList)
                     departNames.add(department.getDepartmentName());
                 listDepartments.addAll(departNames);
@@ -136,12 +156,6 @@ public class DoctorsActivity extends AppCompatActivity implements DoctorAdapter.
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
     }
 
     @Override
@@ -208,6 +222,7 @@ public class DoctorsActivity extends AppCompatActivity implements DoctorAdapter.
         dialogueDoctorRegister.setCancelable(false);
 
         final TextInputLayout name = view.findViewById(R.id.textInputName);
+        profileImage = view.findViewById(R.id.profileImage);
         final TextInputLayout email = view.findViewById(R.id.textInputEmailRegister);
         final TextInputLayout phoneNo = view.findViewById(R.id.textInputPhoneNo);
         final TextInputLayout address = view.findViewById(R.id.textInputAddress);
@@ -355,17 +370,110 @@ public class DoctorsActivity extends AppCompatActivity implements DoctorAdapter.
             }
         });
 
+//        profileImage.setOnClickListener(this);
         timeRecyclerView.setLayoutManager(new GridLayoutManager(DoctorsActivity.this, 1));
         timeRecyclerView.hasFixedSize();
         timeAdapter = new ArrayOfStringAdapter(listTimes, DoctorsActivity.this);
         timeRecyclerView.setAdapter(timeAdapter);
     }
 
+//    private boolean checkForWritePermission() {
+//        if (ActivityCompat.checkSelfPermission(DoctorsActivity.this,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+//        {   requestPermissions(
+//                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                2000);
+//            //Permission automatically granted for Api<23 on installation
+//        }
+//        else
+//            return true;
+//
+//        return false;
+//    }
+//
+//    private boolean checkForReadPermission() {
+//        if(ActivityCompat.checkSelfPermission(DoctorsActivity.this,
+//                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+//        { requestPermissions(
+//                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                2000);
+//            //Permission automatically granted for Api<23 on installation
+//        }
+//        else
+//            return true;
+//
+//        return false;
+//    }
+//
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        alertDialogChoose.dismiss();
+//        if (resultCode == RESULT_OK && data != null) {
+//            if (requestCode == 1 && data.getData() != null) {
+//                imageUri = data.getData();
+//                if (imageUri!=null && profileImage!=null) {
+//                    Picasso.get().load(imageUri).placeholder(R.drawable.ic_profile).into(profileImage);
+//                }
+//            } else if (requestCode == 2 && data.getExtras() != null) {
+//                Bundle extras = data.getExtras();
+//                Bitmap imageBitmap = (Bitmap) extras.get("data");
+//                if (profileImage!=null) {
+//                    imageUri = getImageUri(DoctorsActivity.this, imageBitmap);
+//                    profileImage.setImageBitmap(imageBitmap);
+//                }
+//            }
+//        }
+//    }
+
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        if (alertDialogChoose!=null)
+//            alertDialogChoose.dismiss();
+//    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        if (alertDialogChoose!=null)
+//            alertDialogChoose.dismiss();
+        unbinder.unbind();
+    }
+
+//    private void openAlertDialogueChoose() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(DoctorsActivity.this);
+//        LayoutInflater inflater = this.getLayoutInflater();
+//        builder.setView(inflater.inflate(R.layout.dialogue_choose,null));
+//        alertDialogChoose = builder.create();
+//        alertDialogChoose.show();
+//
+//        gallery = alertDialogChoose.findViewById(R.id.gallery);
+//        camera =  alertDialogChoose.findViewById(R.id.camera);
+//        cancel = alertDialogChoose.findViewById(R.id.cancel);
+//
+//        gallery.setOnClickListener(this);
+//        camera.setOnClickListener(this);
+//        cancel.setOnClickListener(this);
+//    }
+//
+//    public String getFileExtension(Uri uri) {
+//        ContentResolver cR = DoctorsActivity.this.getContentResolver();
+//        MimeTypeMap mime = MimeTypeMap.getSingleton();
+//        return mime.getExtensionFromMimeType(cR.getType(uri));
+//    }
+//
+//    private Uri getImageUri(Context context, Bitmap inImage) {
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+//        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
+//        return Uri.parse(path);
+//    }
+
     private void checkForResponse() {
         doctorsViewModel.getIsDoctorRegistered().observe(DoctorsActivity.this, new Observer<ModelRequestId>() {
             @Override
             public void onChanged(ModelRequestId registeredDoctorId) {
-
                 HelperClass.toast(DoctorsActivity.this, "Doctor " + doctorInfo.getName() + " added Successfully.");
                 HelperClass.hideProgressbar(progressBarDialogue);
                 HelperClass.showProgressbar(progressBar);
@@ -425,6 +533,7 @@ public class DoctorsActivity extends AppCompatActivity implements DoctorAdapter.
     public void onRefresh() {
         if (!isLoading) {
             list.clear();
+            doctorAdapter.notifyDataSetChanged();
             isLoading = true;
             HelperClass.showProgressbar(progressBar);
             doctorsViewModel.getDoctors(hospitalId.getId());
@@ -432,4 +541,29 @@ public class DoctorsActivity extends AppCompatActivity implements DoctorAdapter.
         }
         swipeRefreshLayout.setRefreshing(false);
     }
+
+//    @Override
+//    public void onClick(View v) {
+//        switch (v.getId()){
+//            case R.id.profileImage :
+//                if(checkForReadPermission() && checkForWritePermission())
+//                    openAlertDialogueChoose();
+//                break;
+//            case R.id.gallery:
+//                alertDialogChoose.dismiss();
+//                Intent cameraIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                cameraIntent.setType("image/*");
+//                startActivityForResult(cameraIntent,1);
+//                break;
+//            case R.id.camera:
+//                alertDialogChoose.dismiss();
+//                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                if (takePictureIntent.resolveActivity(DoctorsActivity.this.getPackageManager()) != null)
+//                    startActivityForResult(takePictureIntent, 2);
+//                break;
+//            case R.id.cancel:
+//                alertDialogChoose.dismiss();
+//                break;
+//        }
+//    }
 }

@@ -39,7 +39,7 @@
                     android:fontFamily="cursive"
                     android:gravity="start"
                     android:text="Dr. Scout"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="30sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"

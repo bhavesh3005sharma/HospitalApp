@@ -225,6 +225,7 @@ public class DepartmentsActivity extends AppCompatActivity implements Department
     public void onRefresh() {
         if (!isLoading) {
             list.clear();
+            departmentsAdapter.notifyDataSetChanged();
             isLoading = true;
             HelperClass.showProgressbar(progressBar);
             departmentsViewModel.getDepartmentsList(hospitalId.getId()).observe(this, new Observer<ArrayList<ModelDepartment>>() {

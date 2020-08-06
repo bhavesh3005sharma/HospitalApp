@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.R;
 import com.squareup.picasso.Picasso;
@@ -55,8 +56,10 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.viewHolder
             holder.department.setText(doctorInfo.getDepartment());
             holder.location.setText(doctorInfo.getAddress());
             holder.text_phoneNo.setText(doctorInfo.getPhone_no());
-            if (holder.profileImage!=null && doctorInfo.getUrl()!=null)
-                Picasso.get().load(Uri.parse(doctorInfo.getUrl())).placeholder(R.drawable.ic_profile).into(holder.profileImage);
+            if (holder.profileImage!=null && doctorInfo.getUrl()!=null && !doctorInfo.getUrl().isEmpty()) {
+                Picasso.get().load(Uri.parse(filteredList.get(position).getUrl())).placeholder(R.color.placeholder_bg).into(holder.profileImage);
+            }else
+                holder.profileImage.setImageResource(R.drawable.doctor_icon);
         }
 
         holder.location.setVisibility(View.GONE);
@@ -117,7 +120,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.viewHolder
         @BindView(R.id.text_phoneNo)
         TextView text_phoneNo;
         @BindView(R.id.profileImage)
-        ImageView profileImage;
+        CircularImageView profileImage;
         @BindView(R.id.cancel)
         ImageView cancel;
         public viewHolder(@NonNull View itemView) {
