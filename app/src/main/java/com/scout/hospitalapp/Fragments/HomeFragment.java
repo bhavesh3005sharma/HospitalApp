@@ -76,7 +76,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 isLoading = false;
                 if (response!=null){
                     list.addAll(response);
-                    adapter.notifyDataSetChanged();
+                    adapter.getFilter().filter("");
                 }
                 shimmerLayout.stopShimmer();
                 shimmerLayout.setVisibility(View.GONE);
@@ -100,7 +100,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         recyclerView.hasFixedSize();
-        adapter = new AppointmentsAdapter(getContext(), list);
+        adapter = new AppointmentsAdapter(getContext(), list, true);
         recyclerView.setAdapter(adapter);
         adapter.setUpOnClickListener(HomeFragment.this);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

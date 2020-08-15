@@ -95,7 +95,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             textViewHospitalName.setText(uiData.getName());
             textViewContactNo.setText(uiData.getPhone_no());
             textViewAddress.setText(uiData.getAddress());
-            yearEstablishment.setText(getString(R.string.year_establishment)+uiData.getYear_of_establishment());
+            yearEstablishment.setText(uiData.getYear_of_establishment());
             if (uiData.getUrl()!=null)
                 Picasso.get().load(Uri.parse(uiData.getUrl())).placeholder(R.color.placeholder_bg).into(HospitalImage);
         }

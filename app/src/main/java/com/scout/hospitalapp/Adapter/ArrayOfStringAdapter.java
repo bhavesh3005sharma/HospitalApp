@@ -36,7 +36,7 @@ public class ArrayOfStringAdapter extends RecyclerView.Adapter<ArrayOfStringAdap
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, final int position) {
-        holder.title.setText(list.get(position));
+        holder.title.setText("\u2022 "+list.get(position));
 
         holder.cancel.setOnClickListener(new View.OnClickListener() {
             @Override

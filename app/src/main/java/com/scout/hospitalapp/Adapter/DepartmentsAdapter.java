@@ -42,7 +42,7 @@ public class DepartmentsAdapter extends RecyclerView.Adapter<DepartmentsAdapter.
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, final int position) {
         holder.title.setText(list.get(position).getDepartmentName());
-        holder.description.setText(list.get(position).getDescription());
+        holder.description.setText("\u2022 "+list.get(position).getDescription());
 
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override

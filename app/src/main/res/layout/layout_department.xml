@@ -13,15 +13,6 @@
         android:layout_height="wrap_content"
         android:paddingBottom="15dp">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="16dp"
-            android:layout_height="9dp"
-            android:src="@drawable/ic_dot"
-            app:layout_constraintBottom_toBottomOf="@+id/title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
             android:id="@+id/title"
             style="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
@@ -31,14 +22,14 @@
             android:text="TextView"
             android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@+id/remove"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginHorizontal="20dp"
+            android:layout_marginHorizontal="10dp"
             android:layout_marginVertical="5dp"
             android:background="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"

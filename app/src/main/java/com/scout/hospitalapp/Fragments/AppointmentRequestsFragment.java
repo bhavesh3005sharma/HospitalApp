@@ -65,7 +65,7 @@ public class AppointmentRequestsFragment extends Fragment implements Appointment
                 isLoading = false;
                 if (response!=null){
                     list.addAll(response);
-                    adapter.notifyDataSetChanged();
+                    adapter.getFilter().filter("");
                 }
                 shimmerLayout.stopShimmer();
                 shimmerLayout.setVisibility(View.GONE);

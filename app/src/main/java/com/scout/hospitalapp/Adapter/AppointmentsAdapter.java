@@ -32,11 +32,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     ArrayList<ModelAppointment> list;
     ArrayList<ModelAppointment> filteredList;
     interfaceClickListener mListener;
+    Boolean isIncreasingSortingOrder;
 
-    public AppointmentsAdapter(Context context, ArrayList<ModelAppointment> list) {
+    public AppointmentsAdapter(Context context, ArrayList<ModelAppointment> list, Boolean isIncreasingSortingOrder) {
         this.context = context;
         this.list = list;
         this.filteredList = list;
+        this.isIncreasingSortingOrder = isIncreasingSortingOrder;
     }
 
     public void  setUpOnClickListener(interfaceClickListener mListener) {
@@ -107,26 +109,26 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             @Override
             public int compare (ModelAppointment o1, ModelAppointment o2){
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                Log.d("DateStr",o1.getAppointmentDate()+" "+o2.getAppointmentDate());
                 Date date1 = new Date(), date2 = new Date();
                 try {
                     date1 = sdf.parse(o1.getAppointmentDate());
-                    Log.d("Date",date1+"");
                 } catch (ParseException e) {
                     e.printStackTrace();
-                    Log.d("Date","exception1");
                 }
                 try {
                     date2 = sdf.parse(o2.getAppointmentDate());
-                    Log.d("Date",date1+"");
                 } catch (ParseException e) {
                     e.printStackTrace();
-                    Log.d("Date","exception2");
                 }
+
+                int check = 1;
+                if (!isIncreasingSortingOrder)
+                    check = -1;
+
                 if ((date1).compareTo(date2)==0){
-                    return getTimeDifference(o1.getAppointmentTime()+" - "+o2.getAppointmentTime())*-1;
+                    return getTimeDifference(o1.getAppointmentTime()+" - "+o2.getAppointmentTime())*check;
                 }else
-                    return ((date1).compareTo(date2))*-1;
+                    return ((date1).compareTo(date2))* check;
             }
         });
         notifyDataSetChanged();

@@ -61,7 +61,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 isLoading = false;
                 if (response!=null){
                     list.addAll(response);
-                    adapter.notifyDataSetChanged();
+                    adapter.getFilter().filter("");
                 }
                 shimmerLayout.stopShimmer();
                 shimmerLayout.setVisibility(View.GONE);
@@ -85,7 +85,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         recyclerView.hasFixedSize();
-        adapter = new AppointmentsAdapter(getContext(), list);
+        adapter = new AppointmentsAdapter(getContext(), list, false);
         recyclerView.setAdapter(adapter);
         adapter.setUpOnClickListener(HistoryFragment.this);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
