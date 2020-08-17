@@ -62,6 +62,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         holder.textViewAge.setText(appointment.getAge());
         holder.textViewDisease.setText(appointment.getDisease());
         holder.selectionSpinner.setVisibility(View.GONE);
+        holder.textViewAppointmentId.setText("AppointmentId : \n"+appointment.getAppointmentId().getId());
 
         holder.parentCard.setRadius(20);
         if (appointment.getStatus().equals(context.getString(R.string.accepted))) {
@@ -199,6 +200,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         @BindView(R.id.textViewDoctorHospitalName) TextView doctorName;
         @BindView(R.id.textViewName) TextView textViewName;
         @BindView(R.id.textViewStatus) TextView status;
+        @BindView(R.id.textViewAppointmentId) TextView textViewAppointmentId;
         @BindView(R.id.selectionSpinner) Spinner selectionSpinner;
         @BindView(R.id.parentCard) CardView parentCard;
         public viewHolder(@NonNull View itemView) {

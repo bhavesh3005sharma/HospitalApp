@@ -155,6 +155,7 @@ public class AppointmentRequestsFragment extends Fragment implements Appointment
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
+        TextView textViewAppointmentId = view.findViewById(R.id.textViewAppointmentId);
         TextView doctorHospitalName = view.findViewById(R.id.textViewDoctorHospitalName);
         TextView patientName = view.findViewById(R.id.textViewName);
         TextView textViewDate = view.findViewById(R.id.textViewDate);
@@ -163,6 +164,7 @@ public class AppointmentRequestsFragment extends Fragment implements Appointment
         TextView textViewDisease = view.findViewById(R.id.textViewDisease);
 
         ModelAppointment appointment = list.get(position);
+        textViewAppointmentId.setText("AppointmentId : \n"+appointment.getAppointmentId().getId());
         doctorHospitalName.setText(appointment.getDoctorName()+"\n("+appointment.getHospitalName()+")");
         patientName.setText(appointment.getPatientName());
         textViewDate.setText(appointment.getAppointmentDate());
