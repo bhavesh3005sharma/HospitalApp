@@ -94,5 +94,9 @@
     <string name="doctor_info">Doctor Info</string>
     <string name="specialists">Specialist</string>
     <string name="change_doctor">Change Doctor</string>
+    <string name="appointment_id">Appointment Id :</string>
+    <string name="serial_number">Serial Number -</string>
+    <string name="appointment_status">Appointment Status</string>
+    <string name="serial_number_not_assigned">\"Serial Number not assigned Yet.\"</string>
 
 </resources>

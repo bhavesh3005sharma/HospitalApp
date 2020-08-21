@@ -19,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.scout.hospitalapp.Activities.AppointmentDetailsActivity;
 import com.scout.hospitalapp.Activities.BookAppointmentActivity;
 import com.scout.hospitalapp.Adapter.AppointmentsAdapter;
 import com.scout.hospitalapp.Models.ModelAppointment;
@@ -145,7 +146,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void holderClick(int position) {
-
+        startActivity(new Intent(getContext(), AppointmentDetailsActivity.class).putExtra("modelAppointment",list.get(position)));
     }
 
     @Override

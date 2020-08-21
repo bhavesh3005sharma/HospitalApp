@@ -2,7 +2,9 @@ package com.scout.hospitalapp.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ModelAppointment {
+import java.io.Serializable;
+
+public class ModelAppointment implements Serializable {
     @SerializedName("_id")
     ModelRequestId AppointmentId;
     @SerializedName("appointment_date")
