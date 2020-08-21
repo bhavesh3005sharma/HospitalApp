@@ -34,7 +34,7 @@
             android:textColor="@android:color/white"
             android:textSize="25sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/textViewStatus"
+            app:layout_constraintEnd_toStartOf="@+id/textViewSerialNo"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewAppointmentId" />
@@ -53,7 +53,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
         <TextView
-            android:id="@+id/textViewStatus"
+            android:id="@+id/textViewSerialNo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/accepted_backgrounded"
@@ -168,19 +168,6 @@
             app:layout_constraintEnd_toEndOf="@+id/textViewAge"
             app:layout_constraintStart_toStartOf="@+id/textViewAge"
             app:layout_constraintTop_toBottomOf="@+id/textViewAge" />
-
-        <Spinner
-            android:id="@+id/selectionSpinner"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:background="@drawable/black_border_backgrounded"
-            android:entries="@array/array_status"
-            android:padding="10dp"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@+id/imageView8"
-            app:layout_constraintTop_toBottomOf="@+id/textViewDisease" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

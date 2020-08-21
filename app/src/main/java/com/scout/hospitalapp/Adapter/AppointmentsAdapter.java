@@ -1,18 +1,13 @@
 package com.scout.hospitalapp.Adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.scout.hospitalapp.Models.ModelAppointment;
 import com.scout.hospitalapp.R;
@@ -48,56 +43,29 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     @NonNull
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialogue_appointment_details, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_appointment, parent, false);
         return new viewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         ModelAppointment appointment = filteredList.get(position);
-        holder.date.setText(appointment.getAppointmentDate());
-        holder.time.setText(appointment.getAppointmentTime());
-        holder.doctorName.setText(appointment.getDoctorName());
-        holder.textViewName.setText(appointment.getPatientName());
-        holder.textViewAge.setText(appointment.getAge());
-        holder.textViewDisease.setText(appointment.getDisease());
-        holder.selectionSpinner.setVisibility(View.GONE);
-        holder.textViewAppointmentId.setText("AppointmentId : \n"+appointment.getAppointmentId().getId());
+        holder.date.setText(context.getString(R.string.mdtp_date)+" - "+appointment.getAppointmentDate());
+        holder.time.setText(context.getString(R.string.mdtp_time)+" - "+appointment.getAppointmentTime());
+        holder.doctorName.setText(appointment.getDoctorName()+" ("+context.getString(R.string.doctor_name)+")");
+        holder.textViewSerialNo.setText(context.getString(R.string.serial_number)+" "+appointment.getSerialNumber());
 
-        holder.parentCard.setRadius(20);
         if (appointment.getStatus().equals(context.getString(R.string.accepted))) {
-            holder.selectionSpinner.setVisibility(View.VISIBLE);
-            holder.selectionSpinner.setSelection(0);
-            holder.selectionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            holder.textChangeStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                    mListener.onItemSelected(pos, position, parent.getItemAtPosition(pos));
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
+                public void onClick(View v) {
+                    mListener.onItemSelected(appointment.getAppointmentId().getId(),position);
                 }
             });
+            holder.textChangeStatus.setText(context.getString(R.string.change_status));
         }
-        else{
-            holder.status.setVisibility(View.VISIBLE);
-            if (appointment.getStatus().equals(context.getString(R.string.accepted)) || appointment.getStatus().equals(context.getString(R.string.completed))){
-                holder.status.setText(appointment.getStatus());
-                holder.status.setTextColor(Color.WHITE);
-                holder.status.setBackgroundResource(R.drawable.accepted_backgrounded);
-            }
-            if (appointment.getStatus().equals(context.getString(R.string.rejected))){
-                holder.status.setText(appointment.getStatus());
-                holder.status.setTextColor(Color.WHITE);
-                holder.status.setBackgroundResource(R.drawable.rejected_backgrounded);
-            }
-            if (appointment.getStatus().equals(context.getString(R.string.pending)) || appointment.getStatus().equals(context.getString(R.string.not_attempted))){
-                holder.status.setText(appointment.getStatus());
-                holder.status.setTextColor(Color.BLACK);
-                holder.status.setBackgroundResource(R.drawable.pending_backgrounded);
-            }
-        }
+        else
+            holder.textChangeStatus.setText(appointment.getStatus());
     }
 
     @Override
@@ -193,16 +161,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     }
 
     public class viewHolder extends RecyclerView.ViewHolder{
-        @BindView(R.id.textViewDate) TextView date;
-        @BindView(R.id.textViewTime) TextView time;
-        @BindView(R.id.textViewAge) TextView textViewAge;
-        @BindView(R.id.textViewDisease) TextView textViewDisease;
-        @BindView(R.id.textViewDoctorHospitalName) TextView doctorName;
-        @BindView(R.id.textViewName) TextView textViewName;
-        @BindView(R.id.textViewStatus) TextView status;
-        @BindView(R.id.textViewAppointmentId) TextView textViewAppointmentId;
-        @BindView(R.id.selectionSpinner) Spinner selectionSpinner;
-        @BindView(R.id.parentCard) CardView parentCard;
+        @BindView(R.id.text_date) TextView date;
+        @BindView(R.id.text_time) TextView time;
+        @BindView(R.id.text_doctor_name) TextView doctorName;
+        @BindView(R.id.textViewSerialNo) TextView textViewSerialNo;
+        @BindView(R.id.textChangeStatus) TextView textChangeStatus;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
@@ -219,6 +182,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     public interface interfaceClickListener{
         void holderClick(int position);
 
-        void onItemSelected(int pos, int adapterPosition, Object itemAtPosition);
+        void onItemSelected(String appointmentId, int position);
     }
 }

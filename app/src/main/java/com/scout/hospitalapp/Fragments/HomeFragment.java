@@ -6,19 +6,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.agrawalsuneet.dotsloader.loaders.TrailingCircularDotsLoader;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scout.hospitalapp.Activities.AppointmentDetailsActivity;
 import com.scout.hospitalapp.Activities.BookAppointmentActivity;
 import com.scout.hospitalapp.Adapter.AppointmentsAdapter;
@@ -150,12 +155,65 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     @Override
-    public void onItemSelected(int pos, int adapterPosition, Object itemAtPosition) {
-        if(pos>0){
-            String status = (String) itemAtPosition;
-            homeViewModel.setStatus(hospitalId,list.get(adapterPosition).getAppointmentId().getId(),status);
-            list.remove(adapterPosition);
-            adapter.notifyDataSetChanged();
-        }
+    public void onItemSelected(String appointmentId, int position) {
+        openAlertDialogueChooseStatus(appointmentId,position);
+    }
+
+    private void openAlertDialogueChooseStatus(String appointmentId, int position) {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder( getContext() );
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialogue_set_appointment_status, null, false);
+        builder.setView(view);
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.setCancelable(false);
+
+        RadioGroup radioGroup = view.findViewById(R.id.radio_group);
+        Button buttonConfirm = view.findViewById(R.id.buttonConfirm);
+        Button buttonCancel = view.findViewById(R.id.buttonCancel);
+        TrailingCircularDotsLoader trailingCircularDotsLoader = view.findViewById(R.id.trailingCircularDotsLoader);
+
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        buttonConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int checkedButtonId = radioGroup.getCheckedRadioButtonId();
+
+                if (checkedButtonId==-1){
+                    HelperClass.toast(getContext(),"Please Select Status");
+                }else {
+                    view.setAlpha(0.5f);
+                    buttonCancel.setEnabled(false);
+                    buttonConfirm.setEnabled(false);
+                    trailingCircularDotsLoader.setVisibility(View.VISIBLE);
+                    String status = "";
+                    switch (checkedButtonId){
+                        case 1:
+                            status = getString(R.string.completed);
+                            break;
+                        case 2:
+                            status = getString(R.string.not_attempted);
+                            break;
+                        case 3:
+                            status = getString(R.string.rejected);
+                            break;
+                    }
+                    homeViewModel.setStatus(hospitalId,appointmentId,status).observe(getViewLifecycleOwner(), new Observer<String>() {
+                        @Override
+                        public void onChanged(String s) {
+                            trailingCircularDotsLoader.setVisibility(View.GONE);
+                            HelperClass.toast(getContext(),s);
+                            alertDialog.dismiss();
+                        }
+                    });
+                }
+            }
+        });
     }
 }

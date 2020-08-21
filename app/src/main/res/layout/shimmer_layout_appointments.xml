@@ -54,12 +54,12 @@
             android:layout_margin="10dp"
             android:background="@color/placeholder_bg"
             android:padding="5dp"
-            app:layout_constraintBottom_toBottomOf="@+id/buttonReject"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonCancel"
             app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="@+id/buttonReject" />
+            app:layout_constraintTop_toTopOf="@+id/buttonCancel" />
 
         <TextView
-            android:id="@+id/buttonReject"
+            android:id="@+id/buttonCancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"

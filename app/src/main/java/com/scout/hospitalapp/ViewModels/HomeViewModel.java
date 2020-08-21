@@ -38,8 +38,8 @@ public class HomeViewModel extends ViewModel {
         appointmentsRepo.loadAppointmentList(startingIndex);
     }
 
-    public void setStatus(String hospitalId, String appointmentId, String status) {
+    public LiveData<String> setStatus(String hospitalId, String appointmentId, String status) {
         AppointmentRequestRepo appointmentRequestRepo = AppointmentRequestRepo.getInstance();
-        appointmentRequestRepo.setStatus(hospitalId,appointmentId,status);
+        return appointmentRequestRepo.setStatus(hospitalId,appointmentId,status);
     }
 }

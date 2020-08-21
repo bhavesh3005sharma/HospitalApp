@@ -1,7 +1,6 @@
 package com.scout.hospitalapp.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -174,9 +173,9 @@ public class AppointmentsRequestAdapter extends RecyclerView.Adapter<Appointment
         @BindView(R.id.text_date) TextView date;
         @BindView(R.id.text_time) TextView time;
         @BindView(R.id.buttonConfirm) Button buttonConfirm;
-        @BindView(R.id.buttonReject) Button buttonReject;
+        @BindView(R.id.buttonCancel) Button buttonReject;
         @BindView(R.id.text_doctor_name) TextView doctorName;
-        @BindView(R.id.textViewStatus) TextView textViewStatus;
+        @BindView(R.id.textViewSerialNo) TextView textViewStatus;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

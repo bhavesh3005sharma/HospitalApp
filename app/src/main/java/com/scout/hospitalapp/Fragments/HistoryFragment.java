@@ -1,5 +1,6 @@
 package com.scout.hospitalapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.scout.hospitalapp.Activities.AppointmentDetailsActivity;
 import com.scout.hospitalapp.Adapter.AppointmentsAdapter;
 import com.scout.hospitalapp.Models.ModelAppointment;
 import com.scout.hospitalapp.R;
@@ -130,9 +132,11 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void holderClick(int position) {
+        startActivity(new Intent(getContext(), AppointmentDetailsActivity.class).putExtra("modelAppointment",list.get(position)));
     }
 
     @Override
-    public void onItemSelected(int pos, int adapterPosition, Object itemAtPosition) {
+    public void onItemSelected(String appointmentId, int position) {
+
     }
 }

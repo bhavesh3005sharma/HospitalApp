@@ -98,20 +98,24 @@ public class AppointmentRequestRepo {
         return startingIndexForList;
     }
 
-    public void setStatus(String hospitalId, String appointmentId, String status) {
+    public LiveData<String> setStatus(String hospitalId, String appointmentId, String status) {
+        MutableLiveData<String> mutableLiveData = new MutableLiveData<>();
         networkApi = ApiService.getAPIService();
         networkApi.SetAppointmentStatus(hospitalId,appointmentId,status).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.code()==200){
                     // Appointment Status Updated Successfully.
-                }
+                    mutableLiveData.setValue("Status Updated Successfully");
+                }else
+                    mutableLiveData.setValue(response.errorBody().toString());
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                mutableLiveData.setValue(t.getMessage());
             }
         });
+        return mutableLiveData;
     }
 }

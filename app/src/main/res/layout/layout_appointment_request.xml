@@ -68,14 +68,14 @@
             app:layout_constraintHorizontal_weight="1"
             android:text="@string/confirm"
             android:textColor="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/buttonReject"
-            app:layout_constraintEnd_toStartOf="@+id/buttonReject"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonCancel"
+            app:layout_constraintEnd_toStartOf="@+id/buttonCancel"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="@+id/buttonReject" />
+            app:layout_constraintTop_toTopOf="@+id/buttonCancel" />
 
         <Button
-            android:id="@+id/buttonReject"
+            android:id="@+id/buttonCancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintHorizontal_weight="1"
@@ -90,7 +90,7 @@
             app:layout_constraintTop_toBottomOf="@+id/text_doctor_name" />
 
         <TextView
-            android:id="@+id/textViewStatus"
+            android:id="@+id/textViewSerialNo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"

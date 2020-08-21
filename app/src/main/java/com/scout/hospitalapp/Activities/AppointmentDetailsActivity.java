@@ -24,7 +24,7 @@ public class AppointmentDetailsActivity extends AppCompatActivity {
     @BindView(R.id.textViewAge) TextView textViewAge;
     @BindView(R.id.time) TextView time;
     @BindView(R.id.serialNo) TextView serialNo;
-    @BindView(R.id.textViewStatus) TextView textViewStatus;
+    @BindView(R.id.textViewSerialNo) TextView textViewStatus;
 
     Unbinder unbinder;
     ModelAppointment appointment;
