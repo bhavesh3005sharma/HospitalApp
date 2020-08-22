@@ -191,7 +191,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 HelperClass.hideProgressbar(progressBar);
                 if (s!=null && s.equals(getString(R.string.correct))){
                     saveHospitalInfo(loggedInEmail);
-                }
+                }else
+                    HelperClass.toast(LoginActivity.this,s);
             }
         });
     }

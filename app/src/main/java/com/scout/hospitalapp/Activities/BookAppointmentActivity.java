@@ -53,7 +53,6 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     @BindView(R.id.choice_chip_group) ChipGroup chipGroup;
 
     Unbinder unbinder;
-    int check=0;
     ModelIntent modelIntent;
     String selectedTime = null;
     BookAppointmentsViewModel viewModel;

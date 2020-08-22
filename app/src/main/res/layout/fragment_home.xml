@@ -7,6 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".Activities.HomeActivity">
 
+    <include
+        android:id="@+id/layout_filter"
+        layout="@layout/layout_date_time_filter"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
@@ -14,12 +22,13 @@
         app:layout_constraintBottom_toTopOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/layout_filter">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewAppointment"
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:visibility="gone" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.facebook.shimmer.ShimmerFrameLayout
@@ -41,25 +50,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_margin="20dp"
-                android:background="@color/placeholder_bg"/>
+                android:background="@color/placeholder_bg" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_margin="20dp"
-                android:background="@color/placeholder_bg"/>
+                android:background="@color/placeholder_bg" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_margin="20dp"
-                android:background="@color/placeholder_bg"/>
+                android:background="@color/placeholder_bg" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_margin="20dp"
-                android:background="@color/placeholder_bg"/>
+                android:background="@color/placeholder_bg" />
 
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>

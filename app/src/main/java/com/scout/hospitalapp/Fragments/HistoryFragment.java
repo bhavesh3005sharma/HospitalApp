@@ -132,4 +132,9 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onItemSelected(String appointmentId, int position) {
 
     }
+
+    @Override
+    public void loadMoreData() {
+
+    }
 }

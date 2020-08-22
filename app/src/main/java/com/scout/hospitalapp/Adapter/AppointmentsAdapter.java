@@ -1,6 +1,7 @@
 package com.scout.hospitalapp.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +24,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.viewHolder> implements Filterable {
-    Context context;
-    ArrayList<ModelAppointment> list;
-    ArrayList<ModelAppointment> filteredList;
-    interfaceClickListener mListener;
-    Boolean isIncreasingSortingOrder;
+    private Context context;
+    private ArrayList<ModelAppointment> list;
+    private ArrayList<ModelAppointment> filteredList;
+    private interfaceClickListener mListener;
+    private Boolean isIncreasingSortingOrder;
+    private int check=0;
 
     public AppointmentsAdapter(Context context, ArrayList<ModelAppointment> list, Boolean isIncreasingSortingOrder) {
         this.context = context;
@@ -136,13 +138,24 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 } else {
                     ArrayList<ModelAppointment> listFilterByQuery = new ArrayList<>();
                     for (ModelAppointment row : list) {
+                        String[] filterData = charString.split("#");
+                        String date = filterData[0];
+                        String time = "";
+                        if (filterData.length>1)
+                          time = filterData[1];
+
+                        if (!time.isEmpty() && date.equals(row.getAppointmentDate()) && isAFilteredTime(row.getAppointmentTime(),time))
+                            listFilterByQuery.add(row);
+                        else if(time.isEmpty() && date.equals(row.getAppointmentDate()))
+                            listFilterByQuery.add(row);
+
 
                         // name match condition. this might differ depending on your requirement
                         // here we are looking for name or phone number match
-                        if (row.getStatus().toLowerCase().contains(charString.toLowerCase()) || row.getAppointmentDate().toLowerCase().contains(charString.toLowerCase()) || row.getDisease().toLowerCase().contains(charString.toLowerCase())
-                                || row.getAppointmentTime().toLowerCase().contains(charString.toLowerCase()) || row.getDoctorName().toLowerCase().contains(charString.toLowerCase())) {
-                            listFilterByQuery.add(row);
-                        }
+//                        if (row.getStatus().toLowerCase().contains(charString.toLowerCase()) || row.getAppointmentDate().toLowerCase().contains(charString.toLowerCase()) || row.getDisease().toLowerCase().contains(charString.toLowerCase())
+//                                || row.getAppointmentTime().toLowerCase().contains(charString.toLowerCase()) || row.getDoctorName().toLowerCase().contains(charString.toLowerCase())) {
+//                            listFilterByQuery.add(row);
+//                        }
                     }
                     filteredList = listFilterByQuery;
                 }
@@ -154,10 +167,28 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                filteredList = (ArrayList<ModelAppointment>) results.values;
-                SortDateWise();
+                if(results.values != null) {
+                    filteredList = (ArrayList<ModelAppointment>) results.values;
+                    SortDateWise();
+                    if (++check>1 && filteredList.size()<5) {
+                        Log.d("getAppointmentsList","loadMoreData");
+                        mListener.loadMoreData();
+                    }
+                }
             }
         };
+    }
+
+    private boolean isAFilteredTime(String appointmentTime, String time) {
+        String[] result;
+        result = appointmentTime.split("-");
+
+        Log.d("First",""+getTimeDifference(result[0]+"-"+time));
+        Log.d("Second",""+getTimeDifference(time+"-"+result[1]));
+        if(getTimeDifference(result[0]+"-"+time)>=0 && getTimeDifference(time+"-"+result[1])>=0)
+            return true;
+        else
+            return false;
     }
 
     public class viewHolder extends RecyclerView.ViewHolder{
@@ -183,5 +214,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         void holderClick(int position);
 
         void onItemSelected(String appointmentId, int position);
+
+        void loadMoreData();
     }
 }
