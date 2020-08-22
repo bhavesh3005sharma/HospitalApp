@@ -84,9 +84,6 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_profile:
-//                FirebaseAuth.getInstance().signOut();
-//                startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-//                SharedPref.deleteLoginUserData(this);
                 startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 break;
         }

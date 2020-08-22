@@ -42,6 +42,7 @@ public class AppointmentsRepo {
                     if (response.body().getConfirmedAppointmentsList()!=null) {
                         appointmentsIdsList.clear();
                         appointmentsIdsList.addAll(response.body().getConfirmedAppointmentsList());
+                        Log.d("appointmentsIdsList",""+appointmentsIdsList.size());
                         loadAppointmentList(0);
                     }else {
                         // User have no confirmed Appointments.
@@ -62,12 +63,14 @@ public class AppointmentsRepo {
     public void loadAppointmentList(int startingIndex) {
         networkApi = ApiService.getAPIService();
         ArrayList<ModelAppointment> appointmentArrayList = new ArrayList<>();
-        final int[] maxIndex = {10 + startingIndex};
+        final int[] maxIndex = {20 + startingIndex};
         if(appointmentsIdsList.size() < maxIndex[0])
             maxIndex[0] = appointmentsIdsList.size();
 
         if(appointmentsIdsList.size()==0)
             appointmentsListLive.setValue(null);
+        Log.d("StartingIndex",""+startingIndex);
+        Log.d("maxIndex",""+maxIndex[0]);
 
         for(int i = startingIndex; i< maxIndex[0]; i++){
             int finalI = i;
@@ -76,25 +79,35 @@ public class AppointmentsRepo {
                 public void onResponse(Call<ModelAppointment> call, Response<ModelAppointment> response) {
                     if(response.isSuccessful() && response.code()==200){
                         appointmentArrayList.add(response.body());
-
-                        if(finalI == maxIndex[0] -1){
-                            int newStartingIndex;
-                            if (maxIndex[0]<appointmentsIdsList.size())
-                                newStartingIndex = maxIndex[0];
-                            else
-                                newStartingIndex = -1;
-                            appointmentsListLive.setValue(appointmentArrayList);
-                            startingIndexForList.setValue(newStartingIndex);
-                        }
                     }
                     else {
                         appointmentsListLive.setValue(null);
+                    }
+
+                    if(finalI == maxIndex[0] -1){
+                        int newStartingIndex;
+                        if (maxIndex[0]<appointmentsIdsList.size())
+                            newStartingIndex = maxIndex[0];
+                        else
+                            newStartingIndex = -1;
+                        appointmentsListLive.setValue(appointmentArrayList);
+                        startingIndexForList.setValue(newStartingIndex);
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ModelAppointment> call, Throwable t) {
                     appointmentsListLive.setValue(null);
+                    if(finalI == maxIndex[0] -1){
+                        int newStartingIndex;
+                        if (maxIndex[0]<appointmentsIdsList.size())
+                            newStartingIndex = maxIndex[0];
+                        else
+                            newStartingIndex = -1;
+
+                        appointmentsListLive.setValue(appointmentArrayList);
+                        startingIndexForList.setValue(newStartingIndex);
+                    }
                 }
             });
         }

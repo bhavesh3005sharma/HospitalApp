@@ -100,5 +100,10 @@
     <string name="serial_number_not_assigned">\"Serial Number not assigned Yet.\"</string>
     <string name="change_status">Change Status</string>
     <string name="select_appointment_status">Select Appointment Status</string>
+    <string name="change_password">Change Password</string>
+    <string name="change_schedule">Change Schedule</string>
+    <string name="text_enter_password_again">For Security Reasons You have to Entered Your Password Again.</string>
+    <string name="new_password">New Password</string>
+    <string name="enter_your_new_password">Enter Your New Password</string>
 
 </resources>

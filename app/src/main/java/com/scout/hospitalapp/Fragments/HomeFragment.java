@@ -113,25 +113,18 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
-                {
+                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                     isScrolling = true;
-                }
-            }
+                    currentItems = manager.getChildCount();
+                    totalItems = manager.getItemCount();
+                    scrollOutItems = manager.findFirstVisibleItemPosition();
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                currentItems = manager.getChildCount();
-                totalItems = manager.getItemCount();
-                scrollOutItems = manager.findFirstVisibleItemPosition();
-
-                if(isScrolling && (currentItems + scrollOutItems == totalItems) && startingIndex!=-1 && !isLoading)
-                {
-                    isLoading = true;
-                    isScrolling = false;
-                    HelperClass.showProgressbar(progressBar);
-                    homeViewModel.loadAppointments(startingIndex);
+                    if(isScrolling && (currentItems + scrollOutItems == totalItems) && startingIndex!=-1 && !isLoading) {
+                        isLoading = true;
+                        isScrolling = false;
+                        HelperClass.showProgressbar(progressBar);
+                        homeViewModel.loadAppointments(startingIndex);
+                    }
                 }
             }
         });
@@ -189,6 +182,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     HelperClass.toast(getContext(),"Please Select Status");
                 }else {
                     view.setAlpha(0.5f);
+                    radioGroup.setEnabled(false);
                     buttonCancel.setEnabled(false);
                     buttonConfirm.setEnabled(false);
                     trailingCircularDotsLoader.setVisibility(View.VISIBLE);
@@ -207,6 +201,10 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     homeViewModel.setStatus(hospitalId,appointmentId,status).observe(getViewLifecycleOwner(), new Observer<String>() {
                         @Override
                         public void onChanged(String s) {
+                            if (("Status Updated Successfully").equals(s)){
+                                list.remove(position);
+                                adapter.notifyDataSetChanged();
+                            }
                             trailingCircularDotsLoader.setVisibility(View.GONE);
                             HelperClass.toast(getContext(),s);
                             alertDialog.dismiss();

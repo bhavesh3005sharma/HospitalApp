@@ -94,25 +94,18 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
-                {
+                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                     isScrolling = true;
-                }
-            }
+                    currentItems = manager.getChildCount();
+                    totalItems = manager.getItemCount();
+                    scrollOutItems = manager.findFirstVisibleItemPosition();
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                currentItems = manager.getChildCount();
-                totalItems = manager.getItemCount();
-                scrollOutItems = manager.findFirstVisibleItemPosition();
-
-                if(isScrolling && (currentItems + scrollOutItems == totalItems) && startingIndex!=-1 && !isLoading)
-                {
-                    isLoading = true;
-                    isScrolling = false;
-                    HelperClass.showProgressbar(progressBar);
-                    historyViewModel.loadAppointments(startingIndex);
+                    if(isScrolling && (currentItems + scrollOutItems == totalItems) && startingIndex!=-1 && !isLoading) {
+                        isLoading = true;
+                        isScrolling = false;
+                        HelperClass.showProgressbar(progressBar);
+                        historyViewModel.loadAppointments(startingIndex);
+                    }
                 }
             }
         });
