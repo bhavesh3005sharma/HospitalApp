@@ -24,6 +24,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.agrawalsuneet.dotsloader.loaders.TrailingCircularDotsLoader;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -76,6 +79,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     HospitalInfoResponse hospitalInfoResponse;
     Boolean isLoading = false;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private GoogleSignInClient mGoogleSignInClient;
+    private static final int GOOGLE_SIGN_IN = 9001;
 
     @Override
     protected void onDestroy() {
@@ -132,12 +137,34 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 openAuthDialogue();
                 break;
             case R.id.menu_signout :
-                mAuth.signOut();
-                startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
                 SharedPref.deleteLoginUserData(this);
+
+                // Firebase sign out
+                FirebaseAuth.getInstance().signOut();
+
+                // Google sign out
+                initGoogleSignIn();
+                mGoogleSignInClient.signOut();
+
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initGoogleSignIn() {
+        // [START config_signIn]
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        // [END config_signIn]
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
 
     private void openAuthDialogue() {

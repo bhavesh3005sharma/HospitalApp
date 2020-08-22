@@ -111,4 +111,8 @@ public class AuthViewModel extends ViewModel {
         }
         return ((h2-h1)*60)+(m2-m1);
     }
+
+    public void saveFcmToken(String email, String token) {
+        hospitalRegisterRepo.saveFcmToken(email,token);
+    }
 }

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "49302179929-grtfp7qcg0qdkvd4hkli0hjnhq8166fp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.scout.hospitalapp",
+            "certificate_hash": "4ce262964dc66d8217674f5d1ab30b0c9ad8f596"
+          }
+        },
+        {
           "client_id": "49302179929-u6e8v2ninfmddnn475uoind9sv03vc0h.apps.googleusercontent.com",
           "client_type": 3
         }

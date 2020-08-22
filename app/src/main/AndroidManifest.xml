@@ -18,6 +18,14 @@
         <activity android:name=".Activities.DepartmentsActivity" />
         <activity android:name=".Activities.DoctorProfileActivity" />
         <activity android:name=".Activities.BookAppointmentActivity" />
+
+        <service
+            android:name="com.scout.hospitalapp.Utils.MyFirebaseMessagingService">
+            <intent-filter android:priority="1">
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".Activities.HomeActivity"
             android:configChanges="keyboard|orientation|screenSize"
@@ -27,17 +35,17 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.Auth.ForgotPasswordActivity"
-            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.Auth.SignUpActivity"
-            android:configChanges="keyboard|orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.Auth.LoginActivity"
-            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>

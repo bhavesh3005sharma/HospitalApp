@@ -159,4 +159,20 @@ public class HospitalDataRepo {
         });
         return message;
     }
+
+    public void saveFcmToken(String email, String token) {
+        ApiService.getAPIService().updateFCMToken(email,token)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful() && response.code()==200)
+                            Log.d("Token","Saved Successfully\n"+token);
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
+                });
+    }
 }

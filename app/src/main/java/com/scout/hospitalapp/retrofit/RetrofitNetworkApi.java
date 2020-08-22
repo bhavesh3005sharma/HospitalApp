@@ -74,4 +74,7 @@ public interface RetrofitNetworkApi {
 
     @GET("Hospital/incoming_webhook/doctorProfilePicUpdate")
     Call<ResponseBody> updateDoctorProfilePic(@Query("doctor_id") String id, @Query("url") String url);
+
+    @GET("Hospital/incoming_webhook/updateFCMToken")
+    Call<ResponseBody> updateFCMToken(@Query("email") String  email, @Query("fcm_token") String token);
 }

@@ -34,7 +34,7 @@
         android:id="@+id/welcome_layout"
         layout="@layout/login_welcome_layout"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginRight="20dp"
