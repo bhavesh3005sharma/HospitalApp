@@ -65,6 +65,9 @@ public interface RetrofitNetworkApi {
     @GET("Hospital/incoming_webhook/getFilterAppointments")
     Call<ArrayList<ModelAppointment>> getFilterAppointments(@Query("appointment_date") String filterDate, @Query("hospital_id")String hospitalId);
 
+    @GET("Hospital/incoming_webhook/getFilterPastAppointments")
+    Call<ArrayList<ModelAppointment>> getFilterPastAppointments(@Query("appointment_date") String filterDate, @Query("hospital_id")String hospitalId);
+
     @POST("Hospital/incoming_webhook/bookAppointment")
     Call<ResponseMessage> bookAppointment(@Body ModelBookAppointment appointment);
 

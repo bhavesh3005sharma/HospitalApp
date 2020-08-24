@@ -116,10 +116,10 @@ public class AppointmentsHistoryRepo {
         return startingIndexForList;
     }
 
-    public LiveData<ArrayList<ModelAppointment>> getFilterAppointments(String filterDate, String hospitalId) {
+    public LiveData<ArrayList<ModelAppointment>> getFilterPastAppointments(String filterDate, String hospitalId) {
         MutableLiveData<ArrayList<ModelAppointment>> mutableLiveData = new MutableLiveData<>();
 
-        networkApi.getFilterAppointments(filterDate,hospitalId).enqueue(new Callback<ArrayList<ModelAppointment>>() {
+        networkApi.getFilterPastAppointments(filterDate,hospitalId).enqueue(new Callback<ArrayList<ModelAppointment>>() {
             @Override
             public void onResponse(Call<ArrayList<ModelAppointment>> call, Response<ArrayList<ModelAppointment>> response) {
                 if (response.isSuccessful() && response.code() == 200){

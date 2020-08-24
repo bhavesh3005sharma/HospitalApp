@@ -143,4 +143,25 @@ public class AppointmentsRepo {
         });
         return message;
     }
+
+    public LiveData<ArrayList<ModelAppointment>> getFilterAppointments(String filterDate, String hospitalId) {
+        MutableLiveData<ArrayList<ModelAppointment>> mutableLiveData = new MutableLiveData<>();
+
+        networkApi.getFilterAppointments(filterDate,hospitalId).enqueue(new Callback<ArrayList<ModelAppointment>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ModelAppointment>> call, Response<ArrayList<ModelAppointment>> response) {
+                if (response.isSuccessful() && response.code() == 200){
+                    mutableLiveData.setValue(response.body());
+                } else {
+                    mutableLiveData.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ModelAppointment>> call, Throwable t) {
+                mutableLiveData.setValue(null);
+            }
+        });
+        return mutableLiveData;
+    }
 }

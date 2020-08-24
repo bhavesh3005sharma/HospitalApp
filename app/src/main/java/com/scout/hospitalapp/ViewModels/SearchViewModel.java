@@ -6,18 +6,19 @@ import androidx.lifecycle.ViewModel;
 import com.scout.hospitalapp.Models.ModelAppointment;
 import com.scout.hospitalapp.Repository.Remote.AppointmentRequestRepo;
 import com.scout.hospitalapp.Repository.Remote.AppointmentsHistoryRepo;
+import com.scout.hospitalapp.Repository.Remote.AppointmentsRepo;
 import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
 import java.util.ArrayList;
 
 public class SearchViewModel extends ViewModel {
-    AppointmentsHistoryRepo appointmentsRepo;
+    AppointmentsRepo appointmentsRepo;
 
     public String getHospitalId(Context context) {
         return SharedPref.getLoginUserData(context).getHospitalId().getId();
     }
 
     public LiveData<ArrayList<ModelAppointment>> getFilterAppointments(String filterDate, String hospitalId) {
-        appointmentsRepo = AppointmentsHistoryRepo.getInstance();
+        appointmentsRepo = AppointmentsRepo.getInstance();
         return appointmentsRepo.getFilterAppointments(filterDate,hospitalId);
     }
 
