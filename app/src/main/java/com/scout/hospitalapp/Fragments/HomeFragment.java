@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -59,6 +61,9 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @BindView(R.id.textViewFilterDate) TextView textViewFilterDate;
     @BindView(R.id.textViewFilterTime) TextView textViewFilterTime;
     @BindView(R.id.textViewFilter) TextView textViewFilter;
+    @BindView(R.id.textViewLoading) TextView textViewLoading;
+    @BindView(R.id.textViewNoAppointments) TextView textViewNoAppointments;
+    //@BindView(R.id.imageNoData) ImageView imageNoData;
 
     private ArrayList<ModelAppointment> list = new ArrayList<ModelAppointment>();
     private Unbinder unbinder;
@@ -68,7 +73,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private HomeViewModel homeViewModel;
     private AppointmentsAdapter adapter;
     private String filterQuery = "";
-    private com.wdullaer.materialdatetimepicker.date.DatePickerDialog datePickerDialog;
 
     @Override
     public void onDestroyView() {
@@ -103,9 +107,22 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 }
                 shimmerLayout.stopShimmer();
                 shimmerLayout.setVisibility(View.GONE);
+                textViewLoading.setVisibility(View.GONE);
                 HelperClass.hideProgressbar(progressBar);
                 recyclerView.setVisibility(View.VISIBLE);
                 layoutFilter.setVisibility(View.VISIBLE);
+                if (list.size()==0)
+                    textViewNoAppointments.setVisibility(View.VISIBLE);
+                else
+                    textViewNoAppointments.setVisibility(View.GONE);
+
+                if (filterQuery.isEmpty()) {
+                    textViewFilterDate.setEnabled(true);
+                    textViewFilterTime.setEnabled(true);
+                    textViewFilter.setText(getString(R.string.filter));
+                    textViewFilterDate.setText(getString(R.string.example_date));
+                    textViewFilterTime.setText(getString(R.string.example_time));
+                }
             }
         });
 
@@ -144,6 +161,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     if(isScrolling && (currentItems + scrollOutItems == totalItems) && startingIndex!=-1 && !isLoading) {
                         isLoading = true;
                         isScrolling = false;
+                        textViewLoading.setVisibility(View.VISIBLE);
                         HelperClass.showProgressbar(progressBar);
                         homeViewModel.loadAppointments(startingIndex);
                     }
@@ -157,6 +175,8 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (!isLoading) {
             list.clear();
             isLoading = true;
+            filterQuery = "";
+            textViewNoAppointments.setVisibility(View.GONE);
             layoutFilter.setVisibility(View.GONE);
             shimmerLayout.setVisibility(View.VISIBLE);
             shimmerLayout.startShimmer();
@@ -178,9 +198,9 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void loadMoreData() {
         if ( startingIndex != -1 && !isLoading) {
-            Log.d("getAppointmentsList","loading Data..");
             isLoading = true;
             isScrolling = false;
+            textViewLoading.setVisibility(View.VISIBLE);
             HelperClass.showProgressbar(progressBar);
             homeViewModel.loadAppointments(startingIndex);
         }
@@ -251,7 +271,10 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private void openDatePicker(){
         Calendar now = Calendar.getInstance();
-        datePickerDialog = com.wdullaer.materialdatetimepicker.date.DatePickerDialog.newInstance(
+        // Initial year selection
+        // Initial month selection
+        // Inital day selection
+        DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
                 HomeFragment.this,
                 now.get(Calendar.YEAR), // Initial year selection
                 now.get(Calendar.MONTH), // Initial month selection

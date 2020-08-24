@@ -39,7 +39,6 @@ public class AppointmentsHistoryRepo {
             public void onResponse(Call<HospitalInfoResponse> call, Response<HospitalInfoResponse> response) {
                 if (response.isSuccessful() && response.code()==200){
                     if (response.body().getPastAppointmentsList()!=null) {
-                        Log.d("Result",response.body().getPastAppointmentsList().toString());
                         appointmentsIdsList.clear();
                         appointmentsIdsList.addAll(response.body().getPastAppointmentsList());
                         Collections.reverse(appointmentsIdsList);
@@ -49,7 +48,6 @@ public class AppointmentsHistoryRepo {
                         appointmentsListLive.setValue(null);
                     }
                 } else {
-                    Log.d("Result",response.errorBody().toString());
                     appointmentsListLive.setValue(null);
                 }
             }
@@ -57,7 +55,6 @@ public class AppointmentsHistoryRepo {
             @Override
             public void onFailure(Call<HospitalInfoResponse> call, Throwable t) {
                 appointmentsListLive.setValue(null);
-                Log.d("Result",t.getMessage());
             }
         });
     }
@@ -117,5 +114,26 @@ public class AppointmentsHistoryRepo {
 
     public LiveData<Integer> getStartingIndexOfList() {
         return startingIndexForList;
+    }
+
+    public LiveData<ArrayList<ModelAppointment>> getFilterAppointments(String filterDate, String hospitalId) {
+        MutableLiveData<ArrayList<ModelAppointment>> mutableLiveData = new MutableLiveData<>();
+
+        networkApi.getFilterAppointments(filterDate,hospitalId).enqueue(new Callback<ArrayList<ModelAppointment>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ModelAppointment>> call, Response<ArrayList<ModelAppointment>> response) {
+                if (response.isSuccessful() && response.code() == 200){
+                    mutableLiveData.setValue(response.body());
+                } else {
+                    mutableLiveData.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ModelAppointment>> call, Throwable t) {
+                mutableLiveData.setValue(null);
+            }
+        });
+        return mutableLiveData;
     }
 }

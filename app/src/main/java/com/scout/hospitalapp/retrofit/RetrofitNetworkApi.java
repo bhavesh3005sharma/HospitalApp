@@ -9,6 +9,8 @@ import com.scout.hospitalapp.Models.ModelRequestId;
 import com.scout.hospitalapp.response.HospitalInfoResponse;
 import com.scout.hospitalapp.response.ResponseMessage;
 
+import java.util.ArrayList;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -59,6 +61,9 @@ public interface RetrofitNetworkApi {
 
     @GET("Hospital/incoming_webhook/AppointmentDetails")
     Call<ModelAppointment> getAppointmentsDetails(@Query("appointment_id") String appointmentId);
+
+    @GET("Hospital/incoming_webhook/getFilterAppointments")
+    Call<ArrayList<ModelAppointment>> getFilterAppointments(@Query("appointment_date") String filterDate, @Query("hospital_id")String hospitalId);
 
     @POST("Hospital/incoming_webhook/bookAppointment")
     Call<ResponseMessage> bookAppointment(@Body ModelBookAppointment appointment);

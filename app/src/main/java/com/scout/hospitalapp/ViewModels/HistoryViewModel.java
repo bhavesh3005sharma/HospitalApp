@@ -39,4 +39,9 @@ public class HistoryViewModel extends ViewModel {
         appointmentsRepo = AppointmentsHistoryRepo.getInstance();
         appointmentsRepo.loadAppointmentList(startingIndex);
     }
+
+    public LiveData<ArrayList<ModelAppointment>> getFilterAppointments(String filterDate, String hospitalId) {
+        appointmentsRepo = AppointmentsHistoryRepo.getInstance();
+        return appointmentsRepo.getFilterAppointments(filterDate,hospitalId);
+    }
 }
