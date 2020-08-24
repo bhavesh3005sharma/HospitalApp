@@ -38,7 +38,7 @@ public class AppointmentRequestsFragment extends Fragment implements Appointment
     private Unbinder unbinder;
     private AppointmentsRequestAdapter adapter;
     private Boolean isScrolling = false , isLoading = false;
-    private int currentItems, totalItems, scrollOutItems, startingIndex=-1;
+    private int currentItems, totalItems, scrollOutItems, startingIndex=-1, check=0;
     private AppointmentsViewModel appointmentsViewModel;
     private String hospitalId;
 
@@ -55,9 +55,12 @@ public class AppointmentRequestsFragment extends Fragment implements Appointment
         unbinder = ButterKnife.bind(this,view);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        isLoading = true;
+        list.clear();
         hospitalId = appointmentsViewModel.getHospitalId(getContext());
-        appointmentsViewModel.loadAppointmentRequestsIdsList(hospitalId);
+        if (++check==1) {
+            isLoading = true;
+            appointmentsViewModel.loadAppointmentRequestsIdsList(hospitalId);
+        }
 
         appointmentsViewModel.getAppointmentsList().observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelAppointment>>() {
             @Override

@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -20,11 +19,7 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,7 +31,6 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.scout.hospitalapp.Activities.AppointmentDetailsActivity;
 import com.scout.hospitalapp.Activities.BookAppointmentActivity;
-import com.scout.hospitalapp.Activities.DoctorsActivity;
 import com.scout.hospitalapp.Adapter.AppointmentsAdapter;
 import com.scout.hospitalapp.Models.ModelAppointment;
 import com.scout.hospitalapp.R;
@@ -86,9 +80,12 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         unbinder = ButterKnife.bind(this,root);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        isLoading = true;
+        list.clear();
         hospitalId = homeViewModel.getHospitalId(getContext());
-        homeViewModel.loadAppointmentIdsList(hospitalId);
+        if (++check==1) {
+            homeViewModel.loadAppointmentIdsList(hospitalId);
+            isLoading = true;
+        }
 
         fabBookAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,13 +183,13 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     @Override
-    public void holderClick(int position) {
-        startActivity(new Intent(getContext(), AppointmentDetailsActivity.class).putExtra("modelAppointment",list.get(position)));
+    public void holderClick(ModelAppointment modelAppointment) {
+        startActivity(new Intent(getContext(), AppointmentDetailsActivity.class).putExtra("modelAppointment",modelAppointment));
     }
 
     @Override
-    public void onItemSelected(String appointmentId, int position) {
-        openAlertDialogueChooseStatus(appointmentId,position);
+    public void onChangeStatusClicked(String appointmentId, ModelAppointment appointment) {
+        openAlertDialogueChooseStatus(appointmentId,appointment);
     }
 
     @Override
@@ -206,7 +203,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
     }
 
-    private void openAlertDialogueChooseStatus(String appointmentId, int position) {
+    private void openAlertDialogueChooseStatus(String appointmentId, ModelAppointment appointment) {
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder( getContext() );
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialogue_set_appointment_status, null, false);
         builder.setView(view);
@@ -256,7 +253,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         @Override
                         public void onChanged(String s) {
                             if (("Status Updated Successfully").equals(s)){
-                                list.remove(position);
+                                list.remove(appointment);
                                 adapter.notifyDataSetChanged();
                             }
                             trailingCircularDotsLoader.setVisibility(View.GONE);

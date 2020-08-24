@@ -76,43 +76,44 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         unbinder = ButterKnife.bind(this,root);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        isLoading = true;
+        list.clear();
         hospitalId = historyViewModel.getHospitalId(getContext());
-        historyViewModel.loadAppointmentIdsList(hospitalId);
+        if (++check==1) {
+            historyViewModel.loadAppointmentIdsList(hospitalId);
+            isLoading = true;
+        }
 
         historyViewModel.getAppointmentsList().observe(getViewLifecycleOwner(), new Observer<ArrayList<ModelAppointment>>() {
-            @Override
-            public void onChanged(ArrayList<ModelAppointment> response) {
-                Log.d("List",""+list.size());
-                Log.d("Response",""+response.size());
-                isLoading = false;
-                if (response!=null){
-                    list.addAll(response);
-                    adapter.getFilter().filter(filterQuery);
+                @Override
+                public void onChanged(ArrayList<ModelAppointment> response) {
+                    isLoading = false;
+                    if (response != null) {
+                        list.addAll(response);
+                        adapter.getFilter().filter(filterQuery);
+                    }
+                    shimmerLayout.stopShimmer();
+                    shimmerLayout.setVisibility(View.GONE);
+                    HelperClass.hideProgressbar(progressBar);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    layoutFilter.setVisibility(View.VISIBLE);
+
+                    trailingCircularDotsLoader.setVisibility(View.GONE);
+                    if (list.size() == 0)
+                        textViewNoAppointments.setVisibility(View.VISIBLE);
+                    else
+                        textViewNoAppointments.setVisibility(View.GONE);
+
+                    textViewFilter.setText(getString(R.string.filter));
+                    textViewFilter.setEnabled(true);
+                    textViewFilterDate.setText(getString(R.string.example_date));
+                    textViewFilterTime.setText(getString(R.string.example_time));
+                    textViewFilterDate.setEnabled(true);
+                    textViewFilterTime.setEnabled(true);
+                    HelperClass.hideProgressbar(progressBarFilter);
+                    textViewFilter.setVisibility(View.VISIBLE);
+                    imageNoData.setVisibility(View.GONE);
                 }
-                shimmerLayout.stopShimmer();
-                shimmerLayout.setVisibility(View.GONE);
-                HelperClass.hideProgressbar(progressBar);
-                recyclerView.setVisibility(View.VISIBLE);
-                layoutFilter.setVisibility(View.VISIBLE);
-
-                trailingCircularDotsLoader.setVisibility(View.GONE);
-                if (list.size()==0)
-                    textViewNoAppointments.setVisibility(View.VISIBLE);
-                else
-                    textViewNoAppointments.setVisibility(View.GONE);
-
-                textViewFilter.setText(getString(R.string.filter));
-                textViewFilter.setEnabled(true);
-                textViewFilterDate.setText(getString(R.string.example_date));
-                textViewFilterTime.setText(getString(R.string.example_time));
-                textViewFilterDate.setEnabled(true);
-                textViewFilterTime.setEnabled(true);
-                HelperClass.hideProgressbar(progressBarFilter);
-                textViewFilter.setVisibility(View.VISIBLE);
-                imageNoData.setVisibility(View.GONE);
-            }
-        });
+            });
 
         historyViewModel.getStartingIndexOfList().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
@@ -177,12 +178,12 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public void holderClick(int position) {
-        startActivity(new Intent(getContext(), AppointmentDetailsActivity.class).putExtra("modelAppointment",list.get(position)));
+    public void holderClick(ModelAppointment appointment) {
+        startActivity(new Intent(getContext(), AppointmentDetailsActivity.class).putExtra("modelAppointment",appointment));
     }
 
     @Override
-    public void onItemSelected(String appointmentId, int position) {
+    public void onChangeStatusClicked(String appointmentId, ModelAppointment appointment) {
 
     }
 

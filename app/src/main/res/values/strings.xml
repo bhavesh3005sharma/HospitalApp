@@ -112,5 +112,6 @@
     <string name="text_loading">We are Loading More Details Please Wait...</string>
     <string name="text_no_scheduled_appointments">You Have No Scheduled Appointments\n Your Scheduled Appointments Shown here.</string>
     <string name="text_no_past_appointments">You Have No Past Appointments\n Your Past Appointments Shown here.</string>
+    <string name="search">SEARCH</string>
 
 </resources>

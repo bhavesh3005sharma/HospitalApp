@@ -86,6 +86,9 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.menu_profile:
                 startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 break;
+            case R.id.search_bar :
+                startActivity(new Intent(HomeActivity.this, SearchActivity.class));
+                break;
         }
         return true;
     }

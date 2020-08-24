@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.AppointmentDetailsActivity"></activity>
+        <activity android:name=".Activities.SearchActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.AppointmentDetailsActivity" />
         <activity android:name=".Activities.EditProfileActivity" />
         <activity android:name=".Activities.ProfileActivity" />
         <activity android:name=".Activities.DoctorsActivity" />
@@ -19,10 +21,9 @@
         <activity android:name=".Activities.DoctorProfileActivity" />
         <activity android:name=".Activities.BookAppointmentActivity" />
 
-        <service
-            android:name="com.scout.hospitalapp.Utils.MyFirebaseMessagingService">
+        <service android:name=".Utils.MyFirebaseMessagingService">
             <intent-filter android:priority="1">
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
@@ -30,8 +31,8 @@
             android:name=".Activities.HomeActivity"
             android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.Auth.ForgotPasswordActivity"
@@ -40,8 +41,8 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.Auth.SignUpActivity"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.Auth.LoginActivity"

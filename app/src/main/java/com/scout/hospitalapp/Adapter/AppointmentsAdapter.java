@@ -9,7 +9,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 import com.scout.hospitalapp.Models.ModelAppointment;
 import com.scout.hospitalapp.R;
@@ -62,7 +61,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             holder.textChangeStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onItemSelected(appointment.getAppointmentId().getId(),position);
+                    mListener.onChangeStatusClicked(appointment.getAppointmentId().getId(),appointment);
                 }
             });
             holder.textChangeStatus.setText(context.getString(R.string.change_status));
@@ -149,14 +148,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             listFilterByQuery.add(row);
                         else if(time.isEmpty() && date.equals(row.getAppointmentDate()))
                             listFilterByQuery.add(row);
-
-
-                        // name match condition. this might differ depending on your requirement
-                        // here we are looking for name or phone number match
-//                        if (row.getStatus().toLowerCase().contains(charString.toLowerCase()) || row.getAppointmentDate().toLowerCase().contains(charString.toLowerCase()) || row.getDisease().toLowerCase().contains(charString.toLowerCase())
-//                                || row.getAppointmentTime().toLowerCase().contains(charString.toLowerCase()) || row.getDoctorName().toLowerCase().contains(charString.toLowerCase())) {
-//                            listFilterByQuery.add(row);
-//                        }
                     }
                     filteredList = listFilterByQuery;
                 }
@@ -172,7 +163,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     filteredList = (ArrayList<ModelAppointment>) results.values;
                     SortDateWise();
                     if (++check>1 && filteredList.size()<5) {
-                        Log.d("getAppointmentsList","loadMoreData");
                         mListener.loadMoreData();
                     }
                 }
@@ -184,8 +174,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         String[] result;
         result = appointmentTime.split("-");
 
-        Log.d("First",""+getTimeDifference(result[0]+"-"+time));
-        Log.d("Second",""+getTimeDifference(time+"-"+result[1]));
         if(getTimeDifference(result[0]+"-"+time)>=0 && getTimeDifference(time+"-"+result[1])>=0)
             return true;
         else
@@ -205,16 +193,16 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 @Override
                 public void onClick(View v) {
                     if (mListener!=null)
-                    mListener.holderClick(getAdapterPosition());
+                    mListener.holderClick(filteredList.get(getAdapterPosition()));
                 }
             });
         }
     }
 
     public interface interfaceClickListener{
-        void holderClick(int position);
+        void holderClick(ModelAppointment modelAppointment);
 
-        void onItemSelected(String appointmentId, int position);
+        void onChangeStatusClicked(String appointmentId, ModelAppointment appointment);
 
         void loadMoreData();
     }

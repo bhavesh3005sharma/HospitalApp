@@ -49,8 +49,8 @@ public class AppointmentsRequestAdapter extends RecyclerView.Adapter<Appointment
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         ModelAppointment appointment = filteredList.get(position);
-        holder.date.setText(appointment.getAppointmentDate());
-        holder.time.setText(appointment.getAppointmentTime());
+        holder.date.setText(context.getString(R.string.mdtp_date)+" : "+appointment.getAppointmentDate());
+        holder.time.setText(context.getString(R.string.mdtp_time)+" - "+appointment.getAppointmentTime());
         holder.doctorName.setText(appointment.getDoctorName()+" (Doctor Name)");
         holder.textViewStatus.setVisibility(View.GONE);
 
