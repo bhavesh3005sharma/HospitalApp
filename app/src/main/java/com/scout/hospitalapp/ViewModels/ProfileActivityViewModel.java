@@ -85,4 +85,9 @@ public class ProfileActivityViewModel extends ViewModel {
         }
         return message;
     }
+
+    public LiveData<String> setSchedule(String schedule, ProfileActivity profileActivity) {
+        hospitalDataRepo = HospitalDataRepo.getInstance();
+        return hospitalDataRepo.setSchedule(schedule,SharedPref.getLoginUserData(profileActivity).getHospitalId().getId());
+    }
 }

@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
-import android.net.Credentials;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -135,6 +135,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         switch (item.getItemId()){
             case R.id.menu_change_password :
                 openAuthDialogue();
+                break;
+            case R.id.menu_change_schedule :
+                openAlertDialogueChooseSchedule();
                 break;
             case R.id.menu_signout :
                 SharedPref.deleteLoginUserData(this);
@@ -261,7 +264,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             textViewEmail.setText(hospitalInfoResponse.getEmail());
             textViewContactNo.setText(hospitalInfoResponse.getPhone_no());
             textViewAddress.setText(hospitalInfoResponse.getAddress());
-            yearEstablishment.setText(getString(R.string.year_establishment)+hospitalInfoResponse.getYear_of_establishment());
+            yearEstablishment.setText(getString(R.string.year_establishment)+" "+hospitalInfoResponse.getYear_of_establishment());
             if (hospitalInfoResponse.getUrl()!=null)
                 Picasso.get().load(Uri.parse(hospitalInfoResponse.getUrl())).placeholder(R.color.placeholder_bg).into(HospitalImage);
             cardViewImage.setVisibility(View.VISIBLE);
@@ -288,6 +291,74 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 startActivity(new Intent(ProfileActivity.this, DepartmentsActivity.class));
                 break;
         }
+    }
+
+    private void openAlertDialogueChooseSchedule() {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder( this );
+        View view = LayoutInflater.from(this).inflate(R.layout.dialogue_set_appointment_taking_schedule, null, false);
+        builder.setView(view);
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.setCancelable(false);
+
+        RadioGroup radioGroup = view.findViewById(R.id.radio_group);
+        Button buttonConfirm = view.findViewById(R.id.buttonConfirm);
+        Button buttonCancel = view.findViewById(R.id.buttonCancel);
+
+        TrailingCircularDotsLoader trailingCircularDotsLoader = view.findViewById(R.id.trailingCircularDotsLoader);
+        radioGroup.check(getCheckedButtonId(hospitalInfoResponse.getSchedule()));
+
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        buttonConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int checkedButtonId = radioGroup.getCheckedRadioButtonId();
+
+                view.setAlpha(0.5f);
+                radioGroup.setEnabled(false);
+                buttonCancel.setEnabled(false);
+                buttonConfirm.setEnabled(false);
+                trailingCircularDotsLoader.setVisibility(View.VISIBLE);
+                String schedule = getString(R.string.monthly);
+                switch (checkedButtonId){
+                    case -1 :
+                    case R.id.monthly:
+                        schedule = getString(R.string.monthly);
+                        break;
+                    case R.id.weekly:
+                        schedule = getString(R.string.weekly);
+                        break;
+                    case R.id.daily:
+                        schedule = getString(R.string.daily);
+                        break;
+                }
+                Log.d("schedule",schedule);
+                profileActivityViewModel.setSchedule(schedule,ProfileActivity.this).observe(ProfileActivity.this, new Observer<String>() {
+                    @Override
+                    public void onChanged(String s) {
+                        trailingCircularDotsLoader.setVisibility(View.GONE);
+                        HelperClass.toast(ProfileActivity.this,s);
+                        alertDialog.dismiss();
+                    }
+                });
+            }
+        });
+    }
+
+    private int getCheckedButtonId(String schedule) {
+        if (schedule.equals(getString(R.string.weekly)))
+            return R.id.weekly;
+        else if (schedule.equals(getString(R.string.daily)))
+            return R.id.daily;
+        else
+            return R.id.monthly;
     }
 
     @Override

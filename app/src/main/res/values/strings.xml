@@ -113,5 +113,8 @@
     <string name="text_no_scheduled_appointments">You Have No Scheduled Appointments\n Your Scheduled Appointments Shown here.</string>
     <string name="text_no_past_appointments">You Have No Past Appointments\n Your Past Appointments Shown here.</string>
     <string name="search">SEARCH</string>
+    <string name="select_appointment_taking_schedule">Select Appointment Taking Schedule</string>
+    <string name="monthly_by_default">Monthly  (By Default)</string>
+    <string name="helper_text_appointment_taking_schedule">This is the time that how much advance appointments you want to consider. You can change it at any time. By Default Anyone can Book appointment with you in one month advance.</string>
 
 </resources>

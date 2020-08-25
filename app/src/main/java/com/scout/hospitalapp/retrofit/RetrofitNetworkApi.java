@@ -85,4 +85,7 @@ public interface RetrofitNetworkApi {
 
     @GET("Hospital/incoming_webhook/updateFCMToken")
     Call<ResponseBody> updateFCMToken(@Query("email") String  email, @Query("fcm_token") String token);
+
+    @GET("Hospital/incoming_webhook/SetAppointmentTakingSchedule")
+    Call<ResponseBody> SetAppointmentTakingSchedule(@Query("hospital_id") String hospitalId, @Query("schedule")String schedule);
 }

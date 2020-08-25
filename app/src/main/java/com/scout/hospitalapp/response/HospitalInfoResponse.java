@@ -12,6 +12,8 @@ public class HospitalInfoResponse implements Serializable {
     ModelRequestId hospitalId;
     @SerializedName("name")
     String name;
+    @SerializedName("schedule")
+    String schedule;
     @SerializedName("email")
     String email;
     @SerializedName("phone_no")
@@ -50,6 +52,10 @@ public class HospitalInfoResponse implements Serializable {
         this.phone_no = phone_no;
         this.address = address;
         this.year_of_establishment = year_of_establishment;
+    }
+
+    public String getSchedule() {
+        return schedule;
     }
 
     public void setUrl(String url) {

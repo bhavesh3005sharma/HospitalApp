@@ -55,6 +55,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     Unbinder unbinder;
     ModelIntent modelIntent;
     String selectedTime = null;
+    Boolean isOpeningDatePicker = false;
     BookAppointmentsViewModel viewModel;
     com.wdullaer.materialdatetimepicker.date.DatePickerDialog datePickerDialog;
     ArrayList<ModelDateTime> partiallyUnavailableDates = new ArrayList<>();
@@ -96,6 +97,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     }
 
     public void openDatePicker(){
+        isOpeningDatePicker = true;
         Calendar now = Calendar.getInstance();
          datePickerDialog = com.wdullaer.materialdatetimepicker.date.DatePickerDialog.newInstance(
                 BookAppointmentActivity.this,
@@ -112,7 +114,20 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
                  datePickerDialog.setSelectableDays(modelUnAvailableDates.getAvailableDates());
                  datePickerDialog.setDisabledDays(modelUnAvailableDates.getCompletelySlotUnavailableDates());
                  datePickerDialog.setMinDate(now);
-                 now.add(Calendar.MONTH,2);
+
+                 String schedule = modelIntent.getDoctorProfileInfo().getSchedule();
+                 if (schedule==null)
+                     schedule = getString(R.string.monthly);
+                 switch (schedule) {
+                     case "Weekly":
+                         now.add(Calendar.WEEK_OF_MONTH, 1);
+                         break;
+                     case "Daily":
+                         now.add(Calendar.DAY_OF_YEAR, 1);
+                         break;
+                     default:
+                         now.add(Calendar.MONTH, 1);
+                 }
                  datePickerDialog.setMaxDate(now);
 
                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -126,6 +141,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
                  partiallyUnavailableDates.clear();
                  partiallyUnavailableDates.addAll(modelUnAvailableDates.getPartiallyUnavailableDates());
                  HelperClass.hideProgressbar(progressBar);
+                 isOpeningDatePicker = false;
              }
          });
     }
@@ -203,7 +219,10 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
                 break;
 
             case R.id.textViewSelectDate :
-                openDatePicker();
+                if (isOpeningDatePicker)
+                    HelperClass.toast(BookAppointmentActivity.this,"Please Wait We Checking For Available Dates..");
+                else
+                    openDatePicker();
                 break;
 
             case R.id.select_doctor :

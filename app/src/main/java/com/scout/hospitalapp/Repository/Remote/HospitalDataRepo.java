@@ -175,4 +175,25 @@ public class HospitalDataRepo {
                     }
                 });
     }
+
+    public LiveData<String> setSchedule(String schedule, String hospitalId) {
+        MutableLiveData<String> mutableLiveData = new MutableLiveData<>();
+        networkApi = ApiService.getAPIService();
+        networkApi.SetAppointmentTakingSchedule(hospitalId,schedule).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.code()==200){
+                    // Appointment Status Updated Successfully.
+                    mutableLiveData.setValue("Status Updated Successfully");
+                }else
+                    mutableLiveData.setValue(response.errorBody().toString());
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                mutableLiveData.setValue(t.getMessage());
+            }
+        });
+        return mutableLiveData;
+    }
 }
