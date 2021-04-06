@@ -41,7 +41,7 @@
         style="@style/Widget.MaterialComponents.FloatingActionButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:tint="@android:color/white"
+        app:tint="@android:color/white"
         android:backgroundTint="@color/colorPrimary"
         app:srcCompat="@drawable/ic_add" />
 </androidx.constraintlayout.widget.ConstraintLayout>

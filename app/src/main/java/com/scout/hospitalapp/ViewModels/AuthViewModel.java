@@ -1,11 +1,17 @@
 package com.scout.hospitalapp.ViewModels;
 
+import android.content.Context;
 import android.util.Patterns;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.scout.hospitalapp.Activities.Auth.LoginActivity;
 import com.scout.hospitalapp.Models.ModelDoctorInfo;
 import com.scout.hospitalapp.Models.ModelHospitalRegisterRequest;
 import com.scout.hospitalapp.Repository.Remote.HospitalDataRepo;
+import com.scout.hospitalapp.Repository.SharedPref.SharedPref;
 import com.scout.hospitalapp.response.HospitalInfoResponse;
 
 public class AuthViewModel extends ViewModel {
@@ -85,7 +91,13 @@ public class AuthViewModel extends ViewModel {
         return hospitalRegisterRepo.getHospitalInfoResponse(email,id);
     }
 
-    public LiveData<Boolean> isUserLoggedIn(){
+    public LiveData<Boolean> isUserLoggedIn(Context context){
+        if(SharedPref.getLoginUserData(context)==null || SharedPref.getLoginUserData(context).getHospitalId()==null) {
+            MutableLiveData<Boolean> isUserLoggedIn = new MutableLiveData<>();
+            isUserLoggedIn.setValue(false);
+            return isUserLoggedIn;
+        }
+
         hospitalRegisterRepo = HospitalDataRepo.getInstance();
         return hospitalRegisterRepo.isUserLoggedIn();
     }

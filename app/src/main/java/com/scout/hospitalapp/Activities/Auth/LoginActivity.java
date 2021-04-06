@@ -212,7 +212,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }else {
                     HelperClass.toast(LoginActivity.this,"User Data Not Found");
                     signOut();
-                    Log.d("Saved","null"+"");
                 }
             }
         });
@@ -223,7 +222,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         FirebaseAuth.getInstance().signOut();
 
         // Google sign out
-        mGoogleSignInClient.signOut();
+        if(mGoogleSignInClient!=null)
+            mGoogleSignInClient.signOut();
     }
 
     private void generateFcmToken(String email) {
@@ -250,11 +250,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-        authViewModel.isUserLoggedIn().observe( this, new Observer<Boolean>() {
+        authViewModel.isUserLoggedIn(this).observe( this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if (aBoolean==true)
+                if (aBoolean)
                     openHomeActivity();
+                else
+                    signOut();
             }
         });
     }

@@ -116,5 +116,6 @@
     <string name="select_appointment_taking_schedule">Select Appointment Taking Schedule</string>
     <string name="monthly_by_default">Monthly  (By Default)</string>
     <string name="helper_text_appointment_taking_schedule">This is the time that how much advance appointments you want to consider. You can change it at any time. By Default Anyone can Book appointment with you in one month advance.</string>
+    <string name="dr_scout_hospital_app">Dr Scout | Hospital App</string>
 
 </resources>

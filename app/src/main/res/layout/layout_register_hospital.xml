@@ -6,17 +6,34 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@android:color/primary_text_dark"
-    app:cardCornerRadius="10dp"
+    app:cardCornerRadius="20dp"
     android:elevation="20dp">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:text="@string/hospital_registration"
+            android:textColor="@color/colorPrimary"
+            android:fontFamily="sans-serif-condensed-light"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:fillViewport="true"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -25,10 +42,14 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputName"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:hint="@string/hospital_name"
+                    app:boxBackgroundColor="@android:color/white"
+                    app:boxStrokeErrorColor="@android:color/holo_red_light"
+                    app:errorEnabled="true"
                     app:errorIconTint="@android:color/holo_red_light"
                     app:errorTextColor="@android:color/holo_red_light"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -44,10 +65,14 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputEmailRegister"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:hint="@string/email"
+                    app:boxBackgroundColor="@android:color/white"
+                    app:boxStrokeErrorColor="@android:color/holo_red_light"
+                    app:errorEnabled="true"
                     app:errorIconTint="@android:color/holo_red_light"
                     app:errorTextColor="@android:color/holo_red_light"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -64,10 +89,14 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputPhoneNo"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:hint="@string/phoneNo"
+                    app:boxBackgroundColor="@android:color/white"
+                    app:boxStrokeErrorColor="@android:color/holo_red_light"
+                    app:errorEnabled="true"
                     app:errorIconTint="@android:color/holo_red_light"
                     app:errorTextColor="@android:color/holo_red_light"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -84,10 +113,14 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputPassword"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:hint="@string/loginPassword"
+                    app:boxBackgroundColor="@android:color/white"
+                    app:boxStrokeErrorColor="@android:color/holo_red_light"
+                    app:errorEnabled="true"
                     app:errorIconTint="@android:color/holo_red_light"
                     app:errorTextColor="@android:color/holo_red_light"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -104,10 +137,14 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputAddress"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:hint="@string/address"
+                    app:boxBackgroundColor="@android:color/white"
+                    app:boxStrokeErrorColor="@android:color/holo_red_light"
+                    app:errorEnabled="true"
                     app:errorIconTint="@android:color/holo_red_light"
                     app:errorTextColor="@android:color/holo_red_light"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -124,10 +161,14 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputEstablishmentYear"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:hint="@string/year_establishment"
+                    app:boxBackgroundColor="@android:color/white"
+                    app:boxStrokeErrorColor="@android:color/holo_red_light"
+                    app:errorEnabled="true"
                     app:errorIconTint="@android:color/holo_red_light"
                     app:errorTextColor="@android:color/holo_red_light"
                     app:layout_constraintEnd_toEndOf="parent"

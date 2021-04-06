@@ -55,7 +55,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         holder.date.setText(context.getString(R.string.mdtp_date)+" - "+appointment.getAppointmentDate());
         holder.time.setText(context.getString(R.string.mdtp_time)+" - "+appointment.getAppointmentTime());
         holder.doctorName.setText(appointment.getDoctorName()+" ("+context.getString(R.string.doctor_name)+")");
-        holder.textViewSerialNo.setText(context.getString(R.string.serial_number)+" "+appointment.getSerialNumber());
+        String serialNo = "NA";
+        if (appointment.getSerialNumber()!=null && !appointment.getSerialNumber().isEmpty())
+            serialNo = appointment.getSerialNumber();
+        holder.textViewSerialNo.setText(context.getString(R.string.serial_number)+" "+serialNo);
 
         if (appointment.getStatus().equals(context.getString(R.string.accepted))) {
             holder.textChangeStatus.setOnClickListener(new View.OnClickListener() {

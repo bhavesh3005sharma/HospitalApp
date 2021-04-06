@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -106,11 +107,13 @@ public class DepartmentsActivity extends AppCompatActivity implements Department
         final TextInputLayout textInputDepartmentName = view.findViewById(R.id.textInputDepartmentName);
         final EditText editTextDescription = view.findViewById(R.id.editTextDescription);
         final Button buttonAddDepartment = view.findViewById(R.id.buttonAddDepartment);
+        final TextView textViewTitle = view.findViewById(R.id.textViewTitle);
 
         if (isEditDialogue){
             textInputDepartmentName.getEditText().setText(list.get(position).getDepartmentName());
             editTextDescription.setText(list.get(position).getDescription());
             buttonAddDepartment.setText(getString(R.string.update));
+            textViewTitle.setText("Update Department Info");
         }
 
         buttonAddDepartment.setOnClickListener(new View.OnClickListener() {
